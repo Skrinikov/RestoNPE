@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RestoNPE</string>
+    <string name="title_activity_restos_near">RestosNearActivity</string>
 </resources>
