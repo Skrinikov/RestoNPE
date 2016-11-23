@@ -38,6 +38,7 @@ public class RestoDAO extends SQLiteOpenHelper{
     private static final String COLUMN_EMAIL= "email";
     private static final String COLUMN_USER_FK = "user_id";
     private static final String COLUMN_RESTO_FK = "resto_id";
+    private static final String COLUMN_POSTAL = "postal";
 
     // Genre table
     private static final String COLUMN_GENRE = "genre_name";
@@ -66,7 +67,44 @@ public class RestoDAO extends SQLiteOpenHelper{
     private static final String COLUMN_RATING = "rating";
     private static final String COLUMN_lIKES = "likes";
 
+    // Create Tables Strings
+    private static final String CREATE_USERS = "create table "+TABLE_USERS+"( " +
+            COLUMN_ID+" integer primary key autoincrement, "+
+            COLUMN_USERNAME+" text not null, "+
+            COLUMN_EMAIL+" text not null);";
 
+    private static final String CREATE_GENRE = "create table "+TABLE_GENRE+"( "+
+            COLUMN_ID+" integer primary key autoincrement, "+
+            COLUMN_GENRE+" text not null);";
+
+    private static final String CREATE_RESTO = "create table "+TABLE_RESTO+"( "+
+            COLUMN_ID+" integer primary key autoincrement, "+
+            COLUMN_RESTO_NAME+" text not null, "+
+            COLUMN_PRICE_RANGE+" text, "+
+            COLUMN_PHONE+" integer, "+
+            COLUMN_EMAIL+" text, "+
+            COLUMN_CREATED+" datetime default current_timestamp, "+
+            COLUMN_MODIFIED+" datetime default current_timestamp, "+
+            COLUMN_USER_FK+" integer, "+
+            "FOREIGN KEY("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+"));";
+
+    private static final String CREATE_ADDRESS = "create table "+TABLE_GENRE+"( "+
+            COLUMN_ID+" integer primary key autoincrement, "+
+            COLUMN_CIVIC+" integer not null, "+
+            COLUMN_STREET+" text not null, "+
+            COLUMN_COUNTRY+" text not null, "+
+            COLUMN_POSTAL+" text not null, ";
+    //TODO finish tables.
+
+
+
+
+    /**
+     * Constructor for the object. Private just to let the factory method to initialize the
+     * object.
+     *
+     * @param context
+     */
     private RestoDAO(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
