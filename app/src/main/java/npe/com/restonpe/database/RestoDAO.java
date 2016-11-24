@@ -29,7 +29,7 @@ public class RestoDAO extends SQLiteOpenHelper{
     private static final String TABLE_RESTO = "resto";
     private static final String TABLE_ADDRESS = "address";
     private static final String TABLE_REVIEW = "review";
-    private static final String TABLE_USERS = "users";
+    private static final String TABLE_USERS = "user";
 
     // Shared column names between tables
     private static final String COLUMN_ID = "_id";
@@ -86,16 +86,36 @@ public class RestoDAO extends SQLiteOpenHelper{
             COLUMN_CREATED+" datetime default current_timestamp, "+
             COLUMN_MODIFIED+" datetime default current_timestamp, "+
             COLUMN_USER_FK+" integer, "+
-            "FOREIGN KEY("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+"));";
+            COLUMN_LINK+" text, "+
+            "FOREIGN KEY("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+") ON DELETE CASCADE);";
 
-    private static final String CREATE_ADDRESS = "create table "+TABLE_GENRE+"( "+
+    private static final String CREATE_ADDRESS = "create table "+TABLE_ADDRESS+"( "+
             COLUMN_ID+" integer primary key autoincrement, "+
             COLUMN_CIVIC+" integer not null, "+
             COLUMN_STREET+" text not null, "+
             COLUMN_COUNTRY+" text not null, "+
-            COLUMN_POSTAL+" text not null, ";
-    //TODO finish tables.
+            COLUMN_CITY+" text not null, "+
+            COLUMN_LONG+" real not null, "+
+            COLUMN_LAT+" real not null, "+
+            COLUMN_POSTAL+" text not null, "+
+            COLUMN_SUITE+" integer not null, "+
+            "FOREIGN KEY ("+COLUMN_RESTO_FK+") REFERENCES "+TABLE_RESTO+"("+COLUMN_ID+") ON DELETE CASCADE);";
 
+    private static final String CREATE_REVIEW = "create table "+TABLE_REVIEW+"( "+
+            COLUMN_ID+" integer primary key autoincrement, "+
+            COLUMN_TITLE+" text, "+
+            COLUMN_CONTENT+" text not null, "+
+            COLUMN_RATING+" real not null, "+
+            COLUMN_lIKES+" integer not null, "+
+            "FOREIGN KEY ("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+") ON DELETE CASCADE"+
+            "FOREIGN KEY ("+COLUMN_RESTO_FK+") REFERENCES "+TABLE_RESTO+"("+COLUMN_ID+") ON DELETE CASCADE);";
+
+    // Drop tables
+    private static final String DROP_REVIEW = "DROP TABLE IF EXISTS "+TABLE_REVIEW+" ;";
+    private static final String DROP_ADDRESS = "DROP TABLE IF EXISTS "+TABLE_ADDRESS+" ;";
+    private static final String DROP_RESTO = "DROP TABLE IF EXISTS "+TABLE_RESTO+" ;";
+    private static final String DROP_USER = "DROP TABLE IF EXISTS "+TABLE_USERS+" ;";
+    private static final String DROP_GENRE = "DROP TABLE IF EXISTS "+TABLE_GENRE+" ;";
 
 
 
@@ -137,11 +157,34 @@ public class RestoDAO extends SQLiteOpenHelper{
      */
     @Override
     public void onCreate(SQLiteDatabase database) {
-
+        database.execSQL(CREATE_GENRE);
+        database.execSQL(CREATE_USERS);
+        database.execSQL(CREATE_RESTO);
+        database.execSQL(CREATE_ADDRESS);
+        database.execSQL(CREATE_REVIEW);
+        Log.i(TAG, "onCreate() - Created all needed tables.");
     }
 
+    /**
+     * Drops all tables from the database if they exists and then calls the onCreate method in order
+     * to rebuild them in a fashion which is supported by the new version.
+     *
+     * @param database link to the device internal sqlite database.
+     * @param oldVersion integer which represents the old version.
+     * @param newVersion integer which represents the new version.
+     */
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+        Log.w(TAG, "Upgrading database from version "+oldVersion+" to version "+newVersion+". All data" +
+                " will be destroyed");
 
+        database.execSQL(DROP_REVIEW);
+        database.execSQL(DROP_ADDRESS);
+        database.execSQL(DROP_RESTO);
+        database.execSQL(DROP_USER);
+        database.execSQL(DROP_GENRE);
+
+        onCreate(database);
+        Log.i(TAG, "onUpgrade()");
     }
 }
