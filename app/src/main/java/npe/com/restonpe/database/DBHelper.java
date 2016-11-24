@@ -6,19 +6,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 /**
- * Provides read and write to the database implementation fot this application.
+ * Handles creation of the connection, creation of the tables and upgrading of the database.
+ * Does not provide any data returning methods.
  *
  * @author Danieil Skrinikov
  * @version 0.0.01
  * @since 11/23/2016
  */
-public class RestoDAO extends SQLiteOpenHelper{
+public class DBHelper extends SQLiteOpenHelper{
 
     // Tag
-    private static String TAG = "RestoDAO";
+    private static String TAG = "DBHelper";
 
     // Instance to share the database.
-    private static RestoDAO dbh;
+    private static DBHelper dbh;
 
     // Database related information.
     private static final String DATABASE_NAME = "resto.db";
@@ -125,25 +126,25 @@ public class RestoDAO extends SQLiteOpenHelper{
      *
      * @param context
      */
-    private RestoDAO(Context context) {
+    private DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**
-     * Factory method to create a RestoDAO object. Only creates the database if there is
+     * Factory method to create a DBHelper object. Only creates the database if there is
      * only one reference to it.
      *
      * @param context
      * @return DBHelper
      */
-    public static RestoDAO getDatabase(Context context) {
+    public static DBHelper getDatabase(Context context) {
 		/*
 		 * Use the application context, which will ensure that you don't
 		 * accidentally leak an Activity's context. See this article for more
 		 * information: http://bit.ly/6LRzfx
 		 */
         if (dbh == null) {
-            dbh = new RestoDAO(context.getApplicationContext());
+            dbh = new DBHelper(context.getApplicationContext());
             Log.i(TAG, "getDBHelper, dbh == null");
         }
         Log.i(TAG, "getDBHelper()");
@@ -187,4 +188,6 @@ public class RestoDAO extends SQLiteOpenHelper{
         onCreate(database);
         Log.i(TAG, "onUpgrade()");
     }
+
+
 }
