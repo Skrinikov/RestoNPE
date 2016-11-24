@@ -85,7 +85,12 @@ public class BaseActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.about) {
+        if (id == R.id.home) {
+            Log.d(TAG,"onNavigationItemSelected - home");
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+        }
+        else if (id == R.id.about) {
             Log.d(TAG,"onNavigationItemSelected - about");
             Intent intent = new Intent(this,AboutActivity.class);
             startActivity(intent);
