@@ -1,13 +1,21 @@
 package npe.com.restonpe;
 
-import android.support.v7.app.AppCompatActivity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
-
 public class MainActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_main);
         super.onCreate(savedInstanceState);
+        createFragments();
+    }
+
+    private void createFragments() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        IndexFragment fragment = new IndexFragment();
+        transaction.add(R.id.content, fragment);
+        transaction.commit();
     }
 }
