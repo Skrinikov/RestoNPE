@@ -2,8 +2,9 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import npe.com.restonpe.Fragments.AboutFragment;
 
 public class AboutActivity extends BaseActivity {
 

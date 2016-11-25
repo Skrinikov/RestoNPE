@@ -26,7 +26,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".TipActivity" />
-        <activity android:name=".AboutActivity"></activity>
+        <activity android:name=".AboutActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
 </manifest>

@@ -20,6 +20,7 @@ public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private String TAG = "BaseActivity";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,30 +85,31 @@ public class BaseActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent = null;
 
         if (id == R.id.home) {
-            Log.d(TAG,"onNavigationItemSelected - home");
-            Intent intent = new Intent(this,MainActivity.class);
-            startActivity(intent);
-        }
-        else if (id == R.id.about) {
-            Log.d(TAG,"onNavigationItemSelected - about");
-            Intent intent = new Intent(this,AboutActivity.class);
-            startActivity(intent);
+            Log.d(TAG, "onNavigationItemSelected - home");
+            intent = new Intent(this, MainActivity.class);
+        } else if (id == R.id.about) {
+            Log.d(TAG, "onNavigationItemSelected - about");
+            intent = new Intent(this, AboutActivity.class);
         } else if (id == R.id.dawson) {
-            Log.d(TAG,"onNavigationItemSelected - dawson");
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dawsoncollege.qc.ca/computer-science-technology/"));
-            startActivity(intent);
+            Log.d(TAG, "onNavigationItemSelected - dawson");
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dawsoncollege.qc.ca/computer-science-technology/"));
         } else if (id == R.id.setting) {
-
+            Log.d(TAG, "onNavigationItemSelected - setting");
+            intent = new Intent(this, SettingActivity.class);
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
 
+        if (intent != null)
+            startActivity(intent);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-       drawer.closeDrawer(GravityCompat.START);
+        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 }
