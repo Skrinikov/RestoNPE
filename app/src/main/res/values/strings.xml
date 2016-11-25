@@ -12,11 +12,13 @@
     <string name="action_dawson">Dawson College</string>
 
     <string name="course_id">420-518-DW Mobile</string>
+
+    <string name="tip_calculator">Tip Calculator</string>
+
     <string name="first_name">First name</string>
     <string name="last_name">Last name</string>
     <string name="email">Email Address</string>
     <string name="postal_code">Postal Code</string>
     <string name="save">Save</string>
     <string name="discard">Discard changes?</string>
-
 </resources>

@@ -6,14 +6,30 @@ import android.os.Bundle;
 
 import npe.com.restonpe.Fragments.AboutFragment;
 
+/**
+ * Creates an instance of the About Activity
+ *
+ * @author Uen Yi Cindy Hung
+ * @since 24/11/2016
+ * @version 1.0
+ */
 public class AboutActivity extends BaseActivity {
 
+    /**
+     * Loads the layout and changes the action bar's title.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle(R.string.action_about);
         createFragments();
     }
 
+    /**
+     * Inserts the about fragment into the content view.
+     */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();

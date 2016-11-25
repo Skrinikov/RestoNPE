@@ -13,9 +13,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
+/**
+ * Template activity for all other activity to extend. Contains the
+ * drawer menu and action bar. Most of the code is auto-generated with
+ * the drawer activity.
+ *
+ * @author Uen Yi Cindy Hung
+ * @since 24/11/2016
+ * @version 1.0
+ */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
