@@ -1,20 +1,16 @@
 package location;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-public class RestoLocationManager extends Service implements LocationListener {
+public abstract class RestoLocationManager implements LocationListener {
 
     private static final String TAG = RestoLocationManager.class.getSimpleName();
 
@@ -28,11 +24,10 @@ public class RestoLocationManager extends Service implements LocationListener {
     // The time between updates, in milliseconds
     private static final long UPDATE_TIME = 60000; // 1 minute in milliseconds
 
-    protected LocationManager locationManager;
     private Location location;
 
-    public RestoLocationManager(Activity activity) {
-        this.mContext = activity.getApplicationContext();
+    public RestoLocationManager(Context context) {
+        this.mContext = context;
     }
 
     /**
@@ -46,7 +41,7 @@ public class RestoLocationManager extends Service implements LocationListener {
     public Location getLocation() {
 
         // Get location manager service
-        locationManager = (LocationManager) mContext.getSystemService(LOCATION_SERVICE);
+        LocationManager locationManager = (LocationManager) mContext.getSystemService(Service.LOCATION_SERVICE);
 
         // Get coarse location permission granted
         boolean isCoarseLocationGranted = ContextCompat.checkSelfPermission(mContext, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -60,8 +55,10 @@ public class RestoLocationManager extends Service implements LocationListener {
 
             // Get GPS status
             boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            Log.i(TAG, "Is GPS enabled: " + isGPSEnabled);
             // Get network status
             boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+            Log.i(TAG, "Is Network Provider enabled: " + isNetworkEnabled);
 
             if (isNetworkEnabled) {
                 Log.i(TAG, "Using Network");
@@ -82,26 +79,5 @@ public class RestoLocationManager extends Service implements LocationListener {
         }
 
         return location;
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public IBinder onBind(Intent arg0) {
-        return null;
     }
 }
