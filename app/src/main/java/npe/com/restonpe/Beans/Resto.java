@@ -21,6 +21,10 @@ public class Resto {
     private long phone;
     private ArrayList<Address> address;
     private ArrayList<Review> reviews;
+
+    // Submitter info
+    private String submitterEmail;
+    private String submitterName;
     
     /**
      * Default constructor, sets the variables to default values and initializes 
@@ -182,4 +186,34 @@ public class Resto {
         this.reviews = reviews;
     }
 
+    /**
+     * Sets the email address of the submitter. So the add can be attributed
+     *
+     * @param email new email for this object.
+     */
+    public void setSubmitterEmail(String email){
+        this.submitterEmail = email;
+    }
+
+    /**
+     * Returns the email of the submitter.
+     *
+     * @return String which holds the email.
+     */
+    public String getSubmitterEmail(){
+        return submitterEmail;
+    }
+
+    /**
+     * Gets the name of the person/company who submitted it.
+     *
+     * @return
+     */
+    public String getSubmitterName() {
+        return submitterName;
+    }
+
+    public void setSubmitterName(String submitterName) {
+        this.submitterName = submitterName;
+    }
 }

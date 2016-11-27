@@ -1,25 +1,32 @@
 package npe.com.restonpe.database;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+
+import npe.com.restonpe.Beans.Address;
+import npe.com.restonpe.Beans.Resto;
+
 /**
- * Handles creation of the connection, creation of the tables and upgrading of the database.
- * Does not provide any data returning methods.
+ * Handles the creation and maintenance of the database.
+ * Provides data querying methods for the resto app context..
  *
  * @author Danieil Skrinikov
  * @version 0.0.01
  * @since 11/23/2016
  */
-public class DBHelper extends SQLiteOpenHelper{
+public class RestoDAO extends SQLiteOpenHelper{
 
     // Tag
-    private static String TAG = "DBHelper";
+    private static String TAG = "RestoDAO";
 
     // Instance to share the database.
-    private static DBHelper dbh;
+    private static RestoDAO dbh;
 
     // Database related information.
     private static final String DATABASE_NAME = "resto.db";
@@ -49,6 +56,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String COLUMN_PRICE_RANGE = "resto_price_range";
     private static final String COLUMN_LINK = "link";
     private static final String COLUMN_PHONE = "phone";
+    private static final String COLUMN_GENRE_FK = "genre_id";
 
     // Address table
     private static final String COLUMN_CIVIC = "civic";
@@ -72,7 +80,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String CREATE_USERS = "create table "+TABLE_USERS+"( " +
             COLUMN_ID+" integer primary key autoincrement, "+
             COLUMN_USERNAME+" text not null, "+
-            COLUMN_EMAIL+" text not null);";
+            COLUMN_EMAIL+" text not null unique);";
 
     private static final String CREATE_GENRE = "create table "+TABLE_GENRE+"( "+
             COLUMN_ID+" integer primary key autoincrement, "+
@@ -87,8 +95,10 @@ public class DBHelper extends SQLiteOpenHelper{
             COLUMN_CREATED+" datetime default current_timestamp, "+
             COLUMN_MODIFIED+" datetime default current_timestamp, "+
             COLUMN_USER_FK+" integer, "+
+            COLUMN_GENRE_FK+" integer, "+
             COLUMN_LINK+" text, "+
-            "FOREIGN KEY("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+") ON DELETE CASCADE);";
+            "FOREIGN KEY("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+") ON DELETE CASCADE);"+
+            "FOREIGN KEY("+COLUMN_GENRE_FK+") REFERENCES "+TABLE_RESTO+"("+COLUMN_ID+") ON DELETE CASCADE);";
 
     private static final String CREATE_ADDRESS = "create table "+TABLE_ADDRESS+"( "+
             COLUMN_ID+" integer primary key autoincrement, "+
@@ -118,6 +128,10 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String DROP_USER = "DROP TABLE IF EXISTS "+TABLE_USERS+" ;";
     private static final String DROP_GENRE = "DROP TABLE IF EXISTS "+TABLE_GENRE+" ;";
 
+    // Query Strings
+    private static final String GET_GENRE = COLUMN_GENRE+"=?";
+    private static final String GET_USER = COLUMN_EMAIL+"=?";
+
 
 
     /**
@@ -126,25 +140,25 @@ public class DBHelper extends SQLiteOpenHelper{
      *
      * @param context
      */
-    private DBHelper(Context context) {
+    private RestoDAO(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     /**
-     * Factory method to create a DBHelper object. Only creates the database if there is
+     * Factory method to create a RestoDAO object. Only creates the database if there is
      * only one reference to it.
      *
      * @param context
-     * @return DBHelper
+     * @return RestoDAO
      */
-    public static DBHelper getDatabase(Context context) {
+    public static RestoDAO getDatabase(Context context) {
 		/*
 		 * Use the application context, which will ensure that you don't
 		 * accidentally leak an Activity's context. See this article for more
 		 * information: http://bit.ly/6LRzfx
 		 */
         if (dbh == null) {
-            dbh = new DBHelper(context.getApplicationContext());
+            dbh = new RestoDAO(context.getApplicationContext());
             Log.i(TAG, "getDBHelper, dbh == null");
         }
         Log.i(TAG, "getDBHelper()");
@@ -187,6 +201,123 @@ public class DBHelper extends SQLiteOpenHelper{
 
         onCreate(database);
         Log.i(TAG, "onUpgrade()");
+    }
+
+    /**
+     * Inserts the restaurant into the restaurant table.
+     * @param resto
+     */
+    public void addRestaurant(Resto resto) throws IllegalArgumentException{
+        long restoId = insertResto(resto);
+        insertAddress(resto.getAddress(),restoId);
+    }
+
+    /**
+     * Adds all the addresses
+     *
+     * @param address
+     * @param restoId
+     */
+    private void insertAddress(ArrayList<Address> address, long restoId) {
+        if(address != null){
+            ContentValues cv;
+            for(Address addr : address){
+                cv = new ContentValues();
+
+                cv.put();
+            }
+        }
+    }
+
+    /**
+     * Adds the restaurant information to the rest table in the local database.
+     *
+     * @param resto bean which holds information about the restaurant.
+     * @return newly created id for the restaurant row.
+     */
+    private long insertResto(Resto resto) throws IllegalArgumentException {
+
+        //validateBean(resto);
+
+        long genreId = getGenreID(resto.getGenre());
+        long userId = getUserId(resto.getGenre());
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_RESTO_NAME,resto.getName());
+        cv.put(COLUMN_EMAIL,resto.getEmail());
+        cv.put(COLUMN_PHONE,resto.getPhone());
+        cv.put(COLUMN_LINK,resto.getLink());
+        cv.put(COLUMN_PRICE_RANGE,resto.getPriceRange());
+        cv.put(COLUMN_USER_FK,userId);
+        cv.put(COLUMN_GENRE_FK,genreId);
+
+        long id = getWritableDatabase().insert(TABLE_RESTO, null, cv);
+        return id;
+    }
+
+    /**
+     * Checks if all the needed fields are initialized and if they are not empty.
+     * @throws IllegalArgumentException if any of the required fields is not initialized.
+     */
+    private void validateBean(Resto r) {
+
+        if(r.getName() == null || r.getName().length() < 1)
+            throw  new IllegalArgumentException(COLUMN_RESTO_NAME+" cannot be empty");
+        if(r.getEmail() == null || r.getEmail().length() < 1)
+            throw  new IllegalArgumentException(COLUMN_EMAIL+" cannot be empty");
+        if(r.getPriceRange() == null || r.getPriceRange().length() < 1)
+            throw  new IllegalArgumentException(COLUMN_PRICE_RANGE+" cannot be empty");
+        if(r.getLink() == null || r.getLink().length() < 1)
+            throw  new IllegalArgumentException(COLUMN_LINK+" cannot be empty");
+        if(r.getSubmitterEmail() == null || r.getSubmitterEmail().length() < 1)
+            throw  new IllegalArgumentException(COLUMN_RESTO_NAME+" cannot be empty");
+    }
+
+    /**
+     * Fetches the primary key for a given genre from the database. If it does not exists, inserts the
+     * genre into the databsase and then returns the newly created id of the genre.
+     *
+     * @param genre Genre of the restaurant.
+     * @return primary key of that genre row.
+     */
+    private long getGenreID(String genre) throws  IllegalArgumentException{
+
+        if(genre.length() < 1)
+            throw new IllegalArgumentException("Cannot add empty genre.");
+
+        long id = -1;
+
+        Cursor c = getReadableDatabase().query(TABLE_GENRE,new String[]{COLUMN_ID},GET_GENRE,new String[]{genre}, null,null, null, null);
+        id = c.getInt(1);
+
+        if(id < 0){
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_GENRE,genre);
+            id = getWritableDatabase().insert(TABLE_GENRE,null,cv);
+        }
+
+        return id;
+    }
+
+    /**
+     * Adds a user to the database or fetches the id of the user with a matching email address.
+     *
+     * @param submitterEmail email a
+     */
+    private long getUserId(String submitterEmail) {
+        long id = -1;
+
+        Cursor c = getReadableDatabase().query(TABLE_USERS,new String[]{COLUMN_ID},GET_USER,new String[]{submitterEmail}, null,null, null, null);
+        id = c.getInt(1);
+
+        if(id < 0){
+            ContentValues cv = new ContentValues();
+            cv.put(COLUMN_GENRE,submitterEmail);
+            id = getWritableDatabase().insert(TABLE_USERS,null,cv);
+        }
+
+        return id;
     }
 
 
