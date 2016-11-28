@@ -48,7 +48,7 @@ public class NearRestosActivity extends AppCompatActivity {
 
         // TODO With the long/lat use Zomato API
         RestoZomato restoZomato = new RestoZomato(this);
-        restoZomato.getRestos(location.getLatitude(), location.getLongitude());
+//        restoZomato.getRestos(location.getLatitude(), location.getLongitude());
     }
 
     private void displayInformation(Location location) {
