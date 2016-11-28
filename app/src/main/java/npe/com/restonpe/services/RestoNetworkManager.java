@@ -1,4 +1,4 @@
-package npe.com.restonpe.services;
+package npe.com.restonpe.Services;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
