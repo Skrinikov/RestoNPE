@@ -1,4 +1,4 @@
-package location;
+package npe.com.restonpe.services;
 
 import android.Manifest;
 import android.app.Service;
@@ -20,7 +20,6 @@ public abstract class RestoLocationManager implements LocationListener {
 
     // The distance required to travel to update, in meters
     private static final long UPDATE_DISTANCE = 10; // 10 meters
-
     // The time between updates, in milliseconds
     private static final long UPDATE_TIME = 60000; // 1 minute in milliseconds
 

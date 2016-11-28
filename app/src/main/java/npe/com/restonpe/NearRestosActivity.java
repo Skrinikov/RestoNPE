@@ -6,7 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
-import location.RestoLocationManager;
+import npe.com.restonpe.services.RestoLocationManager;
+import npe.com.restonpe.zomato.RestoZomato;
 
 public class NearRestosActivity extends AppCompatActivity {
 
@@ -42,9 +43,12 @@ public class NearRestosActivity extends AppCompatActivity {
             }
         };
 
-        displayInformation(restoLocationManager.getLocation());
+        Location location = restoLocationManager.getLocation();
+        displayInformation(location);
 
         // TODO With the long/lat use Zomato API
+        RestoZomato restoZomato = new RestoZomato(this);
+        restoZomato.getRestos(location.getLatitude(), location.getLongitude());
     }
 
     private void displayInformation(Location location) {
