@@ -216,7 +216,7 @@ public class RestoDAO extends SQLiteOpenHelper {
         insertReviews(resto.getReviews(), restoId);
     }
 
-    //name, genre, rating
+    //name, genre, rating, city, price range
     public void getAllRestaurantsSmall(){
 
     }
