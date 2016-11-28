@@ -30,6 +30,7 @@
         <activity android:name=".SettingActivity" />
         <activity android:name=".FindRestosActivity" />
         <activity android:name=".NearRestosActivity" />
+        <activity android:name=".SettingActivity"></activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />

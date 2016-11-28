@@ -1,7 +1,7 @@
 package npe.com.restonpe;
 
-import android.Manifest;
-import android.content.Intent;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -9,19 +9,36 @@ import android.view.View;
 
 import npe.com.restonpe.services.RestoLocationManager;
 
-public class MainActivity extends AppCompatActivity {
+import npe.com.restonpe.Fragments.IndexFragment;
 
+/**
+ * Creates an instance of the Main Activity
+ *
+ * @author Uen Yi Cindy Hung
+ * @since 24/11/2016
+ * @version 1.0
+ */
+public class MainActivity extends BaseActivity {
+
+    /**
+     * Loads the layout.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        // Request permission
-        ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_COARSE_LOCATION }, RestoLocationManager.LOCATION_MANAGER_REQUEST_CODE );
+	createFragments();
     }
-
-    public void buttonClick(View v) {
-        Intent intent = new Intent(this, NearRestosActivity.class);
-        startActivity(intent);
+    
+    /**
+     * Inserts the index fragment into the content view.
+     */
+    private void createFragments() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        IndexFragment fragment = new IndexFragment();
+        transaction.add(R.id.content, fragment);
+        transaction.commit();
     }
 }
