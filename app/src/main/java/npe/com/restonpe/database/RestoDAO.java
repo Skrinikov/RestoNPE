@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import npe.com.restonpe.Beans.Address;
 import npe.com.restonpe.Beans.Resto;
+import npe.com.restonpe.Beans.Review;
 
 /**
  * Handles the creation and maintenance of the database.
@@ -118,6 +119,8 @@ public class RestoDAO extends SQLiteOpenHelper{
             COLUMN_CONTENT+" text not null, "+
             COLUMN_RATING+" real not null, "+
             COLUMN_lIKES+" integer not null, "+
+            COLUMN_USER_FK+" integer, "+
+            COLUMN_RESTO_FK+" integer, "+
             "FOREIGN KEY ("+COLUMN_USER_FK+") REFERENCES "+TABLE_USERS+"("+COLUMN_ID+") ON DELETE CASCADE"+
             "FOREIGN KEY ("+COLUMN_RESTO_FK+") REFERENCES "+TABLE_RESTO+"("+COLUMN_ID+") ON DELETE CASCADE);";
 
@@ -210,13 +213,42 @@ public class RestoDAO extends SQLiteOpenHelper{
     public void addRestaurant(Resto resto) throws IllegalArgumentException{
         long restoId = insertResto(resto);
         insertAddress(resto.getAddress(),restoId);
+        insertReviews(resto.getReviews(),restoId);
     }
 
+
     /**
-     * Adds all the addresses
+     * Adds all the reviews for this restaurant to the database.
      *
-     * @param address
-     * @param restoId
+     * @param reviews List of reviews that this restaurant has.
+     * @param restoId primary key for the restaurant to reference.
+     */
+    private void insertReviews(ArrayList<Review> reviews, long restoId) {
+        if(reviews != null){
+            ContentValues cv;
+            for(Review r : reviews){
+                cv = new ContentValues();
+
+                //cv.put(COLUMN_TITLE);
+
+            }
+        }
+    }
+
+    /*
+            COLUMN_TITLE+" text, "+
+            COLUMN_CONTENT+" text not null, "+
+            COLUMN_RATING+" real not null, "+
+            COLUMN_lIKES+" integer not null, "+
+            COLUMN_USER_FK+" integer, "+
+            COLUMN_RESTO_FK+" integer, "+
+    */
+
+    /**
+     * Adds all the addresses in the bean to the the database.
+     *
+     * @param address List of addresses fir the given restaurant.
+     * @param restoId primary kry of a restaurant to reference.
      */
     private void insertAddress(ArrayList<Address> address, long restoId) {
         if(address != null){
@@ -224,7 +256,17 @@ public class RestoDAO extends SQLiteOpenHelper{
             for(Address addr : address){
                 cv = new ContentValues();
 
-                cv.put();
+                cv.put(COLUMN_CIVIC, addr.getCivic());
+                cv.put(COLUMN_STREET, addr.getStreet());
+                cv.put(COLUMN_COUNTRY, addr.getCountry());
+                cv.put(COLUMN_CITY, addr.getCity());
+                cv.put(COLUMN_POSTAL, addr.getPostal());
+                cv.put(COLUMN_LONG, addr.getLongitude());
+                cv.put(COLUMN_LAT, addr.getLatitude());
+                cv.put(COLUMN_SUITE, addr.getSuite());
+                cv.put(COLUMN_RESTO_FK, restoId);
+
+                getWritableDatabase().insert(TABLE_ADDRESS, null, cv);
             }
         }
     }

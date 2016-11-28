@@ -13,6 +13,7 @@ public class Address {
     private String street;
     private String city;
     private String country;
+    private String postal;
     private double latitude;
     private double longitude;
     private int suit;
@@ -143,7 +144,7 @@ public class Address {
      *
      * @return value of the internal suit variable.
      */
-    public int getSuit() {
+    public int getSuite() {
         return suit;
     }
 
@@ -152,8 +153,25 @@ public class Address {
      *
      * @param suit
      */
-    public void setSuit(int suit) {
+    public void setSuite(int suit) {
         this.suit = suit;
     }
 
+    /**
+     * Fetches the postal code from the bean.
+     *
+     * @return string which holds the postal code for the given address.
+     */
+    public String getPostal() {
+        return postal;
+    }
+
+    /**
+     * Changes the value of the postal code with the provided value.
+     *
+     * @param postal new value for the postal code.
+     */
+    public void setPostal(String postal) {
+        this.postal = postal;
+    }
 }
