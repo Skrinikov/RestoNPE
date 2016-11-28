@@ -25,6 +25,10 @@ public class Review {
         likes = 0;
     }
 
+    /**
+     *
+     * @return
+     */
     public String getTitle() {
         return title;
     }
