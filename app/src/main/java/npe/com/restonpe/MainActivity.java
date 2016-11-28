@@ -2,12 +2,9 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-
-import npe.com.restonpe.services.RestoLocationManager;
 
 import npe.com.restonpe.Fragments.IndexFragment;
 
@@ -40,5 +37,25 @@ public class MainActivity extends BaseActivity {
         IndexFragment fragment = new IndexFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    /**
+     * Launches the NearRestos activity
+     *
+     * @param v The View
+     */
+    public void nearRestos(View v) {
+        Intent intent = new Intent(this, NearRestosActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * Launches the FindRestos activity
+     *
+     * @param v The View
+     */
+    public void findRestos(View v) {
+        Intent intent = new Intent(this, FindRestosActivity.class);
+        startActivity(intent);
     }
 }
