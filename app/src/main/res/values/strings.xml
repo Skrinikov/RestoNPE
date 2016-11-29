@@ -25,4 +25,6 @@
     <string name="title_activity_restos_find">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
+
+    <string name="setting_saved">Changes have been saved.</string>
 </resources>
