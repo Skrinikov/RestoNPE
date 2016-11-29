@@ -13,8 +13,8 @@ import npe.com.restonpe.Fragments.SettingFragment;
  * Creates an instance of the Setting Activity
  *
  * @author Uen Yi Cindy Hung
- * @since 24/11/2016
- * @version 1.0
+ * @since 29/11/2016
+ * @version 1.1
  */
 public class SettingActivity extends BaseActivity {
 
@@ -41,12 +41,24 @@ public class SettingActivity extends BaseActivity {
         transaction.commit();
     }
 
+    /**
+     * Inflates the setting menu.
+     *
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.setting_menu, menu);
         return true;
     }
 
+    /**
+     * Sets up the actions when an item in the menu is clicked.
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
