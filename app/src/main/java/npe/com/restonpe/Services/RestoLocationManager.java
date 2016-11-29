@@ -10,11 +10,16 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+/**
+ * An abstract class that handles the location services.
+ *
+ * @author Jeegna Patel
+ * @since 25/11/2016
+ * @version 1.0
+ */
 public abstract class RestoLocationManager implements LocationListener {
 
     private static final String TAG = RestoLocationManager.class.getSimpleName();
-
-    public static final int LOCATION_MANAGER_REQUEST_CODE = 1;
 
     private final Context mContext;
 
@@ -25,6 +30,11 @@ public abstract class RestoLocationManager implements LocationListener {
 
     private Location location;
 
+    /**
+     * Creates a location manager for the Resto App
+     *
+     * @param context The {@code Context} of the calling {@code Activity}
+     */
     public RestoLocationManager(Context context) {
         this.mContext = context;
     }
