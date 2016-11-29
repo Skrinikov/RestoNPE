@@ -38,23 +38,4 @@ public class MainActivity extends BaseActivity {
         transaction.add(R.id.content, fragment);
         transaction.commit();
     }
-    /**
-     * Launches the NearRestos activity
-     *
-     * @param v The View
-     */
-    public void nearRestos(View v) {
-        Intent intent = new Intent(this, NearRestosActivity.class);
-        startActivity(intent);
-    }
-
-    /**
-     * Launches the FindRestos activity
-     *
-     * @param v The View
-     */
-    public void findRestos(View v) {
-        Intent intent = new Intent(this, FindRestosActivity.class);
-        startActivity(intent);
-    }
 }
