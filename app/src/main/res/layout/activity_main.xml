@@ -39,8 +39,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/temp"
-                style="@style/ImageViewPadding"
-                android:onClick="findRestos"/>
+                style="@style/ImageViewPadding"/>
 
         </LinearLayout>
 
@@ -57,11 +56,10 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/temp"
-                style="@style/ImageViewPadding"
-                android:onClick="nearRestos"/>
+                style="@style/ImageViewPadding"/>
 
             <ImageView
-                android:id="@+id/tipCalc"
+                android:id="@+id/tipCalculator"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"

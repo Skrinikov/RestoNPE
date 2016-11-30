@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import npe.com.restonpe.Fragments.AboutFragment;
+import npe.com.restonpe.Fragments.TipFragment;
 
 /**
  * Creates an instance of the About Activity
@@ -35,8 +36,8 @@ public class TipActivity extends BaseActivity {
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        //AboutFragment fragment = new AboutFragment();
-        //transaction.add(R.id.content, fragment);
+        TipFragment fragment = new TipFragment();
+        transaction.add(R.id.content, fragment);
         transaction.commit();
     }
 }

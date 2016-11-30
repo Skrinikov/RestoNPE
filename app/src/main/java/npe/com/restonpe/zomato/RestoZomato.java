@@ -1,4 +1,4 @@
-package npe.com.restonpe.zomato;
+package npe.com.restonpe.Zomato;
 
 import android.content.Context;
 import android.util.JsonReader;
@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import npe.com.restonpe.services.RestoNetworkManager;
+import npe.com.restonpe.Services.RestoNetworkManager;
 
 public class RestoZomato {
 

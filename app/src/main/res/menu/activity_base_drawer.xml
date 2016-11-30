@@ -15,8 +15,12 @@
             android:icon="@drawable/ic_menu_school"
             android:title="@string/action_dawson" />
         <item
+            android:id="@+id/tip"
+            android:icon="@drawable/ic_menu_tip"
+            android:title="@string/tip_calculator" />
+        <item
             android:id="@+id/setting"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_setting"
             android:title="@string/action_settings" />
     </group>
 

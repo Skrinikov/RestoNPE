@@ -1,11 +1,13 @@
 package npe.com.restonpe;
 
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
 
+import npe.com.restonpe.Fragments.NearRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.Zomato.RestoZomato;
 
@@ -30,7 +32,8 @@ public class NearRestosActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_near_restos);
+        getSupportActionBar().setTitle(R.string.title_activity_restos_near);
+        createFragments();
 
         RestoLocationManager restoLocationManager = new RestoLocationManager(this) {
             @Override
@@ -82,5 +85,16 @@ public class NearRestosActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.textView2)).setText("Location not found");
             Log.i(TAG, "Location was not found");
         }
+    }
+
+    /**
+     * Inserts the nearresto fragment into the content view.
+     */
+    private void createFragments() {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        NearRestoFragment fragment = new NearRestoFragment();
+        transaction.add(R.id.content, fragment);
+        transaction.commit();
     }
 }

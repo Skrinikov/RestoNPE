@@ -2,39 +2,28 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
-import npe.com.restonpe.Fragments.IndexFragment;
+import npe.com.restonpe.Fragments.AddRestoFragment;
+import npe.com.restonpe.Fragments.FavRestoFragment;
 
-/**
- * Creates an instance of the Main Activity
- *
- * @author Uen Yi Cindy Hung
- * @since 24/11/2016
- * @version 1.0
- */
-public class MainActivity extends BaseActivity {
+public class FavRestoActivity extends BaseActivity {
 
-    /**
-     * Loads the layout.
-     *
-     * @param savedInstanceState
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	createFragments();
+        getSupportActionBar().setTitle(R.string.title_activity_restos_fav);
+        createFragments();
     }
-    
+
     /**
-     * Inserts the index fragment into the content view.
+     * Inserts the findresto fragment into the content view.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        IndexFragment fragment = new IndexFragment();
+        FavRestoFragment fragment = new FavRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
     }
