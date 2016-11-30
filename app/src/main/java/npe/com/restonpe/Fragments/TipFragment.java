@@ -14,9 +14,21 @@ import npe.com.restonpe.R;
 
 public class TipFragment extends Fragment{
 
+    /**
+     * source: https://developer.android.com/guide/components/fragments.html
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_tip, container, false);
     }
+
+    /**
+     * source: http://www.imore.com/best-check-splitting-and-tip-apps-iphone-plates-gratuity-tab-and-more
+     */
 }

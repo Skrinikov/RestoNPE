@@ -28,6 +28,8 @@ public class IndexFragment extends Fragment {
     /**
      * Inflates a layout as the content of the MainActivity.
      *
+     * source: https://developer.android.com/guide/components/fragments.html
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

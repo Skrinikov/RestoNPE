@@ -27,6 +27,8 @@ public class SettingFragment extends Fragment {
     /**
      * Inflates a layout to be the content layout of the SettingActivity.
      *
+     * source: https://developer.android.com/guide/components/fragments.html
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

@@ -1,4 +1,4 @@
-package npe.com.restonpe.Services;
+package npe.com.restonpe.services;
 
 import android.Manifest;
 import android.app.Service;
