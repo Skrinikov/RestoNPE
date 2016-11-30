@@ -8,9 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import npe.com.restonpe.Beans.Address;
 import npe.com.restonpe.Beans.Resto;
+import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Beans.Review;
 
 /**
@@ -216,15 +218,67 @@ public class RestoDAO extends SQLiteOpenHelper {
         insertReviews(resto.getReviews(), restoId);
     }
 
-    //name, genre, rating, city, price range
-    public void getAllRestaurantsSmall(){
+    /**
+     * Fetches a small portion of the information on all restaurants in a database and stores it into
+     * a list.
+     *
+     * @return limited data for each restaurant in the database.
+     */
+    public List<RestoItem> getAllRestaurantsSmall(){
+        Cursor c = getReadableDatabase().query(TABLE_RESTO,new String[]{COLUMN_ID, COLUMN_RESTO_NAME,COLUMN_PRICE_RANGE},null,null,null,null,null);
+        List<RestoItem> restos = new ArrayList<>();
+        RestoItem temp;
+        while(c.moveToNext()){
+            temp = new RestoItem();
+            temp.setId(c.getInt(1));
+            temp.setName(c.getString(2));
+            temp.setPriceRange(c.getString(3));
+            getAddressForResto(temp);
+            //getRatingForResto(temp);
+        }
+        return restos;
+    }
 
+    public Resto getSignleRestaurant(int id){
+        if(id < 1)
+            return null;
+        Resto r = new Resto();
+
+        Cursor c = getReadableDatabase().query(TABLE_RESTO,null,COLUMN_ID+"?",new String[]{id+""},null,null,null);
+
+        if(c.moveToNext()){
+            
+        }
+        return r;
     }
 
     /*
       Private Methods.
     ------------------------------------------------------------------------------------------------
      */
+
+    private void getRatingForResto(RestoItem temp) {
+        int id = temp.getId();
+
+        // Ask tricia.
+    }
+
+    /**
+     * Fetches tge city, longitude and latitude for a given restaurant.
+     *
+     * @param temp
+     */
+    private void getAddressForResto(RestoItem temp) {
+        int id = temp.getId();
+
+        Cursor c = getReadableDatabase().query(TABLE_ADDRESS,new String[]{COLUMN_CITY,COLUMN_LONG,COLUMN_LAT},COLUMN_ID+"=?",new String[]{id+""},null,null,null,"1");
+
+        if(c.moveToNext()){
+            temp.setCity(c.getString(1));
+            temp.setLongitude(c.getDouble(2));
+            temp.setLatitude(c.getDouble(3));
+        }
+    }
 
 
     /**

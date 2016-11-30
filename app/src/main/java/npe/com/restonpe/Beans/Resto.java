@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Resto {
 
     // Resto
+    private int id;
     private String name;
     private String genre;
     private String priceRange;
@@ -31,6 +32,7 @@ public class Resto {
      * other beans.
      */
     public Resto(){
+        id = -1;
         name = "";
         genre = "";
         priceRange = "";
@@ -213,7 +215,19 @@ public class Resto {
         return submitterName;
     }
 
+    /**
+     * Sets the name of the person who submitted it.
+     * @param submitterName
+     */
     public void setSubmitterName(String submitterName) {
         this.submitterName = submitterName;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
