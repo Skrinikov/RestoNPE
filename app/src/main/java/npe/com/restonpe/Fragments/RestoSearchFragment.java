@@ -12,7 +12,7 @@ import npe.com.restonpe.R;
  * Created by Hung on 11/29/2016.
  */
 
-public class FindRestoFragment extends Fragment {
+public class RestoSearchFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

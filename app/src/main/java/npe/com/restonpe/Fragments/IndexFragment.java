@@ -9,8 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import npe.com.restonpe.FindRestosActivity;
-import npe.com.restonpe.MainActivity;
+import npe.com.restonpe.RestoSearchActivity;
 import npe.com.restonpe.NearRestosActivity;
 import npe.com.restonpe.R;
 import npe.com.restonpe.TipActivity;
@@ -90,7 +89,7 @@ public class IndexFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), FindRestosActivity.class);
+                Intent intent = new Intent(getActivity(), RestoSearchActivity.class);
                 startActivity(intent);
             }
         });

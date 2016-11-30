@@ -4,17 +4,17 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
-import npe.com.restonpe.Fragments.FindRestoFragment;
+import npe.com.restonpe.Fragments.RestoSearchFragment;
 
 /**
- * Creates an instance of the FindRestos Activity. This {@code Activity} will allow the user to
- * find restaurants from the Zomato API.
+ * Creates an instance of the RestoSearch Activity. This {@code Activity} will allow the user to
+ * find restaurants using the Zomato API.
  *
  * @author Jeegna Patel
  * @since 21/11/2016
  * @version 1.0
  */
-public class FindRestosActivity extends BaseActivity {
+public class RestoSearchActivity extends BaseActivity {
 
     /**
      * Creates the {@code Activity}.
@@ -24,7 +24,7 @@ public class FindRestosActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.title_activity_restos_find);
+        getSupportActionBar().setTitle(R.string.title_activity_search_restos);
         createFragments();
     }
 
@@ -34,7 +34,7 @@ public class FindRestosActivity extends BaseActivity {
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        FindRestoFragment fragment = new FindRestoFragment();
+        RestoSearchFragment fragment = new RestoSearchFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
     }

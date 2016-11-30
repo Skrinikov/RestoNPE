@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
@@ -14,8 +15,8 @@ import android.util.Log;
  * An abstract class that handles the location services.
  *
  * @author Jeegna Patel
- * @since 25/11/2016
  * @version 1.0
+ * @since 25/11/2016
  */
 public abstract class RestoLocationManager implements LocationListener {
 
@@ -88,5 +89,20 @@ public abstract class RestoLocationManager implements LocationListener {
         }
 
         return location;
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        Log.i(TAG, provider + " was disabled");
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        Log.i(TAG, provider + " was enabled");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+        Log.i(TAG, "Status of " + provider + " changed to " + status);
     }
 }

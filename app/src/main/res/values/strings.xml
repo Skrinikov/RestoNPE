@@ -22,7 +22,7 @@
     <string name="discard">Discard changes?</string>
 
     <string name="title_activity_restos_near">Restaurants Nearby</string>
-    <string name="title_activity_restos_find">Find a Restaurant</string>
+    <string name="title_activity_search_restos">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
 
