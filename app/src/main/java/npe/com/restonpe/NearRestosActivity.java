@@ -20,7 +20,7 @@ import npe.com.restonpe.Zomato.RestoZomato;
  * @version 1.0
  * @since 21/11/2016
  */
-public class NearRestosActivity extends AppCompatActivity {
+public class NearRestosActivity extends BaseActivity {
 
     private static final String TAG = NearRestosActivity.class.getSimpleName();
 
@@ -47,6 +47,7 @@ public class NearRestosActivity extends AppCompatActivity {
             @Override
             public void onProviderDisabled(String provider) {
                 Log.i(TAG, provider + " was disabled");
+
             }
 
             @Override
@@ -78,11 +79,11 @@ public class NearRestosActivity extends AppCompatActivity {
         if (location != null) {
             Log.i(TAG, location.getLatitude() + " " + location.getLongitude());
 
-            ((TextView) findViewById(R.id.textView)).setText("Latitude " + location.getLatitude());
-            ((TextView) findViewById(R.id.textView2)).setText("Longitude " + location.getLongitude());
+            ((TextView) findViewById(R.id.textView)).setText(String.format(getString(R.string.latitude), location.getLatitude()));
+            ((TextView) findViewById(R.id.textView2)).setText(String.format(getString(R.string.longitude), location.getLongitude()));
         } else {
-            ((TextView) findViewById(R.id.textView)).setText("Location not found");
-            ((TextView) findViewById(R.id.textView2)).setText("Location not found");
+            ((TextView) findViewById(R.id.textView)).setText(getString(R.string.location_not_found));
+            ((TextView) findViewById(R.id.textView2)).setText(getString(R.string.location_not_found));
             Log.i(TAG, "Location was not found");
         }
     }

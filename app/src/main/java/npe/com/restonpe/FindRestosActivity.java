@@ -4,6 +4,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 
+import npe.com.restonpe.Fragments.FindRestoFragment;
+
 /**
  * Creates an instance of the FindRestos Activity. This {@code Activity} will allow the user to
  * find restaurants from the Zomato API.
@@ -12,7 +14,7 @@ import android.os.Bundle;
  * @since 21/11/2016
  * @version 1.0
  */
-public class FindRestosActivity extends AppCompatActivity {
+public class FindRestosActivity extends BaseActivity {
 
     /**
      * Creates the {@code Activity}.

@@ -11,7 +11,7 @@
     <string name="action_about">About</string>
     <string name="action_dawson">Dawson College</string>
 
-    <string name="course_id">420-518-DW Mobile</string>
+    <string name="course_id">420&#8211;518&#8211;DW Mobile</string>
 
     <string name="tip_calculator">Tip Calculator</string>
 
@@ -21,10 +21,14 @@
     <string name="save">Save</string>
     <string name="discard">Discard changes?</string>
 
-    <string name="title_activity_restos_near">RestosNearActivity</string>
+    <string name="title_activity_restos_near">Restaurants Nearby</string>
     <string name="title_activity_restos_find">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
 
     <string name="setting_saved">Changes have been saved.</string>
+
+    <string name="location_not_found">Location not found</string>
+    <string name="latitude">Latitude: %1$f</string>
+    <string name="longitude">Longitude: %1$f</string>
 </resources>
