@@ -5,16 +5,29 @@ import android.app.FragmentTransaction;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
 
 import npe.com.restonpe.Fragments.NearRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
-import npe.com.restonpe.Zomato.RestoZomato;
+import npe.com.restonpe.Services.RestoNetworkManager;
 
+/**
+ * Creates an instance of the NearRestos Activity. This {@code Activity} will show the user the
+ * restaurants nearest to their current location, or an inputted postal code, according to the
+ * Zomatp API.
+ *
+ * @author Jeegna Patel
+ * @version 1.0
+ * @since 21/11/2016
+ */
 public class NearRestosActivity extends BaseActivity {
 
     private static final String TAG = NearRestosActivity.class.getSimpleName();
 
+    /**
+     * Creates the {@code Activity}.
+     *
+     * @param savedInstanceState The {@code Bundle} from which to retrieve the saved values
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,41 +42,31 @@ public class NearRestosActivity extends BaseActivity {
 
                 displayInformation(location);
             }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Log.i(TAG, provider + " was disabled");
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-                Log.i(TAG, provider + " was enabled");
-            }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-                Log.i(TAG, "Status of " + provider + " changed to " + status);
-            }
         };
 
         Location location = restoLocationManager.getLocation();
         displayInformation(location);
 
-        // TODO With the long/lat use Zomato API
-        RestoZomato restoZomato = new RestoZomato(this);
-        restoZomato.getRestos(location.getLatitude(), location.getLongitude());
+        RestoNetworkManager restoNetworkManager = new RestoNetworkManager(this);
+        // TODO give getRestos something to display the information on
+        restoNetworkManager.getRestos(location.getLatitude(), location.getLongitude(), null);
     }
 
+    /**
+     * Displays the latitude and longitude on the screen.
+     *
+     * @param location The location information to display on the screen
+     */
+    // FIXME This method is temporary. It is only used in phase 1.
     private void displayInformation(Location location) {
         if (location != null) {
-            Log.i(TAG, location.getLatitude() + " " + location.getLongitude());
-
-            ((TextView)findViewById(R.id.textView)).setText("Latitude " + location.getLatitude());
-            ((TextView)findViewById(R.id.textView2)).setText("Longitude " + location.getLongitude());
+            Log.i(TAG, "Location found: " + location.toString());
+//            ((TextView) findViewById(R.id.textView)).setText(String.format(getString(R.string.latitude), location.getLatitude()));
+//            ((TextView) findViewById(R.id.textView2)).setText(String.format(getString(R.string.longitude), location.getLongitude()));
         } else {
-            ((TextView)findViewById(R.id.textView)).setText("Location not found");
-            ((TextView)findViewById(R.id.textView2)).setText("Location not found");
             Log.i(TAG, "Location was not found");
+//            ((TextView) findViewById(R.id.textView)).setText(getString(R.string.location_not_found));
+//            ((TextView) findViewById(R.id.textView2)).setText(getString(R.string.location_not_found));
         }
     }
 
