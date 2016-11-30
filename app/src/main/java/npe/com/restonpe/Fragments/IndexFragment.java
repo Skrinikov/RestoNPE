@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import npe.com.restonpe.AddRestoActivity;
+import npe.com.restonpe.FavRestoActivity;
 import npe.com.restonpe.RestoSearchActivity;
 import npe.com.restonpe.NearRestosActivity;
 import npe.com.restonpe.R;
@@ -63,10 +65,8 @@ public class IndexFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"favResto",Toast.LENGTH_LONG).show();
-                /*
                 Intent intent = new Intent(getActivity(), FavRestoActivity.class);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 
@@ -104,10 +104,8 @@ public class IndexFragment extends Fragment {
              */
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(),"addResto",Toast.LENGTH_LONG).show();
-                /*
                 Intent intent = new Intent(getActivity(), AddRestoActivity.class);
-                startActivity(intent);*/
+                startActivity(intent);
             }
         });
 
