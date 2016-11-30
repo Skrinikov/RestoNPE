@@ -39,9 +39,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="20dp"
             android:layout_weight="1"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -55,16 +55,16 @@
                     android:layout_height="0dp"
                     android:layout_weight="3"
                     android:gravity="center"
-                    android:text="@string/tip_default"
                     android:inputType="number"
-                    android:textSize="30sp"/>
+                    android:text="@string/tip_default"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/tip_percent"/>
+                    android:text="@string/tip_percent" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,28 +73,29 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="3"
-                android:gravity="center"
-                android:text="@string/person_default"
-                android:inputType="number"
-                android:textSize="30sp"/>
+                <EditText
+                    android:id="@+id/num_of_people"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:text="@string/person_default"
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/num_person"/>
+                    android:text="@string/num_person" />
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             android:layout_weight="1">
 
             <LinearLayout
@@ -108,17 +109,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3"
+                    android:focusable="false"
                     android:gravity="center"
                     android:text="@string/hint_dollar"
-                    android:focusable="false"
-                    android:textSize="30sp"/>
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/tip_amount"/>
+                    android:text="@string/tip_amount" />
             </LinearLayout>
 
             <LinearLayout
@@ -132,21 +133,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="3"
+                    android:focusable="false"
                     android:gravity="center"
                     android:text="@string/hint_dollar"
-                    android:textSize="30sp"
-                    android:focusable="false"/>
+                    android:textSize="30sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="1"
                     android:gravity="center"
-                    android:text="@string/amount_person"/>
+                    android:text="@string/amount_person" />
             </LinearLayout>
-
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/grand_total"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="3"
+                android:text="@string/hint_dollar"
+                android:gravity="center"
+                android:textSize="30sp"
+                android:focusable="false"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/grand_total"/>
+
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
