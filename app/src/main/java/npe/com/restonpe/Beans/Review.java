@@ -11,7 +11,7 @@ public class Review {
 
     private String title;
     private String content;
-    private String rating;
+    private double rating;
     private String submitter;
     private String submitterEmail;
     private int likes;
@@ -19,7 +19,7 @@ public class Review {
     public Review(){
         title = "";
         content = "";
-        rating = "";
+        rating = 0;
         submitter = "";
         submitterEmail = "";
         likes = 0;
@@ -45,11 +45,11 @@ public class Review {
         this.content = content;
     }
 
-    public String getRating() {
+    public double getRating() {
         return rating;
     }
 
-    public void setRating(String rating) {
+    public void setRating(double rating) {
         this.rating = rating;
     }
 
