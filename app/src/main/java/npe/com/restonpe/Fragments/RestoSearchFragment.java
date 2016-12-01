@@ -14,6 +14,14 @@ import npe.com.restonpe.R;
 
 public class RestoSearchFragment extends Fragment {
 
+    /**
+     * source: https://developer.android.com/guide/components/fragments.html
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

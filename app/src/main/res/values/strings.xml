@@ -14,8 +14,17 @@
     <string name="course_id">420&#8211;518&#8211;DW Mobile</string>
 
     <string name="tip_calculator">Tip Calculator</string>
+    <string name="subtotal">Bill Subtotal</string>
+    <string name="hint_dollar">0.00</string>
+    <string name="tip_default">15</string>
+    <string name="tip_percent">Tip Percentage</string>
+    <string name="num_person">No. of People</string>
+    <string name="person_default">1</string>
+    <string name="tip_amount">Tip Amount</string>
+    <string name="amount_person">Each Person Pays</string>
+    <string name="grand_total">Grand Total</string>
 
-    <string name="username">username</string>
+    <string name="username">Username</string>
     <string name="email">Email Address</string>
     <string name="postal_code">Postal Code</string>
     <string name="save">Save</string>
