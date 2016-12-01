@@ -35,6 +35,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     // The URL to hit for restaurant information with a placeholder for the restaurant id
     private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
 
+    // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
     private static final String RESTO_ACCEPT = "application/json; charset=UTF-8";
     private static final String RESTO_KEY_HEADER = "user-key";
