@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">RestoNPE</string>
     <string name="slogan">Food is always within reach.</string>
+    <string name="about_app">Thanks you for using our App RestoNPE. Our delicious intention was to bring food closer to you and help you make the most difficult decision of what to eat now.</string>
 
     <string name="close">Close</string>
     <string name="unsaved">Unsaved Changes</string>
@@ -16,11 +17,11 @@
     <string name="thaivu">Thai Vu Nguyen</string>
     <string name="haugilles">Hau Gilles Che</string>
 
-    <string name="cindy_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
-    <string name="jeegna_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
-    <string name="danieil_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
-    <string name="thaivu_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
-    <string name="haugilles_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
+    <string name="cindy_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
+    <string name="jeegna_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
+    <string name="danieil_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
+    <string name="thaivu_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
+    <string name="haugilles_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
