@@ -45,20 +45,29 @@ public class SettingActivity extends BaseActivity {
 
     /**
      * When the Activity has started, the fragment will have been loaded, so
-     * get a handle on the TextViews for later use.
-     *
+     * get a handle on the TextViews to set the saved SharedPreferences into them,
+     * if there is one.
+     * <p>
+     * <p>
      * Used as reference
      * source: http://stackoverflow.com/questions/24188050/how-to-access-fragments-child-views-inside-fragments-parent-activity
      */
     @Override
-    protected void onStart(){
+    protected void onStart() {
         Log.d(TAG, "onStart called");
         Log.d(TAG, "fragment is: " + fragment);
         super.onStart();
+
         username = (TextView) fragment.getView().findViewById(R.id.username_input);
         emailAdr = (TextView) fragment.getView().findViewById(R.id.email_adr_input);
         postalCode = (TextView) fragment.getView().findViewById(R.id.postal_code_input);
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
+
+        if (pref != null) {
+            username.setText(pref.getString("username", ""));
+            emailAdr.setText(pref.getString("emailAdr", ""));
+            postalCode.setText(pref.getString("postalCode", ""));
+        }
 
         Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + postalCode);
     }
@@ -116,20 +125,28 @@ public class SettingActivity extends BaseActivity {
         SharedPreferences.Editor editor = pref.edit();
 
         if (username.getText() != null && emailAdr.getText() != null && postalCode.getText() != null) {
-            editor.putString("username", username.getText().toString());
-            editor.putString("emailAdr", emailAdr.getText().toString());
-            editor.putString("postalCode", postalCode.getText().toString());
+            Log.d(TAG, "Fields are: " + username.getText() + "\t" + emailAdr.getText() + "\t" + postalCode.getText());
+            Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + postalCode.getText().toString());
 
-            editor.commit();
+            if (username.getText().toString().trim().length() > 0 && emailAdr.getText().toString().trim().length() > 0 && postalCode.getText().toString().trim().length() > 0) {
+                editor.putString("username", username.getText().toString().trim());
+                editor.putString("emailAdr", emailAdr.getText().toString().trim());
+                editor.putString("postalCode", postalCode.getText().toString().trim());
+
+                editor.commit();
+                Toast.makeText(this, R.string.setting_saved, Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, R.string.incomplete, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
     /**
      * Overridden onBackPressed which verifies for any unsaved changes.
-     *
+     * <p>
      * If there are unsaved changes, ask the user if they want to discard the
      * changes before finish() the activity or stay.
-     *
+     * <p>
      * If there is no unsaved changes, calls super's onBackPressed.
      * <p>
      * Used as reference
@@ -142,11 +159,11 @@ public class SettingActivity extends BaseActivity {
 
         // Check if there the text fields are the same as in the prefs in there is one.
         if (pref != null) {
-            if (!username.getText().toString().equals(pref.getString("username", null))) {
+            if (!username.getText().toString().trim().equals(pref.getString("username", null))) {
                 dataSaved = false;
-            } else if (!emailAdr.getText().toString().equals(pref.getString("emailAdr", null))) {
+            } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", null))) {
                 dataSaved = false;
-            } else if (!postalCode.getText().toString().equals(pref.getString("postalCode", null))) {
+            } else if (!postalCode.getText().toString().trim().equals(pref.getString("postalCode", null))) {
                 dataSaved = false;
             }
         } else {
@@ -177,7 +194,7 @@ public class SettingActivity extends BaseActivity {
 
             Dialog dialog = builder.create();
             dialog.show();
-        }else{
+        } else {
             //No unsaved data.
             super.onBackPressed();
         }

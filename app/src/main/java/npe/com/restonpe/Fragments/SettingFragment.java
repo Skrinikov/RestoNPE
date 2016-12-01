@@ -58,7 +58,7 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         Log.d(TAG,"onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
-
+/*
         SharedPreferences prefs = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
 
         if(prefs != null){
@@ -69,6 +69,6 @@ public class SettingFragment extends Fragment {
             username.setText(prefs.getString("username",""));
             emailAdr.setText(prefs.getString("emailAdr",""));
             postalCode.setText(prefs.getString("postalCode",""));
-        }
+        }*/
     }
 }

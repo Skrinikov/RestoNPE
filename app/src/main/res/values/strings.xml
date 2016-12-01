@@ -7,6 +7,8 @@
     <string name="not_saved">The information are not saved, do you want to discard the changes?</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="setting_saved">Changes have been saved.</string>
+    <string name="incomplete">Cannot save, please fill in all the fields</string>
 
     <string name="cindy">Uen Yi Hung</string>
     <string name="jeegna">Jeegna Patel</string>
@@ -52,8 +54,6 @@
     <string name="title_activity_search_restos">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
-
-    <string name="setting_saved">Changes have been saved.</string>
 
     <string name="location_not_found">Location not found</string>
     <string name="latitude">Latitude: %1$f</string>
