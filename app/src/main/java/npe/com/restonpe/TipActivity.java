@@ -9,7 +9,9 @@ import npe.com.restonpe.Fragments.AboutFragment;
 import npe.com.restonpe.Fragments.TipFragment;
 
 /**
- * Creates an instance of the About Activity
+ * Creates an instance of the TipActivity which allows the user
+ * to input some values (subtotal,tip percentage, number of people to split with)
+ * in order to get the computed grand total, and the amounts to pay per person.
  *
  * @author Uen Yi Cindy Hung
  * @version 1.0
@@ -19,9 +21,9 @@ import npe.com.restonpe.Fragments.TipFragment;
 public class TipActivity extends BaseActivity {
 
     /**
-     * Loads the layout and changes the action bar's title.
+     * Loads the fragment and changes the action bar's title.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +33,8 @@ public class TipActivity extends BaseActivity {
     }
 
     /**
-     * Inserts the tip fragment into the content view.
+     * Inserts the tip fragment into the content view using the fragment
+     * manager.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();

@@ -70,7 +70,8 @@ public class NearRestosActivity extends BaseActivity {
     }
 
     /**
-     * Inserts the nearresto fragment into the content view.
+     * Inserts the NearRestoFragment into the content view using
+     * the fragment manager.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();

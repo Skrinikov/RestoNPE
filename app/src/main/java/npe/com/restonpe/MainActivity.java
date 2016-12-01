@@ -9,7 +9,8 @@ import android.view.View;
 import npe.com.restonpe.Fragments.IndexFragment;
 
 /**
- * Creates an instance of the Main Activity
+ * Creates an instance of the Main Activity which will display
+ * the main actions/activities of the application.
  *
  * @author Uen Yi Cindy Hung
  * @since 24/11/2016
@@ -18,9 +19,9 @@ import npe.com.restonpe.Fragments.IndexFragment;
 public class MainActivity extends BaseActivity {
 
     /**
-     * Loads the layout.
+     * Loads the fragment and changes the action bar's title.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,8 @@ public class MainActivity extends BaseActivity {
     }
     
     /**
-     * Inserts the index fragment into the content view.
+     * Inserts the index fragment into the content view using
+     * the fragment manager.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();

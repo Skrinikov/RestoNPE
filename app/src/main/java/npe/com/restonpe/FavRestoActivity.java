@@ -6,8 +6,22 @@ import android.os.Bundle;
 
 import npe.com.restonpe.Fragments.FavRestoFragment;
 
+/**
+ * Creates an instance of FavRestoActivity which will
+ * display in a list format, all the restaurant which have
+ * been favorited by the user.
+ *
+ * @author
+ * @since 30/11/2016
+ * @version 1.0
+ */
 public class FavRestoActivity extends BaseActivity {
 
+    /**
+     * Loads the fragment and changes the action bar's title.
+     *
+     * @param savedInstanceState bundle where values are stored.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,7 +30,8 @@ public class FavRestoActivity extends BaseActivity {
     }
 
     /**
-     * Inserts the findresto fragment into the content view.
+     * Inserts the FavRestoFragment into the content view using
+     * the fragment manager..
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();

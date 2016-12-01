@@ -7,7 +7,8 @@ import android.os.Bundle;
 import npe.com.restonpe.Fragments.AboutFragment;
 
 /**
- * Creates an instance of the About Activity
+ * Creates an instance of the About Activity that will display information
+ * about the authors.
  *
  * @author Uen Yi Cindy Hung
  * @since 24/11/2016
@@ -18,7 +19,7 @@ public class AboutActivity extends BaseActivity {
     /**
      * Loads the layout and changes the action bar's title.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +29,8 @@ public class AboutActivity extends BaseActivity {
     }
 
     /**
-     * Inserts the about fragment into the content view.
+     * Inserts the about fragment into the content view using
+     * the fragment manager.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();

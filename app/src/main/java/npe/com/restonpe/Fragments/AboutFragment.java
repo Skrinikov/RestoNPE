@@ -38,10 +38,10 @@ public class AboutFragment extends Fragment {
      * Used as reference to inflate the fragment layout.
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater Layout inflater needed to inflate the xml file.
+     * @param container View where the xml file will be loaded into.
+     * @param savedInstanceState bundle where values are stored.
+     * @return The View inflated.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,7 +54,7 @@ public class AboutFragment extends Fragment {
      * Calls methods that will get a handle on the different section of elements to add
      * on click event onto them to either open an url or a dialog.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

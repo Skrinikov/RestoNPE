@@ -10,7 +10,8 @@ import android.widget.Toast;
 import npe.com.restonpe.Fragments.SettingFragment;
 
 /**
- * Creates an instance of the Setting Activity
+ * Creates an instance of the SettingActivity which will display basic
+ * saved information that are modifiable.
  *
  * @author Uen Yi Cindy Hung
  * @since 29/11/2016
@@ -19,9 +20,9 @@ import npe.com.restonpe.Fragments.SettingFragment;
 public class SettingActivity extends BaseActivity {
 
     /**
-     * Loads the layout and changes the action bar's title.
+     * Loads the fragment and changes the action bar's title.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,8 @@ public class SettingActivity extends BaseActivity {
     }
 
     /**
-     * Inserts the setting fragment into the content view.
+     * Inserts the setting fragment into the content view using the fragment
+     * manager.
      */
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
@@ -42,10 +44,10 @@ public class SettingActivity extends BaseActivity {
     }
 
     /**
-     * Inflates the setting menu.
+     * Inflates the setting menu using an inflater.
      *
-     * @param menu
-     * @return
+     * @param menu The view where the xml will be infalted into.
+     * @return boolean representing the success of the inflation.
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -54,10 +56,10 @@ public class SettingActivity extends BaseActivity {
     }
 
     /**
-     * Sets up the actions when an item in the menu is clicked.
+     * Saves the input fields into the shared preferences.
      *
-     * @param item
-     * @return
+     * @param item The selected item.
+     * @return boolean depicting that an item has been clicked.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

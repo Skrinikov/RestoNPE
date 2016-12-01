@@ -29,6 +29,12 @@ public class BaseActivity extends AppCompatActivity
 
     private String TAG = "BaseActivity";
 
+    /**
+     * Creates the basic xml layout with a new main toolbar. Along with the
+     * auto generated-code which creates the drawer and navigation view.
+     *
+     * @param savedInstanceState bundle where the values are stored.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +62,9 @@ public class BaseActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
+    /**
+     * Auto-generated code that came with the DrawerActivity.
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -88,6 +97,13 @@ public class BaseActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }*/
 
+    /**
+     * Event handler for all the different menu items for when they are clicked on.
+     * Which action to take is determined by the selected item's id.
+     *
+     * @param item The item which was selected.
+     * @return boolean Depicts an item has been selected and processed the intention.
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {

@@ -27,12 +27,13 @@ public class SettingFragment extends Fragment {
     /**
      * Inflates a layout to be the content layout of the SettingActivity.
      *
+     * Used as reference
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater Layout inflater needed to inflate the xml file.
+     * @param container View where the xml file will be loaded into.
+     * @param savedInstanceState bundle where values are stored.
+     * @return The View inflated.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

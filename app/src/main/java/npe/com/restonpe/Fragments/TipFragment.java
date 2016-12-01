@@ -36,10 +36,10 @@ public class TipFragment extends Fragment {
      * Used as reference to inflate the fragment layout.
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater
-     * @param container
-     * @param savedInstanceState
-     * @return
+     * @param inflater Layout inflater needed to inflate the xml file.
+     * @param container View where the xml file will be loaded into.
+     * @param savedInstanceState bundle where values are stored.
+     * @return The View inflated.
      */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
