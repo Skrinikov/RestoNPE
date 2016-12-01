@@ -9,6 +9,8 @@ package npe.com.restonpe.Beans;
  */
 public class Address {
 
+    private String address;
+
     private int civic;
     private String street;
     private String city;
@@ -22,6 +24,7 @@ public class Address {
      * Default constructor for the bean. Initializes all variables to default values.
      */
     public Address(){
+        address = "";
         civic = 0;
         street = "";
         city = "";
@@ -30,7 +33,26 @@ public class Address {
         longitude = 0;
         suit = 0;
     }
-    
+
+    /**
+     * Returns the address. The address is formatted as: civic address Street name, City,
+     * Province/State Postal/ZIP code
+     *
+     * @return The string representation of the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets the address. The format of the address should be: civic address Street name, City,
+     * Province/State Postal/ZIP code
+     * @param address
+     */
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     /**
      * Returns the civic address of the address.
      * 

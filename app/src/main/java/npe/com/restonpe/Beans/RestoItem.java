@@ -15,6 +15,8 @@ public class RestoItem {
     private double rating;
     private double latitude;
     private double longitude;
+    private String address;
+
 
     public RestoItem(){
         id = -1;
@@ -24,6 +26,7 @@ public class RestoItem {
         rating = 0;
         latitude = 0;
         longitude = 0;
+        address = "";
     }
 
     public int getId() {
@@ -80,5 +83,24 @@ public class RestoItem {
 
     public void setCity(String city) {
         this.city = city;
+    }
+
+    /**
+     * Returns the address. The address is formatted as: civic address Street name, City,
+     * Province/State Postal/ZIP code
+     *
+     * @return The string representation of the address
+     */
+    public String getAddress() {
+        return address;
+    }
+
+    /**
+     * Sets the address. The format of the address should be: civic address Street name, City,
+     * Province/State Postal/ZIP code
+     * @param address
+     */
+    public void setAddress(String address) {
+        this.address = address;
     }
 }
