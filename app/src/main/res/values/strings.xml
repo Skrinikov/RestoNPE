@@ -1,7 +1,19 @@
 <resources>
     <string name="app_name">RestoNPE</string>
     <string name="slogan">Food is always within reach.</string>
-    <string name="title_activity_base">BaseActivity</string>
+    <string name="close">Close</string>
+
+    <string name="cindy">Uen Yi Hung</string>
+    <string name="jeegna">Jeegna Patel</string>
+    <string name="danieil">Danieil Skrinikov</string>
+    <string name="thaivu">Thai Vu Nguyen</string>
+    <string name="haugilles">Hau Gilles Che</string>
+
+    <string name="cindy_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
+    <string name="jeegna_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
+    <string name="danieil_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
+    <string name="thaivu_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
+    <string name="haugilles_info">Grad Dawson CS 2016\nCrazy cat lady.</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -14,15 +26,15 @@
     <string name="course_id">420&#8211;518&#8211;DW Mobile</string>
 
     <string name="tip_calculator">Tip Calculator</string>
-    <string name="subtotal">Bill Subtotal</string>
+    <string name="subtotal">Bill Subtotal $</string>
     <string name="hint_dollar">0.00</string>
     <string name="tip_default">15</string>
-    <string name="tip_percent">Tip Percentage</string>
+    <string name="tip_percent">Tip Percentage %</string>
     <string name="num_person">No. of People</string>
     <string name="person_default">1</string>
-    <string name="tip_amount">Tip Amount</string>
-    <string name="amount_person">Each Person Pays</string>
-    <string name="grand_total">Grand Total</string>
+    <string name="tip_amount">Total Tip $</string>
+    <string name="amount_person">Each Person Pays $</string>
+    <string name="grand_total">Grand Total $</string>
 
     <string name="username">Username</string>
     <string name="email">Email Address</string>
@@ -30,6 +42,7 @@
     <string name="save">Save</string>
     <string name="discard">Discard changes?</string>
 
+    <string name="title_activity_base">BaseActivity</string>
     <string name="title_activity_restos_near">Restaurants Nearby</string>
     <string name="title_activity_search_restos">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
