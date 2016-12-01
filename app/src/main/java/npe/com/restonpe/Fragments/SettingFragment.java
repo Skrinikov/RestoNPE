@@ -1,7 +1,9 @@
 package npe.com.restonpe.Fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import npe.com.restonpe.R;
@@ -23,6 +26,9 @@ import npe.com.restonpe.R;
  */
 
 public class SettingFragment extends Fragment {
+    private TextView username, emailAdr,postalCode;
+    private final String TAG = "SettingFragment";
+
 
     /**
      * Inflates a layout to be the content layout of the SettingActivity.
@@ -38,6 +44,31 @@ public class SettingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG,"onCreateView called");
         return inflater.inflate(R.layout.activity_setting, container, false);
+    }
+
+    /**
+     * Retrieves the data saved in the shared preferences, if there is one
+     * and display them into the text view of the inflated layout.
+     *
+     * @param savedInstanceState Bundle where the run values are stored.
+     */
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState){
+        Log.d(TAG,"onActivityCreated called");
+        super.onActivityCreated(savedInstanceState);
+
+        SharedPreferences prefs = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
+
+        if(prefs != null){
+            username = (TextView) getActivity().findViewById(R.id.username_input);
+            emailAdr = (TextView) getActivity().findViewById(R.id.email_adr_input);
+            postalCode = (TextView) getActivity().findViewById(R.id.postal_code_input);
+
+            username.setText(prefs.getString("username",""));
+            emailAdr.setText(prefs.getString("emailAdr",""));
+            postalCode.setText(prefs.getString("postalCode",""));
+        }
     }
 }

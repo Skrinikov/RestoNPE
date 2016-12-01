@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">RestoNPE</string>
     <string name="slogan">Food is always within reach.</string>
+
     <string name="close">Close</string>
+    <string name="unsaved">Unsaved Changes</string>
+    <string name="not_saved">The information are not saved, do you want to discard the changes?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <string name="cindy">Uen Yi Hung</string>
     <string name="jeegna">Jeegna Patel</string>

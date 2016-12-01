@@ -26,7 +26,7 @@
             style="@style/TextViewTheme"/>
 
         <EditText
-            android:id="@+id/first_name_input"
+            android:id="@+id/username_input"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -43,7 +43,7 @@
             style="@style/TextViewTheme"/>
 
         <EditText
-            android:id="@+id/email_adr_inputa"
+            android:id="@+id/email_adr_input"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
