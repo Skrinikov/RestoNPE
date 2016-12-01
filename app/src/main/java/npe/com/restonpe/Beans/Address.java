@@ -18,7 +18,7 @@ public class Address {
     private String postal;
     private double latitude;
     private double longitude;
-    private int suit;
+    private int suite;
 
     /**
      * Default constructor for the bean. Initializes all variables to default values.
@@ -31,7 +31,7 @@ public class Address {
         country = "";
         latitude = 0;
         longitude = 0;
-        suit = 0;
+        suite = 0;
     }
 
     /**
@@ -162,21 +162,21 @@ public class Address {
     }
 
     /**
-     * Returns the value of the instance suit variable.
+     * Returns the value of the instance suite variable.
      *
-     * @return value of the internal suit variable.
+     * @return value of the internal suite variable.
      */
     public int getSuite() {
-        return suit;
+        return suite;
     }
 
     /**
-     * Sets the instance suit variable with the provided int.
+     * Sets the instance suite variable with the provided int.
      *
      * @param suit
      */
     public void setSuite(int suit) {
-        this.suit = suit;
+        this.suite = suit;
     }
 
     /**

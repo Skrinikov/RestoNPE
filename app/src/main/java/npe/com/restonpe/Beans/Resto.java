@@ -1,6 +1,7 @@
 package npe.com.restonpe.Beans;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Bean which holds information of a single restaurant. Provides getters and setters for all the
@@ -13,15 +14,15 @@ import java.util.ArrayList;
 public class Resto {
 
     // Resto
-    private int id;
+    private long id;
     private String name;
     private String genre;
     private String priceRange;
     private String email;
     private String link;
     private long phone;
-    private ArrayList<Address> address;
-    private ArrayList<Review> reviews;
+    private List<Address> address;
+    private List<Review> reviews;
 
     // Submitter info
     private String submitterEmail;
@@ -157,7 +158,7 @@ public class Resto {
      *
      * @return all the addresses that match this restaurant.
      */
-    public ArrayList<Address> getAddress() {
+    public List<Address> getAddress() {
         return address;
     }
 
@@ -166,7 +167,7 @@ public class Resto {
      * 
      * @param address single address for the restaurant.
      */
-    public void setAddress(ArrayList<Address> address) {
+    public void setAddress(List<Address> address) {
         this.address = address;
     }
 
@@ -183,7 +184,7 @@ public class Resto {
      * 
      * @return 
      */
-    public ArrayList<Review> getReviews() {
+    public List<Review> getReviews() {
         return reviews;
     }
 
@@ -192,7 +193,7 @@ public class Resto {
      * 
      * @param reviews list of reviews.
      */
-    public void setReviews(ArrayList<Review> reviews) {
+    public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
 
@@ -231,11 +232,27 @@ public class Resto {
         this.submitterName = submitterName;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public String toString(){
+        String s = "Resto:\n"+
+                "" +
+                "\tName: "+name+"\n"+
+                "\tGenre: "+genre+"\n"+
+                "\tP-R: "+priceRange+"\n"+
+                "\tEmail: "+email+"\n"+
+                "\tLink: "+link+"\n"+
+                "\tPhone: "+phone+"\n"+
+                "\tSubmitter Email: "+submitterEmail+"\n"+
+                "\tSubmiter name: "+submitterName+"\n"+
+                "\tAddress: "+address.toString()+"\n"+
+                "\tReviews: "+reviews.toString()+"\n";
+        return s;
     }
 }
