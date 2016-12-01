@@ -8,7 +8,7 @@ import android.util.Log;
 
 import npe.com.restonpe.Fragments.NearRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
-import npe.com.restonpe.Services.RestoNetworkManager;
+import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
  * Creates an instance of the NearRestos Activity. This {@code Activity} will show the user the
@@ -47,9 +47,8 @@ public class NearRestosActivity extends BaseActivity {
         Location location = restoLocationManager.getLocation();
         displayInformation(location);
 
-        RestoNetworkManager restoNetworkManager = new RestoNetworkManager(this);
-        // TODO give getRestos something to display the information on
-        restoNetworkManager.getRestos(location.getLatitude(), location.getLongitude(), null);
+        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
+        zomatoRestos.findRestosNear(location.getLatitude(), location.getLongitude());
     }
 
     /**

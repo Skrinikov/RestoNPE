@@ -171,6 +171,14 @@ public class Resto {
     }
 
     /**
+     * Adds the given {@code Address} to this restaurant.
+     *
+     * @param address The address to add
+     */
+    public void addAddress(Address address) {
+        this.address.add(address);
+    }
+    /**
      * Returns a list of reviews for this restaurant.
      * 
      * @return 
