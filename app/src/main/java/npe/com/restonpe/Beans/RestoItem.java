@@ -104,6 +104,8 @@ public class RestoItem {
      */
     public void setAddress(String address) {
         this.address = address;
+    }
+    
     public long getPhone() {
         return phone;
     }
