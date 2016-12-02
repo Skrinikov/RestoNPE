@@ -225,21 +225,29 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @return limited data for each restaurant in the database.
      */
     public List<RestoItem> getAllRestaurantsSmall(){
-        Cursor c = getReadableDatabase().query(TABLE_RESTO,new String[]{COLUMN_ID, COLUMN_RESTO_NAME,COLUMN_PRICE_RANGE},null,null,null,null,null);
+        Cursor c = getReadableDatabase().query(TABLE_RESTO,new String[]{COLUMN_ID, COLUMN_RESTO_NAME,COLUMN_PRICE_RANGE,COLUMN_PHONE},null,null,null,null,null);
         List<RestoItem> restos = new ArrayList<>();
         RestoItem temp;
         while(c.moveToNext()){
             temp = new RestoItem();
-            temp.setId(c.getInt(1));
-            temp.setName(c.getString(2));
-            temp.setPriceRange(c.getString(3));
+            temp.setId(c.getInt(c.getColumnIndex(COLUMN_ID)));
+            temp.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
+            temp.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
+            temp.setPhone(c.getLong(c.getColumnIndex(COLUMN_PHONE)));
             getAddressForResto(temp);
             //getRatingForResto(temp);
         }
         return restos;
     }
 
-    public Resto getSignleRestaurant(int id){
+    /**
+     * Retrieves a single restaurant object from the local database with all its related information
+     * which contains: One or Many addresses, zero or many reviews, a genre and a submitter.
+     *
+     * @param id primary key of the restaurant to retrieve.
+     * @return Full Resto bean which contains all the data about this restaurant in the database.
+     */
+    public Resto getSingleRestaurant(int id){
         if(id < 1)
             return null;
         Resto r = new Resto();
