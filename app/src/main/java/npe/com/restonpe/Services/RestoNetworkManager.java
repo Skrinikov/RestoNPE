@@ -8,15 +8,11 @@ import android.util.JsonReader;
 import android.util.Log;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-
-import npe.com.restonpe.Beans.Resto;
-import npe.com.restonpe.Beans.RestoItem;
 
 /**
  * Manages network connections for the application. This class extends ASyncTask so that it may do
@@ -34,6 +30,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_NEAR_URL = "https://developers.zomato.com/api/v2.1/geocode?lat=%1$s&lon=%2$s";
     // The URL to hit for restaurant information with a placeholder for the restaurant id
     private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
+    // TODO The URL to hit to search for restaurants with place holder for search terms
+    private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?q=%1$s&count=50&lat=%2$s&lon=%3$s&radius=50&cuisines=%4$s&sort=real_distance&order=asc";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -48,7 +46,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      *
      * @param context The {@code Context} of the calling {@code Activity}
      */
-    public RestoNetworkManager(Context context) {
+    protected RestoNetworkManager(Context context) {
         this.mContext = context;
     }
 
@@ -136,9 +134,25 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
     /**
      * Finds the restaurants that matches the given search terms
+     *
+     * @param name The name of the restaurant for which to search
+     * @param genre The type of cuisine for which to search
+     * @param latitude The latitude of the area of which to search
+     * @param latitude The longitude of the area of which to search
      */
-    public void findRestos() {
+    public void findRestos(String name, String latitude, String longitude, String genre) {
+        // Add search terms to url
+        String updatedURL = String.format(RESTO_SEARCH_URL, name, latitude, longitude, genre);
 
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
     }
 
     /**
