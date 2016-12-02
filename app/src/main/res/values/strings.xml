@@ -77,5 +77,6 @@
     <string name="resto_email_hint">Email</string>
     <string name="resto_link_hint">Link</string>
     <string name="add_resto">Add the Restaurant</string>
+    <string name="resto_contact">Contact</string>
     <string name="required">* indicates required field</string>
 </resources>
