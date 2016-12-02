@@ -119,7 +119,8 @@
                     android:id="@+id/restoAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/resto_address_hint" />
+                    android:hint="@string/resto_address_hint"
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -138,7 +139,8 @@
                         android:id="@+id/restoCity"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/resto_city_hint" />
+                        android:hint="@string/resto_city_hint"
+                        android:maxLines="1"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -152,7 +154,8 @@
                         android:id="@+id/restoProvince"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/resto_province_hint" />
+                        android:hint="@string/resto_province_hint"
+                        android:maxLines="1"/>
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -172,7 +175,8 @@
                         android:id="@+id/restoPostal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/resto_postal_hint" />
+                        android:hint="@string/resto_postal_hint"
+                        android:maxLines="1"/>
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -186,7 +190,8 @@
                         android:id="@+id/restoCountry"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/resto_country_hint" />
+                        android:hint="@string/resto_country_hint"
+                        android:maxLines="1"/>
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -208,7 +213,9 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_add_telephone"
                     android:hint="@string/resto_phone_hint"
-                    android:id="@+id/restoPhone"/>
+                    android:id="@+id/restoPhone"
+                    android:maxLines="1"
+                    android:inputType="number"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -221,7 +228,8 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_add_email"
                     android:hint="@string/resto_email_hint"
-                    android:id="@+id/restoEmail"/>
+                    android:id="@+id/restoEmail"
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -234,9 +242,19 @@
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_add_link"
                     android:hint="@string/resto_link_hint"
-                    android:id="@+id/restoLink"/>
+                    android:id="@+id/restoLink"
+                    android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/add_resto"
+                android:textColor="@color/white_text"
+                android:background="@color/colorAccent"
+                android:onClick="addRestaurant"/>
 
 
             <TextView

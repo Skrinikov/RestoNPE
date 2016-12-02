@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -45,5 +46,15 @@ public class AddRestoActivity extends BaseActivity {
         AddRestoFragment fragment = new AddRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    /**
+     * Test
+     *
+     * @param view
+     */
+    public void addRestaurant(View view){
+        Log.d(TAG,"addRestaurant()");
+
     }
 }
