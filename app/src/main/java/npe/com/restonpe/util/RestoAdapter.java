@@ -1,6 +1,8 @@
 package npe.com.restonpe.util;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,7 @@ import npe.com.restonpe.R;
  * @since 01/12/2016
  */
 public class RestoAdapter extends BaseAdapter {
-    private Context context;
+    private final Context context;
     private List<RestoItem> list;
     private double longitude,latitude;
     private static LayoutInflater inflater = null;
@@ -92,7 +94,7 @@ public class RestoAdapter extends BaseAdapter {
      * @return View The View of one single item/row.
      */
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View rowView = inflater.inflate(R.layout.resto_list,null);
         //ImageView icon = (ImageView) rowView.findViewById(R.id.cuisine_icon);
         TextView name = (TextView)rowView.findViewById(R.id.resto_name);
@@ -105,6 +107,31 @@ public class RestoAdapter extends BaseAdapter {
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
         distance.setText(String.format("%.1f m",calculated_distance));
+
+        rowView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Intent intent = new Intent(context,);
+            }
+        });
+
+        rowView.setOnLongClickListener(new View.OnLongClickListener() {
+            /**
+             *
+             * Used as reference
+             * source: http://stackoverflow.com/questions/4275678/how-to-make-phone-call-using-intent-in-android
+             *
+             * @param v
+             * @return
+             */
+            @Override
+            public boolean onLongClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse(/*list.get(position)*/"0"));
+                context.startActivity(intent);
+                return false;
+            }
+        });
 
         return rowView;
     }
