@@ -65,32 +65,34 @@
                         android:text="@string/tip_default"
                         android:textSize="30sp" />
 
+                    <RadioGroup
+                        android:id="@+id/tip_radio"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                        <RadioGroup
-                            android:layout_width="0dp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1">
-                            <RadioButton
-                                android:id="@+id/tip_10"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="@string/tip_10"/>
-                            <RadioButton
-                                android:id="@+id/tip_1"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="@string/tip_15"/>
-                            <RadioButton
-                                android:id="@+id/tip_20"
-                                android:layout_width="match_parent"
-                                android:layout_height="0dp"
-                                android:layout_weight="1"
-                                android:text="@string/tip_20"/>
-                        </RadioGroup>
+                        <RadioButton
+                            android:id="@+id/tip_10"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/tip_10" />
 
+                        <RadioButton
+                            android:id="@+id/tip_15"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/tip_15" />
 
+                        <RadioButton
+                            android:id="@+id/tip_20"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1"
+                            android:text="@string/tip_20" />
+                    </RadioGroup>
                 </LinearLayout>
 
                 <TextView
@@ -193,17 +195,17 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="3"
-                android:text="@string/hint_dollar"
+                android:focusable="false"
                 android:gravity="center"
-                android:textSize="30sp"
-                android:focusable="false"/>
+                android:text="@string/hint_dollar"
+                android:textSize="30sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/grand_total"/>
+                android:text="@string/grand_total" />
 
         </LinearLayout>
     </LinearLayout>
