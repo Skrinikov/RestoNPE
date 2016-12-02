@@ -59,4 +59,6 @@
     <string name="location_not_found">Location not found</string>
     <string name="latitude">Latitude: %1$f</string>
     <string name="longitude">Longitude: %1$f</string>
+
+    <string name="no_result">No result found.</string>
 </resources>

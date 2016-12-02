@@ -58,17 +58,5 @@ public class SettingFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState){
         Log.d(TAG,"onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
-/*
-        SharedPreferences prefs = getActivity().getSharedPreferences("Settings", Context.MODE_PRIVATE);
-
-        if(prefs != null){
-            username = (TextView) getActivity().findViewById(R.id.username_input);
-            emailAdr = (TextView) getActivity().findViewById(R.id.email_adr_input);
-            postalCode = (TextView) getActivity().findViewById(R.id.postal_code_input);
-
-            username.setText(prefs.getString("username",""));
-            emailAdr.setText(prefs.getString("emailAdr",""));
-            postalCode.setText(prefs.getString("postalCode",""));
-        }*/
     }
 }
