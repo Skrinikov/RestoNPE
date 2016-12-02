@@ -67,6 +67,5 @@
 
     <style name="Main_ItemTheme">
         <item name="android:background">@drawable/button_bg</item>
-        <item name="android:layout_margin">5dp</item>
     </style>
 </resources>

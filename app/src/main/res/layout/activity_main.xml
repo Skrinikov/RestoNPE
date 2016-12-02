@@ -17,7 +17,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
-        android:padding="2dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -152,7 +151,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/fav_icon"
+                    android:src="@drawable/add_icon"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
         </LinearLayout>
