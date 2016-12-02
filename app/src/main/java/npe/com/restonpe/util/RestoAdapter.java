@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -28,29 +27,70 @@ import npe.com.restonpe.R;
 public class RestoAdapter extends BaseAdapter {
     private Context context;
     private List<RestoItem> list;
+    private double longitude,latitude;
     private static LayoutInflater inflater = null;
 
-    public RestoAdapter(Context context, List<RestoItem> list){
+    /**
+     * Constructor that will keep a reference to the given parameter and parse the
+     * String longitude and latitude to double and create a layoutInflater.
+     *
+     * @param context The activity that instantiate this object.
+     * @param list The data in List form.
+     * @param longitude The current longitude location.
+     * @param latitude The current latitude location.
+     */
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude){
         this.context = context;
         this.list = list;
+        this.longitude = Double.parseDouble(longitude);
+        this.latitude = Double.parseDouble(latitude);
         this.inflater =(LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    /**
+     * Returns the size of the data list.
+     *
+     * @return int
+     */
     @Override
     public int getCount() {
         return list.size();
     }
 
+    /**
+     * Returns the resto at the given position in the list.
+     *
+     * @param position The index of the object to retrieve.
+     * @return RestoItem
+     */
     @Override
     public Object getItem(int position) {
         return list.get(position);
     }
 
+    /**
+     * Returns the id of the restoItem at the position in the list.
+     *
+     * @param position The index of the object's id to retrieve.
+     * @return long
+     */
     @Override
     public long getItemId(int position) {
         return list.get(position).getId();
     }
 
+    /**
+     * Inflates the list xml layout and insert the data into the
+     * different views in the layout.
+     *
+     * Data being: the resto's name, price range, calculated distance from current
+     * location using the DistanceCalculator.
+     *
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return View The View of one single item/row.
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View rowView = inflater.inflate(R.layout.resto_list,null);
@@ -59,12 +99,12 @@ public class RestoAdapter extends BaseAdapter {
         TextView price = (TextView)rowView.findViewById(R.id.resto_price);
         TextView distance = (TextView)rowView.findViewById(R.id.resto_distance);
 
-        //double calculated_distance = DistanceCalculator.calculateDistance(list.get(position).getLatitude(),list.get(position).getLongitude(),0.0,0.0);
+        double calculated_distance = DistanceCalculator.calculateDistance
+                (list.get(position).getLatitude(),list.get(position).getLongitude(),latitude,longitude);
 
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
-        //distance.setText(String.format("%.1f m",calculated_distance));
-        distance.setText("10 m");
+        distance.setText(String.format("%.1f m",calculated_distance));
 
         return rowView;
     }
