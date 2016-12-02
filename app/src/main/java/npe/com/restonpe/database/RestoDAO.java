@@ -112,7 +112,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             COLUMN_LONG + " real not null, " +
             COLUMN_LAT + " real not null, " +
             COLUMN_POSTAL + " text not null, " +
-            COLUMN_SUITE + " integer not null, " +
+            COLUMN_SUITE + " integer, " +
             COLUMN_RESTO_FK + " integer, " +
             "FOREIGN KEY (" + COLUMN_RESTO_FK + ") REFERENCES " + TABLE_RESTO + "(" + COLUMN_ID + ") ON DELETE CASCADE);";
 

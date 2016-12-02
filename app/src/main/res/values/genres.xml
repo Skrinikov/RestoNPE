@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="genres">
+        <item>Ainu</item>
+        <item>Arab</item>
+        <item>Armenian</item>
+        <item>Assyrian</item>
+        <item>Balochi</item>
+        <item>Berber</item>
+        <item>Buddhist</item>
+        <item>Bulgarian</item>
+        <item>Cajun</item>
+        <item>Chechen</item>
+        <item>Chinese cuisine</item>
+        <item>Chinese Islamic</item>
+        <item>Circassian</item>
+        <item>Crimean Tatar</item>
+        <item>French cuisine</item>
+        <item>Greek</item>
+        <item>Indian Singaporean cuisine</item>
+        <item>Indonesian cuisine</item>
+        <item>Inuit</item>
+        <item>Italian American</item>
+
+    </string-array>
+</resources>
+
+
+
+    Japanese
+    Jewish
+    Kurdish
+    Louisiana Creole
+    Maharashtrian
+    Malay cuisine
+    Malayali Food
+    Malaysian Chinese cuisine
+    Malaysian Indian cuisine
+    Mordovian
+    Native American
+    Parsi
+    Pashtun
+    Pennsylvania Dutch
+    Peranakan
+    Persian cuisine
+    Punjabi
+    Rajasthani
+    Russian
+    Sami
+    Sindhi
+    Tatar
+    Turkish
+    Yamal
+    Zanzibari
+    South Indian

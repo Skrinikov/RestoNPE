@@ -3,6 +3,7 @@ package npe.com.restonpe;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 
 import npe.com.restonpe.Fragments.AddRestoFragment;
 
@@ -28,6 +29,7 @@ public class AddRestoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.title_activity_restos_add);
         createFragments();
+        ArrayAdapter<String> aa = ArrayAdapter
     }
 
     /**

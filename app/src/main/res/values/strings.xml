@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">RestoNPE</string>
-    <string name="slogan">Food is always within reach.</string>
+    <string name="slogan">Food always within reach.</string>
     <string name="about_app">Thanks you for using our App RestoNPE. Our delicious intention was to bring food closer to you and help you make the most difficult decision of what to eat now.</string>
 
     <string name="close">Close</string>
@@ -61,4 +61,10 @@
     <string name="longitude">Longitude: %1$f</string>
 
     <string name="no_result">No result found.</string>
+
+    <!-- Add Resto Strings -->
+    <string name="restaurant">Restaurant</string>
+    <string name="address">Address</string>
+    <string name="resto_name_hint">Restaurant name*</string>
+    <string name="resto_genre_hint">Restaurant genre</string>
 </resources>

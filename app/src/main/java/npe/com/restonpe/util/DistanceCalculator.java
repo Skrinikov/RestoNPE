@@ -26,7 +26,7 @@ public class DistanceCalculator {
      * @param long1 Longitude of the first point.
      * @param lat2 Latitude of the second point.
      * @param long2 Longitude of the second point.
-     * @return Distance between the two location in meters.
+     * @return Distance between the two location in km.
      */
     public static double calculateDistance(Double lat1, Double long1, Double lat2, Double long2){
 
@@ -40,7 +40,7 @@ public class DistanceCalculator {
         //c = 2 * atan2( sqrt(a), sqrt(1-a) )
         Double c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
         //d = R * c
-        return EARTH_RADIUS * c;
+        return Math.round(EARTH_RADIUS * c / 10)/100.0;
     }//calculateDistance
 
 
