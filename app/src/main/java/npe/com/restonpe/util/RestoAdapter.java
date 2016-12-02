@@ -13,6 +13,7 @@ import android.widget.Toast;
 import java.util.List;
 
 import npe.com.restonpe.Beans.RestoItem;
+import npe.com.restonpe.Fragments.ShowRestoFragment;
 import npe.com.restonpe.R;
 
 /**
@@ -110,9 +111,18 @@ public class RestoAdapter extends BaseAdapter {
         distance.setText(String.format("%.1f km", calculated_distance));
 
         rowView.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Method that will communicate back with the activity and
+             * display showRestoFragment.
+             *
+             * Used as reference
+             * source: https://developer.android.com/training/basics/fragments/communicating.html
+             *
+             * @param v The view which is triggering the event.
+             */
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(context,);
+                Intent intent = new Intent(context, ShowRestoFragment.class);
             }
         });
 
@@ -125,8 +135,8 @@ public class RestoAdapter extends BaseAdapter {
              * source: http://stackoverflow.com/questions/4275678/how-to-make-phone-call-using-intent-in-android
              * source: https://developer.android.com/guide/components/intents-filters.html#Building
              *
-             * @param v
-             * @return
+             * @param v The view which is triggering the event.
+             * @return boolean
              */
             @Override
             public boolean onLongClick(View v) {
@@ -138,6 +148,7 @@ public class RestoAdapter extends BaseAdapter {
                 } else {
                     Toast.makeText(context, R.string.no_dial, Toast.LENGTH_LONG).show();
                 }
+
                 return false;
             }
         });

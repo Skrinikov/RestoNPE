@@ -54,4 +54,9 @@
     <style name="ListSubTextTheme">
         <item name="android:textSize">10sp</item>
     </style>
+
+    <style name="RadioButtonTheme" parent="Theme.AppCompat.Light">
+        <item name="colorControlNormal">@android:color/black</item>
+        <item name="colorControlActivated">#a33232</item>
+    </style>
 </resources>
