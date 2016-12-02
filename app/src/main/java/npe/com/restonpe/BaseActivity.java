@@ -1,6 +1,8 @@
 package npe.com.restonpe;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -15,14 +17,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import npe.com.restonpe.Services.RestoLocationManager;
+
 /**
  * Template activity for all other activity to extend. Contains the
  * drawer menu and action bar. Most of the code is auto-generated with
  * the drawer activity.
  *
  * @author Uen Yi Cindy Hung
- * @since 24/11/2016
  * @version 1.0
+ * @since 01/12/2016
  */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -42,6 +46,8 @@ public class BaseActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        locationSetting();
 /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -99,10 +105,10 @@ public class BaseActivity extends AppCompatActivity
 
     /**
      * Event handler for all the different menu items for when they are clicked on.
-     * Which action to take is determined by the selected item's id.
+     * Which action to execute is determined by the selected item's id.
      *
      * @param item The item which was selected.
-     * @return boolean Depicts an item has been selected and processed the intention.
+     * @return boolean Depicts an item has been selected and have processed the intention.
      */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -123,7 +129,7 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.setting) {
             Log.d(TAG, "onNavigationItemSelected - setting");
             intent = new Intent(this, SettingActivity.class);
-        }else if (id == R.id.tip) {
+        } else if (id == R.id.tip) {
             Log.d(TAG, "onNavigationItemSelected - tip");
             intent = new Intent(this, TipActivity.class);
         } else if (id == R.id.nav_share) {
@@ -138,5 +144,40 @@ public class BaseActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    /**
+     * Method that calls upon the RestoLocationManager to get current
+     * longitude and latitude location then saved is to the sharedPreferences.
+     *
+     * Used as reference
+     * Source: Jeegna's NearRestoActivity
+     */
+    private void locationSetting() {
+        RestoLocationManager restoLocationManager = new RestoLocationManager(this) {
+            @Override
+            public void onLocationChanged(Location location) {
+                saveToPrefs(location);
+            }
+        };
+
+        Location location = restoLocationManager.getLocation();
+        saveToPrefs(location);
+    }
+
+    /**
+     * Apply the given location into the sharedPreferences, if not null, for later use.
+     *
+     * @param location User's current Location.
+     */
+    private void saveToPrefs(Location location) {
+        if (location != null) {
+            SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            editor.putString("latitude",location.getLatitude()+"");
+            editor.putString("longitude",location.getLongitude()+"");
+            editor.apply();
+        }
     }
 }

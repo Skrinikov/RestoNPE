@@ -20,9 +20,8 @@ import npe.com.restonpe.util.RestoAdapter;
 import static android.content.Context.MODE_PRIVATE;
 
 /**
- * Fragment class that takes cares of loading the layout
- * and setting the events for the different elements for the
- * FavResto fragment.
+ * Fragment class that takes cares of loading the layout and setting the
+ * events for the different elements for the FavResto fragment.
  *
  * @author Uen Yi Cindy Hung
  * @version 1.1
@@ -51,6 +50,16 @@ public class FavRestoFragment extends Fragment {
         return inflater.inflate(R.layout.activity_fav_resto, container, false);
     }
 
+    /**
+     * Attempts to list all the resto store in database into the ListView.
+     *
+     * Uses the custom RestoAdapter to list the objects. Needs to have sharedPreferences
+     * set in order to be used, because it needs the longitude and latitude of the user.
+     *
+     * If there is no result, will display a no result TextView.
+     *
+     * @param savedInstanceState Bundle that contains current run values.
+     */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         Log.d(TAG,"onActivityCreated called");
