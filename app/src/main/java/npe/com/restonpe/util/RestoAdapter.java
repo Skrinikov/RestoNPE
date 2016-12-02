@@ -18,7 +18,7 @@ import npe.com.restonpe.R;
  * Custom adapter made to display information about restaurants
  * using a custom listing layout which contains a name, price range,
  * distance, cuisine type and rating.
- *
+ * <p>
  * Used as reference
  * source: My android dino lab.
  *
@@ -29,24 +29,24 @@ import npe.com.restonpe.R;
 public class RestoAdapter extends BaseAdapter {
     private final Context context;
     private List<RestoItem> list;
-    private double longitude,latitude;
+    private double longitude, latitude;
     private static LayoutInflater inflater = null;
 
     /**
      * Constructor that will keep a reference to the given parameter and parse the
      * String longitude and latitude to double and create a layoutInflater.
      *
-     * @param context The activity that instantiate this object.
-     * @param list The data in List form.
+     * @param context   The activity that instantiate this object.
+     * @param list      The data in List form.
      * @param longitude The current longitude location.
-     * @param latitude The current latitude location.
+     * @param latitude  The current latitude location.
      */
-    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude){
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
         this.context = context;
         this.list = list;
         this.longitude = Double.parseDouble(longitude);
         this.latitude = Double.parseDouble(latitude);
-        this.inflater =(LayoutInflater)this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
@@ -84,7 +84,7 @@ public class RestoAdapter extends BaseAdapter {
     /**
      * Inflates the list xml layout and insert the data into the
      * different views in the layout.
-     *
+     * <p>
      * Data being: the resto's name, price range, calculated distance from current
      * location using the DistanceCalculator.
      *
@@ -95,18 +95,18 @@ public class RestoAdapter extends BaseAdapter {
      */
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View rowView = inflater.inflate(R.layout.resto_list,null);
+        View rowView = inflater.inflate(R.layout.resto_list, null);
         //ImageView icon = (ImageView) rowView.findViewById(R.id.cuisine_icon);
-        TextView name = (TextView)rowView.findViewById(R.id.resto_name);
-        TextView price = (TextView)rowView.findViewById(R.id.resto_price);
-        TextView distance = (TextView)rowView.findViewById(R.id.resto_distance);
+        TextView name = (TextView) rowView.findViewById(R.id.resto_name);
+        TextView price = (TextView) rowView.findViewById(R.id.resto_price);
+        TextView distance = (TextView) rowView.findViewById(R.id.resto_distance);
 
         double calculated_distance = DistanceCalculator.calculateDistance
-                (list.get(position).getLatitude(),list.get(position).getLongitude(),latitude,longitude);
+                (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
 
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
-        distance.setText(String.format("%.1f m",calculated_distance));
+        distance.setText(String.format("%.1f m", calculated_distance));
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,8 +126,8 @@ public class RestoAdapter extends BaseAdapter {
              */
             @Override
             public boolean onLongClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse(/*list.get(position)*/"0"));
+                String phone = (list.get(position).getPhone() > 0) ? list.get(position).getPhone() + "" : "";
+                Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + phone));
                 context.startActivity(intent);
                 return false;
             }

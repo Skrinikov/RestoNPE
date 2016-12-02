@@ -258,7 +258,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param id primary key of the restaurant to retrieve.
      * @return Full Resto bean which contains all the data about this restaurant in the database.
      */
-    public Resto getSingleRestaurant(int id){
+    public Resto getSingleRestaurant(long id){
         if(id < 1)
             return null;
         Resto r = new Resto();
