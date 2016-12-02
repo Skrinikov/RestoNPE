@@ -3,7 +3,9 @@ package npe.com.restonpe;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import npe.com.restonpe.Fragments.AddRestoFragment;
 
@@ -12,12 +14,14 @@ import npe.com.restonpe.Fragments.AddRestoFragment;
  * allow the user to add a resto to the database by entering
  * the proper needed information.
  *
- * @author
+ * @author Danieil Skirnikov
  * @since 30/11/2016
  * @version 1.0
  *
  */
 public class AddRestoActivity extends BaseActivity {
+
+    private static final String TAG = "AddRestoActivity";
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -29,7 +33,6 @@ public class AddRestoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.title_activity_restos_add);
         createFragments();
-        ArrayAdapter<String> aa = ArrayAdapter
     }
 
     /**
