@@ -48,7 +48,9 @@ public class NearRestosActivity extends BaseActivity {
         displayInformation(location);
 
         ZomatoRestos zomatoRestos = new ZomatoRestos(this);
-        zomatoRestos.findRestosNear(location.getLatitude(), location.getLongitude());
+        zomatoRestos.findNearbyRestos(location.getLatitude(), location.getLongitude());
+        // TODO only for testing
+//        zomatoRestos.findRestoInformation(16638028); // Resto Flap Flap. Don't ask
     }
 
     /**
