@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -94,7 +95,7 @@ public class RestoAdapter extends BaseAdapter {
      * @return View The View of one single item/row.
      */
     @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, ViewGroup parent) {
         View rowView = inflater.inflate(R.layout.resto_list, null);
         //ImageView icon = (ImageView) rowView.findViewById(R.id.cuisine_icon);
         TextView name = (TextView) rowView.findViewById(R.id.resto_name);
@@ -106,7 +107,7 @@ public class RestoAdapter extends BaseAdapter {
 
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
-        distance.setText(String.format("%.1f m", calculated_distance));
+        distance.setText(String.format("%.1f km", calculated_distance));
 
         rowView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,9 +118,12 @@ public class RestoAdapter extends BaseAdapter {
 
         rowView.setOnLongClickListener(new View.OnLongClickListener() {
             /**
+             * Method that will launch an implicit intent to dial the phone number in the
+             * restoItem. Will make Toast if no application can handle the intent.
              *
              * Used as reference
              * source: http://stackoverflow.com/questions/4275678/how-to-make-phone-call-using-intent-in-android
+             * source: https://developer.android.com/guide/components/intents-filters.html#Building
              *
              * @param v
              * @return
@@ -127,8 +131,13 @@ public class RestoAdapter extends BaseAdapter {
             @Override
             public boolean onLongClick(View v) {
                 String phone = (list.get(position).getPhone() > 0) ? list.get(position).getPhone() + "" : "";
-                Intent intent = new Intent(Intent.ACTION_DIAL,Uri.parse("tel:" + phone));
-                context.startActivity(intent);
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
+
+                if (intent.resolveActivity(context.getPackageManager()) != null) {
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, R.string.no_dial, Toast.LENGTH_LONG).show();
+                }
                 return false;
             }
         });
