@@ -17,6 +17,7 @@ public class RestoItem {
     private double longitude;
     private String address;
 
+    private long phone;
 
     public RestoItem(){
         id = -1;
@@ -27,6 +28,7 @@ public class RestoItem {
         latitude = 0;
         longitude = 0;
         address = "";
+        phone = -1;
     }
 
     public int getId() {
@@ -102,5 +104,11 @@ public class RestoItem {
      */
     public void setAddress(String address) {
         this.address = address;
+    public long getPhone() {
+        return phone;
+    }
+
+    public void setPhone(long phone) {
+        this.phone = phone;
     }
 }
