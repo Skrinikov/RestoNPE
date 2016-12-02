@@ -146,7 +146,7 @@ public class RestoDAOTest {
 
         long restoId = db.addRestaurant(r);
 
-        Resto result = db.getSignleRestaurant(restoId);
+        Resto result = db.getSingleRestaurant(restoId);
         Log.d(TAG,result.toString());
     }
 

@@ -9,7 +9,7 @@ package npe.com.restonpe.util;
  */
 public class DistanceCalculator {
 
-    public static final int radiusOfEarth = 6371; //In meters
+    public static final int EARTH_RADIUS = 6371; //In meters
 
     /**
      * Make the class not instantiable.
@@ -18,6 +18,9 @@ public class DistanceCalculator {
 
     /**
      * Calculates the distance between two latitude-longitude points.
+     *
+     * Used the Haversine formula to find the distance.
+     * It can be found here: http://www.movable-type.co.uk/scripts/latlong.html
      *
      * @param lat1 Latitude of the first point.
      * @param long1 Longitude of the first point.
@@ -37,7 +40,7 @@ public class DistanceCalculator {
         //c = 2 * atan2( sqrt(a), sqrt(1-a) )
         Double c = 2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
         //d = R * c
-        return radiusOfEarth * c;
+        return EARTH_RADIUS * c;
     }//calculateDistance
 
 
