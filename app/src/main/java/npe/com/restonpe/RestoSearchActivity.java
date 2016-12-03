@@ -2,9 +2,12 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import npe.com.restonpe.Fragments.RestoSearchFragment;
+import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
  * Creates an instance of the RestoSearch Activity. This {@code Activity} will allow the user to
@@ -26,6 +29,28 @@ public class RestoSearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.title_activity_search_restos);
         createFragments();
+
+        findCuisines();
+    }
+
+    public void buttonSearchClick(View v) {
+
+        String name;
+        String city;
+        String[] cuisines;
+
+
+        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
+//        zomatoRestos.findRestos(name, city, cuisines);
+    }
+
+    private void findCuisines() {
+        SharedPreferences preferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
+        String latitude = preferences.getString(BaseActivity.LATITUDE, null);
+        String longitude = preferences.getString(BaseActivity.LONGITUDE, null);
+
+        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
+        zomatoRestos.findCuisines(latitude, longitude);
     }
 
     /**

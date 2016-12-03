@@ -58,8 +58,8 @@
     <string name="title_activity_restos_fav">Favorites</string>
 
     <string name="location_not_found">Location not found</string>
-    <string name="latitude">Latitude: %1$f</string>
-    <string name="longitude">Longitude: %1$f</string>
+    <string name="latitude">Latitude: %1$s</string>
+    <string name="longitude">Longitude: %1$s</string>
 
     <string name="no_result">No result found.</string>
     <string name="no_dial">Unable to dial phone number.</string>

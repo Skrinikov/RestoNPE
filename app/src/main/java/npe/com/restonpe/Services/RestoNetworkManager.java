@@ -3,7 +3,9 @@ package npe.com.restonpe.Services;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -30,6 +32,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_NEAR_URL = "https://developers.zomato.com/api/v2.1/geocode?lat=%1$s&lon=%2$s";
     // The URL to hit to search for restaurants with place holder for search terms
     private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?q=%1$s&count=50&lat=%2$s&lon=%3$s&radius=50&cuisines=%4$s&sort=real_distance&order=asc";
+    // The URL to hit to search for all cuisines in the current city
+    private static final String RESTO_CUISINE_URL = "https://developers.zomato.com/api/v2.1/cuisines?lat=%1$s&lon=%2$s";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -119,19 +123,45 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      * @param longitude The longitude of the area of which to search
      * @param cuisines An array of cuisine IDs
      */
-    public void findRestos(String name, String latitude, String longitude, int[] cuisines) {
+    public void findRestos(String name, String latitude, String longitude, Integer[] cuisines) {
+
+        // Convert cuisine ids to comma-separated string
+        String cuisinesString = TextUtils.join(",", cuisines);
+
         // Add search terms to url, and make them valid for URLs. I.e. replace spaces with %20 and commas with %2C
-//        String updatedURL = String.format(RESTO_SEARCH_URL, Uri.encode(name), latitude, longitude, Uri.encode(cuisines));
-//
-//        try {
-//            URL url = new URL(updatedURL);
-//
-//            Log.i(TAG, "Hitting " + updatedURL);
-//
-//            execute(url);
-//        } catch (MalformedURLException e) {
-//            Log.e(TAG, "Malformed URL: " + updatedURL);
-//        }
+        String updatedURL = String.format(RESTO_SEARCH_URL, Uri.encode(name), latitude, longitude, Uri.encode(cuisinesString));
+
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
+    }
+
+    /**
+     * A convenience method that finds all cuisines in the city in which the given latitude and
+     * longitude fall
+     *
+     * @param latitude Any latitudinal point in a city
+     * @param longitude Any longitudinal point in the same city
+     */
+    public void findCuisines(String latitude, String longitude) {
+        // Add latitude and longitude to url
+        String updatedURL = String.format(RESTO_CUISINE_URL, latitude, longitude);
+
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
     }
 
     /**

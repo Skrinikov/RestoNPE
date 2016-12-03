@@ -12,7 +12,7 @@ import npe.com.restonpe.Zomato.ZomatoRestos;
 /**
  * Creates an instance of the NearRestos Activity. This {@code Activity} will show the user the
  * restaurants nearest to their current location, or an inputted postal code, according to the
- * Zomatp API.
+ * Zomato API.
  *
  * @author Jeegna Patel
  * @version 1.0
@@ -43,7 +43,7 @@ public class NearRestosActivity extends BaseActivity {
         if (latitude != null && longitude != null) {
             zomatoRestos.findNearbyRestos(latitude, longitude);
         } else {
-            // TODO Display message that says location was not found
+            // TODO Somehow tell user location was not found
         }
     }
 
@@ -57,9 +57,8 @@ public class NearRestosActivity extends BaseActivity {
     private void displayInformation(String latitude, String longitude) {
 
         Log.i(TAG, "Location found: " + latitude + ", " + longitude);
-//        ((TextView) findViewById(R.id.textView)).setText(String.format(getString(R.string.latitude), location.getLatitude()));
-//        ((TextView) findViewById(R.id.textView2)).setText(String.format(getString(R.string.longitude), location.getLongitude()));
-
+//        ((TextView) findViewById(R.id.textView)).setText(String.format(getString(R.string.latitude), latitude));
+//        ((TextView) findViewById(R.id.textView2)).setText(String.format(getString(R.string.longitude), longitude));
     }
 
     /**

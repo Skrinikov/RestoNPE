@@ -28,6 +28,9 @@ public class ZomatoRestos {
 
     private static final String TAG = ZomatoRestos.class.getSimpleName();
 
+    private static final String RESTO_CUISINE_ID = "id";
+    private static final String RESTO_CUISINE_NAME = "name";
+
     private static final String RESTO_LOCATION_ADDRESS = "address";
     private static final String RESTO_LOCATION_CITY = "city";
     private static final String RESTO_LOCATION_LATITUDE = "latitude";
@@ -45,6 +48,37 @@ public class ZomatoRestos {
      */
     public ZomatoRestos(Context context) {
         this.mContext = context;
+    }
+
+    /**
+     * Finds all cuisines in the city in which the given latitude and longitude fall.
+     *
+     * @param latitude Any latitudinal point in a city
+     * @param longitude Any longitudinal point in the same city
+     */
+    public void findCuisines(String latitude, String longitude) {
+        Log.i(TAG, "Finding cuisines near: " + latitude + ", " + longitude);
+
+        RestoNetworkManager<HashMap<String, String>> restoNetworkManager = new RestoNetworkManager<HashMap<String, String>>(mContext) {
+            @Override
+            public void onPostExecute(List<HashMap<String, String>> list) {
+
+            }
+
+            @Override
+            protected List<HashMap<String, String>> readJson(JsonReader reader) {
+                List<HashMap<String, String>> list = null;
+                try {
+                    list = readCuisines(reader);
+                } catch (IOException e) {
+                    Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
+                }
+
+                return list;
+            }
+        };
+
+        restoNetworkManager.findCuisines(latitude, longitude);
     }
 
     /**
@@ -85,10 +119,10 @@ public class ZomatoRestos {
      * @param city The city in which to search
      * @param cuisines The cuisines for which to search
      */
-    public void findRestos(String name, String city, String... cuisines) {
+    public void findRestos(String name, String city, Integer[] cuisines) {
         Log.i(TAG, String.format("Finding restaurants matching name=%1$s, city=%2$s", name, city));
 
-        // Get latitude and longitude of given city. If the city name is too vague, don't continue.
+        // Get latitude and longitude of given city.
         RestoLocationManager restoLocationManager = new RestoLocationManager(mContext) {
             @Override
             public void onLocationChanged(Location location) {
@@ -96,9 +130,6 @@ public class ZomatoRestos {
             }
         };
         android.location.Address address = restoLocationManager.getLocationFromName(city);
-
-        // Get the IDs of the given cuisines from the Zomato API
-        int[] cuisineIds = getCuisineIds(cuisines);
 
         RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
             @Override
@@ -119,13 +150,12 @@ public class ZomatoRestos {
             }
         };
 
-
-        // If an address was returned, it was not vague, so get the lat/long and continue
+        // If an address was returned, it was not vague, so get the lat/long and continue.
         if (address != null) {
             String latitude = address.getLatitude() + "";
             String longitude = address.getLongitude() + "";
 
-            restoNetworkManager.findRestos(name, latitude, longitude, cuisineIds);
+            restoNetworkManager.findRestos(name, latitude, longitude, cuisines);
         } else {
             // TODO No location was found
         }
@@ -154,18 +184,18 @@ public class ZomatoRestos {
             if (token.name().equals(JsonToken.NAME.toString())) {
                 String name = reader.nextName();
 
-                // Find "nearby_restaurants" in JSON response
+                // Find given name in JSON response
                 if (name.equals(jsonName)) {
                     reader.beginArray();
 
                     // Read all nearby restaurants
                     while (reader.hasNext()) {
-                        Log.i(TAG, "Found a restaurant!");
-                        Log.i(TAG, "Getting its information...");
 
                         // Get each restaurant from the response
                         reader.beginObject();
                         if (reader.nextName().equals("restaurant")) {
+                            Log.i(TAG, "Found a restaurant!");
+                            Log.i(TAG, "Getting its information...");
                             list.add(getResto(reader));
                         } else {
                             // The object wasn't a "restaurant" object, so skip it
@@ -175,7 +205,7 @@ public class ZomatoRestos {
                         reader.endObject();
                     }
 
-                    // End "nearby_restaurants" array
+                    // End restaurants array
                     reader.endArray();
                 } else {
                     Log.i(TAG, "Skipping " + name);
@@ -193,14 +223,99 @@ public class ZomatoRestos {
         return list;
     }
 
-    private int[] getCuisineIds(String[] cuisines) {
-        int[] cuisineIds = new int[cuisines.length];
+    /**
+     * Gets the ID's of the given list of cuisines from the Zomato API.
+     *
+     * @param reader A {@code JsonReader} with the next object being a cuisine array
+     *
+     * @return An array of id's. The array could be of size zero or smaller than the given array if
+     * some or all of the given cuisines were not found in the Zomato API.
+     * @throws IOException If an IOException occurs with the JSON text
+     */
+    private List<HashMap<String, String>> readCuisines(JsonReader reader) throws  IOException{
+        List<HashMap<String, String>> list = new ArrayList<>();
 
-        // TODO
+        // Start reading the text, by beginning the root object.
+        reader.beginObject();
 
-        return cuisineIds;
+        while (reader.hasNext()) {
+
+            // Get next token in the reader
+            JsonToken token = reader.peek();
+
+            // If token is a NAME, continue, otherwise, skip it
+            if (token.name().equals(JsonToken.NAME.toString())) {
+                String name = reader.nextName();
+
+                // Find "cuisines" in JSON response
+                if (name.equals("cuisines")) {
+                    reader.beginArray();
+
+                    // Read all cuisines
+                    while (reader.hasNext()) {
+
+                        // Get each cuisine from the response
+                        reader.beginObject();
+                        if (reader.nextName().equals("cuisine")) {
+                            Log.i(TAG, "Found a cuisine!");
+                            Log.i(TAG, "Getting its information...");
+
+                            list.add(getCuisine(reader));
+                        } else {
+                            // The object wasn't a "cuisine" object, so skip it
+                            // This should not happen
+                            reader.skipValue();
+                        }
+                        reader.endObject();
+                    }
+
+                    // End cuisines array
+                    reader.endArray();
+                } else {
+                    Log.i(TAG, "Skipping " + name);
+                    reader.skipValue();
+                }
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        // End root object
+        reader.endObject();
+        reader.close();
+
+        return list;
     }
 
+    /**
+     * Gets a single cuisine object from the JSON
+     *
+     * @param reader A {@code JsonReader} with the next object being a cuisine
+     *
+     * @return A HashMap with two values, the id, and the cuisine name
+     * @throws IOException If an IOException occurs while reading the JSON
+     */
+    private HashMap<String, String> getCuisine(JsonReader reader) throws IOException {
+        HashMap<String, String> cuisine = new HashMap<>();
+
+        reader.beginObject();
+
+        // cuisine_id
+        reader.nextName();
+        int id = reader.nextInt();
+        Log.i(TAG, "Found id: " + id);
+        cuisine.put(RESTO_CUISINE_ID, id + "");
+
+        // cuisine_name
+        reader.nextName();
+        String name = reader.nextString();
+        Log.i(TAG, "Found name: " + name);
+        cuisine.put(RESTO_CUISINE_NAME, name);
+
+        reader.endObject();
+
+        return cuisine;
+    }
 
     /**
      * Gets the information of a restaurant from the {@code JsonReader}
