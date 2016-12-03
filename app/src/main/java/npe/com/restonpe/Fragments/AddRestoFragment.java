@@ -11,9 +11,9 @@ import android.widget.Spinner;
 import npe.com.restonpe.R;
 
 /**
- * Created by Hung on 11/29/2016.
+ * Fragment of the addResto component. Inflates the UI, fills the spinners with data and creates on
+ * focus out listeners for the edit texts.
  */
-
 public class AddRestoFragment extends Fragment {
 
     /**
@@ -34,7 +34,8 @@ public class AddRestoFragment extends Fragment {
     }
 
     /**
-     * Is called whenever the add resto activity is created. Populates certain spinners.
+     * Is called whenever the add resto activity is created. Populates the spinners with data from
+     * the string-arrays.
      *
      * @param savedInstanceState
      */
@@ -42,6 +43,14 @@ public class AddRestoFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        // If add onFocusOutListeners add a method call here.
+        addContentToSpinners();
+    }
+
+    /**
+     * Adds the genre and price range array-strings to the two spinners of the UI.
+     */
+    private void addContentToSpinners() {
         // Adding all genres to the spinner.
         Spinner genres = (Spinner) getActivity().findViewById(R.id.genresSpinner);
         ArrayAdapter<CharSequence> aa = ArrayAdapter.createFromResource(getActivity(),R.array.genres,android.R.layout.simple_spinner_item);
@@ -52,6 +61,5 @@ public class AddRestoFragment extends Fragment {
         ArrayAdapter<CharSequence> aa2 = ArrayAdapter.createFromResource(getActivity(),R.array.price_ranges,android.R.layout.simple_spinner_item);
         aa2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         priceRanges.setAdapter(aa2);
-
     }
 }

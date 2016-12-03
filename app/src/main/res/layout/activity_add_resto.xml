@@ -28,10 +28,12 @@
                 android:textColor="@color/bigLabel"
                 android:textSize="20sp" />
 
+            <!-- Resto Name -->
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:id="@+id/restoNameLbl">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/restoName"
@@ -102,6 +104,8 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <!-- Addresses -->
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -113,7 +117,8 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp">
+                android:layout_marginTop="16dp"
+                android:id="@+id/restoAddressLbl">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/restoAddress"
@@ -132,7 +137,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5">
+                    android:layout_weight="5"
+                    android:id="@+id/restoCityLbl">
 
 
                     <android.support.design.widget.TextInputEditText
@@ -147,7 +153,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3">
+                    android:layout_weight="3"
+                    android:id="@+id/restoProvinceLbl">
 
 
                     <android.support.design.widget.TextInputEditText
@@ -168,7 +175,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5">
+                    android:layout_weight="5"
+                    android:id="@+id/restoPostalLbl">
 
 
                     <android.support.design.widget.TextInputEditText
@@ -183,7 +191,8 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3">
+                    android:layout_weight="3"
+                    android:id="@+id/restoCountryLbl">
 
 
                     <android.support.design.widget.TextInputEditText
@@ -195,6 +204,8 @@
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
+
+            <!-- Contact -->
 
             <TextView
                 android:layout_width="match_parent"
@@ -221,7 +232,8 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:id="@+id/restoEmailLbl">
 
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
@@ -246,6 +258,8 @@
                     android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
+
+            <!-- Button -->
 
             <Button
                 android:layout_width="match_parent"
