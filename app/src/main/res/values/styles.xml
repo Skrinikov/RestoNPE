@@ -61,8 +61,9 @@
     </style>
 
     <style name="Main_TextViewTheme">
+        <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">35sp</item>
+        <item name="android:textSize">25sp</item>
     </style>
 
     <style name="Main_ItemTheme">
