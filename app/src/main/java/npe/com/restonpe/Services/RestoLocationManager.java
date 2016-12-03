@@ -4,12 +4,17 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * An abstract class that handles the location services.
@@ -36,7 +41,7 @@ public abstract class RestoLocationManager implements LocationListener {
      *
      * @param context The {@code Context} of the calling {@code Activity}
      */
-    public RestoLocationManager(Context context) {
+    protected RestoLocationManager(Context context) {
         this.mContext = context;
     }
 
@@ -89,6 +94,39 @@ public abstract class RestoLocationManager implements LocationListener {
         }
 
         return location;
+    }
+
+    /**
+     * Finds the location from the given name. If many locations are found with the same name,
+     * {@code null} will be returned as the location was too vague.
+     *
+     * @param name The name to search for. Could be a city name, country, specific address,
+     *             postal/zip code, etc.
+     *
+     * @return An address with the found location's information, or {@code null} if the results were
+     * ambiguous.
+     */
+    public Address getLocationFromName(String name) {
+        if(Geocoder.isPresent()){
+            try {
+                Geocoder gc = new Geocoder(mContext);
+                List<Address> addresses = gc.getFromLocationName(name, 5);
+
+                if (addresses.size() != 1) {
+                    // Many addresses were returned, so the location was too vague
+
+                    // For some reason, entering London, only returns London, England. But entering
+                    // London, Ontario, returns London, Ontario
+                    return null;
+                } else {
+                    // Get the first and only result
+                    return addresses.get(0);
+                }
+            } catch (IOException e) {
+                Log.e(TAG, "An IOException occurred while trying to get the location: " + e.getMessage());
+            }
+        }
+        return null;
     }
 
     @Override
