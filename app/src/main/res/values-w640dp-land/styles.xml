@@ -46,4 +46,18 @@
         <item name="android:background">@drawable/text_field_bg</item>
         <item name="android:layout_margin">2dp</item>
     </style>
+
+    <style name="ListTextViewTheme">
+        <item name="android:textSize">30sp</item>
+    </style>
+
+    <style name="ListSubTextTheme">
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <style name="Main_TextViewTheme">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">35sp</item>
+    </style>
 </resources>

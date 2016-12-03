@@ -42,11 +42,11 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".FindRestosActivity" />
         <activity android:name=".RestoSearchActivity" />
         <activity android:name=".NearRestosActivity" />
         <activity android:name=".AddRestoActivity" />
-        <activity android:name=".FavRestoActivity"></activity>
+        <activity android:name=".FavRestoActivity">
+        </activity>
     </application>
 
 </manifest>

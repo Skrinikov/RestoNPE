@@ -3,7 +3,9 @@ package npe.com.restonpe.Services;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -28,10 +30,10 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
     // The URL to hit for finding nearby restaurants with placeholders for latitude and longitude.
     private static final String RESTO_NEAR_URL = "https://developers.zomato.com/api/v2.1/geocode?lat=%1$s&lon=%2$s";
-    // The URL to hit for restaurant information with a placeholder for the restaurant id
-    private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
-    // TODO The URL to hit to search for restaurants with place holder for search terms
+    // The URL to hit to search for restaurants with place holder for search terms
     private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?q=%1$s&count=50&lat=%2$s&lon=%3$s&radius=50&cuisines=%4$s&sort=real_distance&order=asc";
+    // The URL to hit to search for all cuisines in the current city
+    private static final String RESTO_CUISINE_URL = "https://developers.zomato.com/api/v2.1/cuisines?lat=%1$s&lon=%2$s";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -92,12 +94,13 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     }
 
     /**
-     * Gets the restaurants nearest the given latitude and longitude from the Zomato API
+     * A convenience method that gets the restaurants nearest the given latitude and longitude from
+     * the Zomato API
      *
      * @param latitude  The latitude from where to get the restaurants
      * @param longitude The longitude from where to get the restaurants
      */
-    public void findNearbyRestos(double latitude, double longitude) {
+    public void findNearbyRestos(String latitude, String longitude) {
         // Add latitude and longitude to url
         String updatedURL = String.format(RESTO_NEAR_URL, latitude, longitude);
 
@@ -113,13 +116,20 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     }
 
     /**
-     * Gets the restaurant with the given id from the Zomato API
+     * A convenience method for finding the restaurants that match the given search terms
      *
-     * @param id The id of the restaurant to get
+     * @param name The name of the restaurant for which to search
+     * @param latitude The latitude of the area of which to search
+     * @param longitude The longitude of the area of which to search
+     * @param cuisines An array of cuisine IDs
      */
-    public void findRestoInformation(int id) {
-        // Add id to url
-        String updatedURL = String.format(RESTO_URL, id);
+    public void findRestos(String name, String latitude, String longitude, Integer[] cuisines) {
+
+        // Convert cuisine ids to comma-separated string
+        String cuisinesString = TextUtils.join(",", cuisines);
+
+        // Add search terms to url, and make them valid for URLs. I.e. replace spaces with %20 and commas with %2C
+        String updatedURL = String.format(RESTO_SEARCH_URL, Uri.encode(name), latitude, longitude, Uri.encode(cuisinesString));
 
         try {
             URL url = new URL(updatedURL);
@@ -128,21 +138,20 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
             execute(url);
         } catch (MalformedURLException e) {
-            Log.w(TAG, "Malformed URL: " + updatedURL);
+            Log.e(TAG, "Malformed URL: " + updatedURL);
         }
     }
 
     /**
-     * Finds the restaurants that matches the given search terms
+     * A convenience method that finds all cuisines in the city in which the given latitude and
+     * longitude fall
      *
-     * @param name The name of the restaurant for which to search
-     * @param genre The type of cuisine for which to search
-     * @param latitude The latitude of the area of which to search
-     * @param latitude The longitude of the area of which to search
+     * @param latitude Any latitudinal point in a city
+     * @param longitude Any longitudinal point in the same city
      */
-    public void findRestos(String name, String latitude, String longitude, String genre) {
-        // Add search terms to url
-        String updatedURL = String.format(RESTO_SEARCH_URL, name, latitude, longitude, genre);
+    public void findCuisines(String latitude, String longitude) {
+        // Add latitude and longitude to url
+        String updatedURL = String.format(RESTO_CUISINE_URL, latitude, longitude);
 
         try {
             URL url = new URL(updatedURL);
@@ -169,12 +178,18 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     }
 
     /**
-     * This method should be used to parse the data
+     * Displays the given list on the UI
      *
      * @param list A list populated with data beans from the JSON response
      */
     @Override
     public abstract void onPostExecute(List<T> list);
 
+    /**
+     * Parses the JSON response from Zomato
+     *
+     * @param reader The {@code JsonReader} with the JSON response
+     * @return A {@code List} populated with data beans from the JSON response
+     */
     protected abstract List<T> readJson(JsonReader reader);
 }

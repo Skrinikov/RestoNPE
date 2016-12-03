@@ -46,40 +46,44 @@ public class FavRestoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Log.d(TAG,"onCreateView called");
+        Log.d(TAG, "onCreateView called");
         return inflater.inflate(R.layout.activity_fav_resto, container, false);
     }
 
     /**
      * Attempts to list all the resto store in database into the ListView.
-     *
+     * <p>
      * Uses the custom RestoAdapter to list the objects. Needs to have sharedPreferences
      * set in order to be used, because it needs the longitude and latitude of the user.
-     *
+     * <p>
      * If there is no result, will display a no result TextView.
      *
      * @param savedInstanceState Bundle that contains current run values.
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
-        Log.d(TAG,"onActivityCreated called");
+        Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
 
         SharedPreferences prefs = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
         ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
-        TextView no_result = (TextView)getActivity().findViewById(R.id.no_result);
+        TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);
 
         if (prefs != null) {
-            Log.d(TAG,"onActivityCreated: prefs is not null.");
+            Log.d(TAG, "onActivityCreated: prefs is not null.");
             restoDAO = RestoDAO.getDatabase(getActivity());
             List<RestoItem> restos = restoDAO.getAllRestaurantsSmall();
 
             if (restos.size() > 0) {
-                Log.d(TAG,"onActivityCreated: there are restos.");
+                Log.d(TAG, "onActivityCreated: there are restos.");
                 no_result.setVisibility(View.GONE);
-                RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos);
+
+                RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos, prefs.getString("longitude", "0"),
+                        prefs.getString("latitude", "0"));
                 resto_list.setAdapter(restoAdapter);
-            } else{
+
+
+            } else {
                 no_result.setVisibility(View.VISIBLE);
             }
         }

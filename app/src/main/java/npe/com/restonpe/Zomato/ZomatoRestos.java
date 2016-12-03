@@ -1,6 +1,7 @@
 package npe.com.restonpe.Zomato;
 
 import android.content.Context;
+import android.location.Location;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -12,8 +13,8 @@ import java.util.List;
 
 import npe.com.restonpe.Beans.Address;
 import npe.com.restonpe.Beans.Resto;
-import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Beans.Review;
+import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.Services.RestoNetworkManager;
 
 /**
@@ -27,20 +28,57 @@ public class ZomatoRestos {
 
     private static final String TAG = ZomatoRestos.class.getSimpleName();
 
+    private static final String RESTO_CUISINE_ID = "id";
+    private static final String RESTO_CUISINE_NAME = "name";
+
     private static final String RESTO_LOCATION_ADDRESS = "address";
     private static final String RESTO_LOCATION_CITY = "city";
     private static final String RESTO_LOCATION_LATITUDE = "latitude";
     private static final String RESTO_LOCATION_LONGITUDE = "longitude";
     private static final String RESTO_LOCATION_POSTAL = "postal";
 
-    private static final String RESTO_RATING_AVG = "rating";
-
     private static final String RESTO_USER_NAME = "username";
 
     private Context mContext;
 
+    /**
+     * Creates a class that will handle calls to the Zomato API
+     *
+     * @param context The {@code Context} of the calling {@code Activity}
+     */
     public ZomatoRestos(Context context) {
         this.mContext = context;
+    }
+
+    /**
+     * Finds all cuisines in the city in which the given latitude and longitude fall.
+     *
+     * @param latitude Any latitudinal point in a city
+     * @param longitude Any longitudinal point in the same city
+     */
+    public void findCuisines(String latitude, String longitude) {
+        Log.i(TAG, "Finding cuisines near: " + latitude + ", " + longitude);
+
+        RestoNetworkManager<HashMap<String, String>> restoNetworkManager = new RestoNetworkManager<HashMap<String, String>>(mContext) {
+            @Override
+            public void onPostExecute(List<HashMap<String, String>> list) {
+
+            }
+
+            @Override
+            protected List<HashMap<String, String>> readJson(JsonReader reader) {
+                List<HashMap<String, String>> list = null;
+                try {
+                    list = readCuisines(reader);
+                } catch (IOException e) {
+                    Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
+                }
+
+                return list;
+            }
+        };
+
+        restoNetworkManager.findCuisines(latitude, longitude);
     }
 
     /**
@@ -49,20 +87,20 @@ public class ZomatoRestos {
      * @param latitude The latitude to use to find the restaurants
      * @param longitude The longitude to use to find the restaurants
      */
-    public void findNearbyRestos(double latitude, double longitude) {
+    public void findNearbyRestos(String latitude, String longitude) {
         Log.i(TAG, "Finding restaurants near: " + latitude + ", " + longitude);
 
-        RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
+        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
             @Override
-            public void onPostExecute(List<RestoItem> list) {
+            public void onPostExecute(List<Resto> list) {
                 // TODO put list in AdpaterView
             }
 
             @Override
-            protected List<RestoItem> readJson(JsonReader reader) {
-                List<RestoItem> list = null;
+            protected List<Resto> readJson(JsonReader reader) {
+                List<Resto> list = null;
                 try {
-                    list = readNearbyRestosJson(reader);
+                    list = readRestoJson(reader, "nearby_restaurants");
                 } catch (IOException e) {
                     Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
                 }
@@ -75,12 +113,23 @@ public class ZomatoRestos {
     }
 
     /**
-     * Finds all the information of the restaurant with the given id.
+     * Finds the restaurants from the Zomato API which match the given search criteria
      *
-     * @param id The id of the restaurant
+     * @param name The name for which to search
+     * @param city The city in which to search
+     * @param cuisines The cuisines for which to search
      */
-    public void findRestoInformation(int id) {
-        Log.i(TAG, "Finding restaurant with id " + id);
+    public void findRestos(String name, String city, Integer[] cuisines) {
+        Log.i(TAG, String.format("Finding restaurants matching name=%1$s, city=%2$s", name, city));
+
+        // Get latitude and longitude of given city.
+        RestoLocationManager restoLocationManager = new RestoLocationManager(mContext) {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Do nothing
+            }
+        };
+        android.location.Address address = restoLocationManager.getLocationFromName(city);
 
         RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
             @Override
@@ -92,7 +141,7 @@ public class ZomatoRestos {
             protected List<Resto> readJson(JsonReader reader) {
                 List<Resto> list = null;
                 try {
-                    list = readRestoJson(reader);
+                    list = readRestoJson(reader, "restaurants");
                 } catch (IOException e) {
                     Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
                 }
@@ -101,50 +150,28 @@ public class ZomatoRestos {
             }
         };
 
-        restoNetworkManager.findRestoInformation(id);
-    }
+        // If an address was returned, it was not vague, so get the lat/long and continue.
+        if (address != null) {
+            String latitude = address.getLatitude() + "";
+            String longitude = address.getLongitude() + "";
 
-    public void findRestos(String name, String genre, String city) {
-        Log.i(TAG, String.format("Finding restaurants matching name=%1$s, genre=%2$s, city=%3$s", name, genre, city));
-
-        // TODO get lat and long of given city
-        // TODO get id of genre somehow
-        String latitude = "";
-        String longitude = "";
-
-        RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
-            @Override
-            public void onPostExecute(List<RestoItem> list) {
-                // TODO put list in AdpaterView
-            }
-
-            @Override
-            protected List<RestoItem> readJson(JsonReader reader) {
-                List<RestoItem> list = null;
-                try {
-                    list = readRestosJson(reader);
-                } catch (IOException e) {
-                    Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
-                }
-
-                return list;
-            }
-        };
-
-        restoNetworkManager.findRestos(name, latitude, longitude, genre);
+            restoNetworkManager.findRestos(name, latitude, longitude, cuisines);
+        } else {
+            // TODO No location was found
+        }
     }
 
     /**
-     * Reads the given JSON text and returns a List of nearby Restaurant objects
+     * Reads the given JSON text of restaurants and returns a List of Resto objects
      *
-     * @param reader The JSON reader
+     * @param reader A {@code JsonReader} with the next object being the root
+     * @param jsonName The string in the JSON to find restaurant objects
      *
-     * @return A list of {@code RestoItem}s. May return an empty list if there are no results found.
-     *
+     * @return A list of {@code Resto}s. May return an empty list if there are no results found.
      * @throws IOException If an IOException occurs with the JSON text
      */
-    private List<RestoItem> readNearbyRestosJson(JsonReader reader) throws IOException {
-        List<RestoItem> list = new ArrayList<>();
+    private List<Resto> readRestoJson(JsonReader reader, String jsonName) throws IOException {
+        List<Resto> list = new ArrayList<>();
 
         // Start reading the text, by beginning the root object.
         reader.beginObject();
@@ -157,27 +184,28 @@ public class ZomatoRestos {
             if (token.name().equals(JsonToken.NAME.toString())) {
                 String name = reader.nextName();
 
-                // Find "nearby_restaurants" in JSON response
-                if (name.equals("nearby_restaurants")) {
+                // Find given name in JSON response
+                if (name.equals(jsonName)) {
                     reader.beginArray();
 
                     // Read all nearby restaurants
                     while (reader.hasNext()) {
-                        Log.i(TAG, "Found a restaurant!");
-                        Log.i(TAG, "Getting its information...");
 
                         // Get each restaurant from the response
                         reader.beginObject();
                         if (reader.nextName().equals("restaurant")) {
-                            list.add(getRestoItem(reader));
+                            Log.i(TAG, "Found a restaurant!");
+                            Log.i(TAG, "Getting its information...");
+                            list.add(getResto(reader));
                         } else {
                             // The object wasn't a "restaurant" object, so skip it
+                            // This should not happen
                             reader.skipValue();
                         }
                         reader.endObject();
                     }
 
-                    // End "nearby_restaurants" array
+                    // End restaurants array
                     reader.endArray();
                 } else {
                     Log.i(TAG, "Skipping " + name);
@@ -196,49 +224,153 @@ public class ZomatoRestos {
     }
 
     /**
-     * Gets all the information of the restaurant object next in the JSON reader
+     * Gets the ID's of the given list of cuisines from the Zomato API.
      *
-     * @param reader The JSON reader
+     * @param reader A {@code JsonReader} with the next object being a cuisine array
      *
-     * @return A {@code List} with 1 item that holds the bean with the information of the
-     * restaurant. or an empty list if a restaurant with the given id does not exist.
-     *
+     * @return An array of id's. The array could be of size zero or smaller than the given array if
+     * some or all of the given cuisines were not found in the Zomato API.
      * @throws IOException If an IOException occurs with the JSON text
      */
-    private List<Resto> readRestoJson(JsonReader reader) throws IOException {
-        List<Resto> list = new ArrayList<>();
-        Resto resto = null;
+    private List<HashMap<String, String>> readCuisines(JsonReader reader) throws  IOException{
+        List<HashMap<String, String>> list = new ArrayList<>();
 
-        // Begin root object
+        // Start reading the text, by beginning the root object.
         reader.beginObject();
 
         while (reader.hasNext()) {
-            resto = new Resto();
+
+            // Get next token in the reader
+            JsonToken token = reader.peek();
+
+            // If token is a NAME, continue, otherwise, skip it
+            if (token.name().equals(JsonToken.NAME.toString())) {
+                String name = reader.nextName();
+
+                // Find "cuisines" in JSON response
+                if (name.equals("cuisines")) {
+                    reader.beginArray();
+
+                    // Read all cuisines
+                    while (reader.hasNext()) {
+
+                        // Get each cuisine from the response
+                        reader.beginObject();
+                        if (reader.nextName().equals("cuisine")) {
+                            Log.i(TAG, "Found a cuisine!");
+                            Log.i(TAG, "Getting its information...");
+
+                            list.add(getCuisine(reader));
+                        } else {
+                            // The object wasn't a "cuisine" object, so skip it
+                            // This should not happen
+                            reader.skipValue();
+                        }
+                        reader.endObject();
+                    }
+
+                    // End cuisines array
+                    reader.endArray();
+                } else {
+                    Log.i(TAG, "Skipping " + name);
+                    reader.skipValue();
+                }
+            } else {
+                reader.skipValue();
+            }
+        }
+
+        // End root object
+        reader.endObject();
+        reader.close();
+
+        return list;
+    }
+
+    /**
+     * Gets a single cuisine object from the JSON
+     *
+     * @param reader A {@code JsonReader} with the next object being a cuisine
+     *
+     * @return A HashMap with two values, the id, and the cuisine name
+     * @throws IOException If an IOException occurs while reading the JSON
+     */
+    private HashMap<String, String> getCuisine(JsonReader reader) throws IOException {
+        HashMap<String, String> cuisine = new HashMap<>();
+
+        reader.beginObject();
+
+        // cuisine_id
+        reader.nextName();
+        int id = reader.nextInt();
+        Log.i(TAG, "Found id: " + id);
+        cuisine.put(RESTO_CUISINE_ID, id + "");
+
+        // cuisine_name
+        reader.nextName();
+        String name = reader.nextString();
+        Log.i(TAG, "Found name: " + name);
+        cuisine.put(RESTO_CUISINE_NAME, name);
+
+        reader.endObject();
+
+        return cuisine;
+    }
+
+    /**
+     * Gets the information of a restaurant from the {@code JsonReader}
+     *
+     * @param reader A {@code JsonReader} with the next object being a restaurant
+     *
+     * @return A {@code RestoItem} with the data from the {@code JsonReader}
+     * @throws IOException If an IOException occurs while reading the JSON
+     */
+    private Resto getResto(JsonReader reader) throws IOException {
+        Resto resto = new Resto();
+
+        // Default values for price range field
+        int priceRange = 0;
+        String currency = "";
+
+        // Begin the restaurant object
+        reader.beginObject();
+
+        // Read all fields in "restaurant" object
+        for (int i = 0; i < 21; i++) {
             JsonToken token = reader.peek();
 
             if (token.name().equals(JsonToken.NAME.toString())) {
 
                 String name = reader.nextName();
+
                 switch (name) {
-                    case "id":
+                    case "id": // Zomato's id for the restaurant
                         int id = reader.nextInt();
                         Log.i(TAG, "Found id: " + id);
 
                         resto.setId(id);
                         break;
-                    case "name":
+                    case "name": // Name of the restaurant
                         String restoName = reader.nextString();
                         Log.i(TAG, "Found name: " + restoName);
 
-                        resto.setName(name);
+                        resto.setName(restoName);
                         break;
-                    case "url":
+                    case "url": // The link to the restaurant's page on Zomato
                         String url = reader.nextString();
                         Log.i(TAG, "Found URL: " + url);
 
                         resto.setLink(url);
                         break;
-                    case "location":
+                    case "price_range": // Price range of restaurant, as a number from 1-4, where 1 is pocket-friendly and 4 is expensive
+                        priceRange = reader.nextInt();
+                        Log.i(TAG, "Found price range: " + priceRange);
+                        break;
+                    case "currency": // The currency used in the restaurant, ex. $, ₯, etc.
+                        currency = reader.nextString();
+                        Log.i(TAG, "Found currency: " + currency);
+                        break;
+                    case "location": // The location of the restaurant as an object
                         HashMap<String, String> locations = handleLocation(reader);
                         Address addressItem = new Address();
 
@@ -250,24 +382,17 @@ public class ZomatoRestos {
 
                         resto.addAddress(addressItem);
                         break;
-                    case "price_range":
-                        int priceRange = reader.nextInt();
-                        Log.i(TAG, "Found price range: " + priceRange);
-
-                        resto.setPriceRange(priceRange + "");
+                    case "all_reviews": // The reviews from the restaurant, as an array of objects
+                        List<Review> reviews = handleReview(reader);
+                        resto.setReviews(reviews);
                         break;
-                    case "all_reviews":
-                        // TODO
-//                      Hashmap<String, String> values = handleReview(reader);
-                        reader.skipValue();
-                        break;
-                    case "cuisines":
+                    case "cuisines": // The type of the food the restaurant serves in a comma-separated list
                         String cuisines = reader.nextString();
                         Log.i(TAG, "Found cuisines: " + cuisines);
 
                         resto.setGenre(cuisines);
                         break;
-                    case "phone_numbers":
+                    case "phone_numbers": // The restaurant's phone number, as a long with the parentheses, spaces and dashes removed
                         String phone = reader.nextString();
                         Log.i(TAG, "Found phone number: " + phone);
 
@@ -277,102 +402,7 @@ public class ZomatoRestos {
 
                         resto.setPhone(Long.parseLong(phone));
                         break;
-                    default:
-                        Log.i(TAG, "The " + name + " was ignored.");
-                        reader.skipValue();
-                }
-            } else {
-                reader.skipValue();
-            }
-        }
-
-        list.add(resto);
-
-        // End root object
-        reader.endObject();
-        reader.close();
-
-        return list;
-    }
-
-    /**
-     *
-     * @param reader
-     * @return
-     * @throws IOException
-     */
-    private List<RestoItem> readRestosJson(JsonReader reader) throws IOException {
-        List<RestoItem> list = null;
-
-        // Begin root object
-        reader.beginObject();
-
-        // TODO
-
-        // End root object
-        reader.endObject();
-        reader.close();
-
-        return list;
-    }
-
-    /**
-     * Gets the information of a restaurant from the {@code JsonReader}
-     *
-     * @param reader A {@code JsonReader} with the next object being a restaurant
-     * @return A {@code RestoItem} with the data from the {@code JsonReader}
-     * @throws IOException If an IOException occurs while reading the JSON
-     */
-    private RestoItem getRestoItem(JsonReader reader) throws IOException {
-        RestoItem restoItem = new RestoItem();
-
-        // Begin the restaurant object
-        reader.beginObject();
-
-        // Read all fields
-        for (int i = 0; i < 21; i++) {
-            JsonToken token = reader.peek();
-
-            if (token.name().equals(JsonToken.NAME.toString())) {
-
-                String name = reader.nextName();
-
-                switch (name) {
-                    case "id":
-                        int id = reader.nextInt();
-                        Log.i(TAG, "Found id: " + id);
-
-                        restoItem.setId(id);
-                        break;
-                    case "name": // Name of the restaurant
-                        String restoName = reader.nextString();
-                        Log.i(TAG, "Found name: " + restoName);
-
-                        restoItem.setName(restoName);
-                        break;
-                    case "price_range": // Price range of restaurant
-                        int priceRange = reader.nextInt();
-                        Log.i(TAG, "Found price range: " + priceRange);
-
-                        restoItem.setPriceRange(priceRange + "");
-                        break;
-                    case "location": // The restaurant's locations. A restaurant may have multiple locations
-                        HashMap<String, String> location = handleLocation(reader);
-
-                        restoItem.setAddress(location.get(RESTO_LOCATION_ADDRESS));
-                        restoItem.setCity(location.get(RESTO_LOCATION_CITY));
-                        restoItem.setLatitude(Double.parseDouble(location.get(RESTO_LOCATION_LATITUDE)));
-                        restoItem.setLongitude(Double.parseDouble(location.get(RESTO_LOCATION_LONGITUDE)));
-                        break;
-                    case "user_rating": // The restaurant's average rating
-                        HashMap<String, String> rating = handleRating(reader);
-
-                        double avgRating = Double.parseDouble(rating.get(RESTO_RATING_AVG));
-                        Log.i(TAG, "Found average rating: " + avgRating);
-
-                        restoItem.setRating(avgRating);
-                        break;
-                    default:
+                    default: // Information we don't need
                         Log.i(TAG, "The " + name + " was ignored.");
                         reader.skipValue();
                 }
@@ -382,16 +412,74 @@ public class ZomatoRestos {
             }
         }
 
+        // Change price range
+        for (int i = 1; i < priceRange; i++) {
+            currency += currency;
+        }
+        Log.i(TAG, "Changed price range to " + currency);
+        resto.setPriceRange(currency);
+
         // End restaurant object
         reader.endObject();
 
-        return restoItem;
+        return resto;
     }
+
+
+    /**
+     * Gets a single review's information from the JSON
+     *
+     * @param reader    A {@code JsonReader} with the next object being a review
+     *
+     * @return A {@code Review} which holds the values retrieved from the review object in the JSON
+     * @throws IOException If an IOException occurs while reading the JSON
+     */
+    private Review getReview(JsonReader reader) throws IOException {
+        Review review = new Review();
+        reader.beginObject();
+
+        for (int i = 0; i < 10; i++) {
+            String name = reader.nextName();
+
+            switch (name) {
+                case "rating":
+                    double rating = reader.nextDouble();
+                    Log.i(TAG, "Found rating: " + rating);
+
+                    review.setRating(rating);
+                    break;
+                case "review_text":
+                    String text = reader.nextString();
+                    Log.i(TAG, "Found review text: " + text);
+
+                    review.setContent(text);
+                    break;
+                case "likes":
+                    int likes = reader.nextInt();
+                    Log.i(TAG, "Found likes: " + likes);
+
+                    review.setLikes(likes);
+                    break;
+                case "user":
+                    HashMap<String, String> users = handleUser(reader);
+
+                    review.setSubmitter(users.get(RESTO_USER_NAME));
+                    break;
+                default:
+                    Log.i(TAG, "The " + name + " was ignored.");
+                    reader.skipValue();
+            }
+        }
+        reader.endObject();
+
+        return review;
+    }
+
 
     /**
      * Gets the location information of the restaurant
      *
-     * @param reader    A {@code JsonReader} with the next object being a restaurant
+     * @param reader    A {@code JsonReader} with the next object being a location
      *
      * @return An associative array which holds the values retrieved from the location object in the JSON
      * @throws IOException If an IOException occurs while reading the JSON
@@ -415,7 +503,6 @@ public class ZomatoRestos {
                     Log.i(TAG, "Found city: " + city);
 
                     values.put("city", RESTO_LOCATION_CITY);
-
                     break;
                 case "latitude":
                     double latitude = reader.nextDouble();
@@ -446,101 +533,37 @@ public class ZomatoRestos {
     }
 
     /**
-     * Gets the average rating information of the restaurant.
+     * Gets all the reviews from the JSON
      *
-     * @param reader    A {@code JsonReader} with the next object being a restaurant
+     * @param reader    A {@code JsonReader} with the next object being an array of reviews
+     *
+     * @return An list of all {@code Review} objects in the JSON, or an empty list if there are no
+     * reviews in the JSON
      * @throws IOException If an IOException occurs while reading the JSON
-     * @return
      */
-    private HashMap<String, String> handleRating(JsonReader reader) throws IOException {
-        HashMap<String, String> values = new HashMap<>();
-        reader.beginObject();
+    private List<Review> handleReview(JsonReader reader) throws IOException {
+        List<Review> reviews = new ArrayList<>();
+        reader.beginArray();
 
-        for (int i = 0; i < 4; i++) {
-            String name = reader.nextName();
-
-            switch (name) {
-                case "aggregate_rating":
-                    double rating = reader.nextDouble();
-                    Log.i(TAG, "Found rating: " + rating);
-
-                    values.put(RESTO_RATING_AVG, rating + "");
-                    break;
-                default:
-                    Log.i(TAG, "The " + name + " was ignored.");
-                    reader.skipValue();
-            }
+        JsonToken token = reader.peek();
+        // While all_reviews array is not over
+        while (!token.name().equals(JsonToken.END_ARRAY.toString())) {
+            Review review = getReview(reader);
+            reviews.add(review);
+            token = reader.peek();
         }
-        reader.endObject();
 
-        return values;
+        reader.endArray();
+        return reviews;
     }
 
     /**
+     * Gets the information of the user object in the JSON
      *
-     * @param reader
-     * @return
-     * @throws IOException
-     */
-    private HashMap<String, String> handleReview(JsonReader reader) throws IOException {
-        HashMap<String, String> values = new HashMap<>();
-
-
-        return values;
-    }
-
-    /**
+     * @param reader    A {@code JsonReader} with the next object being a user
      *
-     * @param reader
-     * @return
-     * @throws IOException
-     */
-    private Review getReview(JsonReader reader) throws IOException {
-        Review review = new Review();
-        reader.beginObject();
-
-        for (int i = 0; i < 10; i++) {
-            String name = reader.nextName();
-
-            switch (name) {
-                case "rating":
-                    double rating = reader.nextDouble();
-                    Log.i(TAG, "Found rating: " + rating);
-
-                    review.setRating(rating);
-                    break;
-                case "review_text":
-                    String text = reader.nextString();
-                    Log.i(TAG, "Found review text: " + text);
-
-                    review.setContent(text);
-                    break;
-                case "likes":
-                    int likes = reader.nextInt();
-                    Log.i(TAG, "Found likes: " + likes);
-
-                    review.setLikes(likes);
-                    break;
-                case "user":
-                    HashMap<String, String> values = handleUser(reader);
-
-                    review.setSubmitter(values.get(RESTO_USER_NAME));
-                    break;
-                default:
-                    Log.i(TAG, "The " + name + " was ignored.");
-                    reader.skipValue();
-            }
-        }
-        reader.endObject();
-
-        return review;
-    }
-
-    /**
-     *
-     * @param reader
-     * @return
-     * @throws IOException
+     * @return An associative array which holds the values retrieved from the user object in the JSON
+     * @throws IOException If an IOException occurs while reading the JSON
      */
     private HashMap<String, String> handleUser(JsonReader reader) throws IOException {
         HashMap<String, String> values = new HashMap<>();

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
 import npe.com.restonpe.R;
 
@@ -25,6 +26,7 @@ import npe.com.restonpe.R;
 public class TipFragment extends Fragment {
 
     private EditText subtotal, tip_percent, tip_amount, num_of_people, person_person, grand_total;
+    private RadioGroup tip_radio;
     private final String TAG = "TipFragment";
 
     /**
@@ -64,6 +66,8 @@ public class TipFragment extends Fragment {
         num_of_people = (EditText) getActivity().findViewById(R.id.num_of_people);
         person_person = (EditText) getActivity().findViewById(R.id.amount_person);
         grand_total = (EditText) getActivity().findViewById(R.id.grand_total);
+        tip_radio = (RadioGroup) getActivity().findViewById(R.id.tip_radio);
+
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -121,7 +125,32 @@ public class TipFragment extends Fragment {
         tip_percent.addTextChangedListener(watcher);
         num_of_people.addTextChangedListener(watcher);
 
-
+        tip_radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener(){
+            /**
+             * Changes the text of the tip_percent depending on which radio button was
+             * selected determined with a switch statement with its id.
+             *
+             * Used as reference:
+             * source: https://developer.android.com/reference/android/widget/RadioGroup.html
+             *
+             * @param group The group which the radio button belongs to.
+             * @param checkedId The id of the checked radio button.
+             */
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (tip_radio.getCheckedRadioButtonId()){
+                    case R.id.tip_10:
+                        tip_percent.setText("10");
+                        break;
+                    case R.id.tip_15:
+                        tip_percent.setText("15");
+                        break;
+                    case R.id.tip_20:
+                        tip_percent.setText("20");
+                        break;
+                }
+            }
+        });
     }
 
     /**

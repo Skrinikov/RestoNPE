@@ -167,7 +167,7 @@ public class RestoDAOTest {
         r.setPriceRange("323.99-873.32");
         r.setSubmitterEmail("baguette");
         r.setSubmitterName("French Dude 107");
-        r.setPhone(986);
+        r.setPhone(5142244918L);
         r.setLink("TestTest");
         r.setEmail("Hello");
 
