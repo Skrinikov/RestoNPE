@@ -10,9 +10,7 @@ package npe.com.restonpe.Beans;
 public class Address {
 
     private String address;
-
-    private int civic;
-    private String street;
+    private String province;
     private String city;
     private String country;
     private String postal;
@@ -25,13 +23,12 @@ public class Address {
      */
     public Address(){
         address = "";
-        civic = 0;
-        street = "";
         city = "";
         country = "";
         latitude = 0;
         longitude = 0;
         suite = 0;
+        province = "";
     }
 
     /**
@@ -51,42 +48,6 @@ public class Address {
      */
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    /**
-     * Returns the civic address of the address.
-     * 
-     * @return value of the civic number.
-     */
-    public int getCivic() {
-        return civic;
-    }
-    
-    /**
-     * Sets the civic number for the address. 
-     * 
-     * @param civic civic number of the address.
-     */
-    public void setCivic(int civic) {
-        this.civic = civic;
-    }
-    
-    /**
-     * Returns the street name of the address.
-     * 
-     * @return name of the street.
-     */
-    public String getStreet() {
-        return street;
-    }
-
-    /**
-     * Sets the street for the address.
-     * 
-     * @param street new street name for the address.
-     */
-    public void setStreet(String street) {
-        this.street = street;
     }
 
     /**
@@ -195,5 +156,13 @@ public class Address {
      */
     public void setPostal(String postal) {
         this.postal = postal;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 }

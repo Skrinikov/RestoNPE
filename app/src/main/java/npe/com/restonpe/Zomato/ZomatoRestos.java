@@ -380,7 +380,8 @@ public class ZomatoRestos {
                         addressItem.setLongitude(Double.parseDouble(locations.get(RESTO_LOCATION_LONGITUDE)));
                         addressItem.setPostal(locations.get(RESTO_LOCATION_POSTAL));
 
-                        resto.addAddress(addressItem);
+                        // Changed here because chains are no longer used.
+                        resto.setAddress(addressItem);
                         break;
                     case "all_reviews": // The reviews from the restaurant, as an array of objects
                         List<Review> reviews = handleReview(reader);

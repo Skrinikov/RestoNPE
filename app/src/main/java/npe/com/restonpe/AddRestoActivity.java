@@ -2,16 +2,22 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
+import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
+import npe.com.restonpe.Services.RestoLocationManager;
+import npe.com.restonpe.database.RestoDAO;
 
 /**
  * Creates an instance of the AddRestoActivity which will
@@ -27,6 +33,9 @@ public class AddRestoActivity extends BaseActivity {
 
     private static final String TAG = "AddRestoActivity";
 
+    private npe.com.restonpe.Beans.Address restoAddress;
+    private SharedPreferences pref;
+
     /**
      * Loads the fragment and changes the action bar's title.
      *
@@ -36,6 +45,7 @@ public class AddRestoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.title_activity_restos_add);
+        pref = getSharedPreferences("Settings", MODE_PRIVATE);
         createFragments();
     }
 
@@ -52,7 +62,10 @@ public class AddRestoActivity extends BaseActivity {
     }
 
     /**
-     * Test
+     * Method is invoked every time the user clicks the add resto button. Validates that all the required
+     * fields are set, and if they are adds the restaurant to the local database.
+     *
+     * TODO use async task later to message the server to add the resto.
      *
      * @param view
      */
@@ -60,12 +73,51 @@ public class AddRestoActivity extends BaseActivity {
         Log.d(TAG,"addRestaurant()");
 
         if(validateInputFields()){
-            
+            Resto resto = buildResto();
+            RestoDAO db = RestoDAO.getDatabase(this);
+            db.addRestaurant(resto);
+            Log.i(TAG,"restaurant added");
+            //TODO open intent to display the new restaurant.
         }
 
         Log.i(TAG,"addRestaurant()");
     }
 
+    /**
+     * Creates a Resto bean using the information from the gui.
+     * @return resto bean with all available information.
+     */
+    private Resto buildResto() {
+        Resto resto = new Resto();
+
+        String name = ((EditText)findViewById(R.id.restoName)).getText().toString();
+        resto.setName(name);
+        String phone = ((EditText)findViewById(R.id.restoPhone)).getText().toString();
+        resto.setPhone(Long.parseLong(phone));
+        String email = ((EditText)findViewById(R.id.restoEmail)).getText().toString();
+        resto.setName(email);
+        String link = ((EditText)findViewById(R.id.restoLink)).getText().toString();
+        resto.setName(link);
+        resto.setAddress(restoAddress);
+
+        //Spinners
+        String genre = ((Spinner)findViewById(R.id.genresSpinner)).getSelectedItem().toString();
+        String pricing = ((Spinner)findViewById(R.id.priceRangeSpinner)).getSelectedItem().toString();
+        resto.setGenre(genre);
+        resto.setPriceRange(pricing);
+
+        // User
+        resto.setSubmitterName(pref.getString("username",""));
+        resto.setSubmitterEmail(pref.getString("emailAdr",""));
+
+        return resto;
+    }
+
+    /**
+     * Validates that all the required input fields were set. If any errors occur, displayes an appropriate
+     * error message next to the edit text field.
+     * @return
+     */
     private boolean validateInputFields() {
         boolean isValid = true;
 
@@ -78,18 +130,7 @@ public class AddRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.name_error));
         }
 
-        /*
-        Since address is civic + street need to do more extensive validation.
-
-        // Address
-        TextInputEditText addr = (TextInputEditText) findViewById(R.id.restoAddress);
-        if(addr.getText().toString().isEmpty()){
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoNameLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.name_error));
-        }
-        */
+        //Since address is civic + street need to do more extensive validation.
 
         // Province
         TextInputEditText province = (TextInputEditText) findViewById(R.id.restoProvince);
@@ -136,6 +177,53 @@ public class AddRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.email_error));
         }
 
+        if(isValid && !validateAddress())
+            isValid = false;
+
         return isValid;
+    }
+
+    /**
+     * Validates only the address using the RestoLocationManager. If it is valid stores the Location
+     * in an instance variable.
+     *
+     * @return true if the address is valid and was found.
+     */
+    private boolean validateAddress() {
+        Log.d(TAG, "ValidateAddress");
+        String address = ((EditText)findViewById(R.id.restoAddress)).getText().toString();
+        String city =((EditText)findViewById(R.id.restoCity)).getText().toString();
+        String province =((EditText)findViewById(R.id.restoProvince)).getText().toString();
+        String country = ((EditText)findViewById(R.id.restoCountry)).getText().toString();
+        String postal = ((EditText)findViewById(R.id.restoPostal)).getText().toString();
+
+
+        RestoLocationManager lm = new RestoLocationManager(this) {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Is not used.
+            }
+        };
+
+        Address addr = lm.getLocationFromName(address+", "+city+", "+province+", "+country+", "+postal);
+
+        if(addr == null) {
+            Log.d(TAG,"Did not find address");
+            return false;
+        }
+
+        // Should have named the address bean something else :/
+        restoAddress = new npe.com.restonpe.Beans.Address();
+        restoAddress.setLatitude(addr.getLatitude());
+        restoAddress.setLongitude(addr.getLongitude());
+        restoAddress.setCity(city);
+        restoAddress.setAddress(address);
+        restoAddress.setPostal(postal);
+        restoAddress.setCountry(country);
+        restoAddress.setProvince(province);
+
+
+        return true;
+
     }
 }
