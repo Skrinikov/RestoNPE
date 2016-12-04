@@ -4,7 +4,10 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+
+import java.io.File;
 
 import npe.com.restonpe.Fragments.IndexFragment;
 
@@ -12,11 +15,15 @@ import npe.com.restonpe.Fragments.IndexFragment;
  * Creates an instance of the Main Activity which will display
  * the main actions/activities of the application.
  *
+ * Checks if the app was launched for the first time. If it is launches a login activity.
+ *
  * @author Uen Yi Cindy Hung
+ * @author Danieil Skrinikov
  * @since 24/11/2016
  * @version 1.0
  */
 public class MainActivity extends BaseActivity {
+    private static final String TAG = "MainActivity";
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -26,9 +33,27 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-	createFragments();
+        checkForFirstLogin();
+	    createFragments();
     }
-    
+
+    /**
+     * Checks if the application contains any shared preferences. If it does, continues with the
+     * normal execution of the app. Else launches the login activity.
+     */
+    private void checkForFirstLogin() {
+        Log.i(TAG,"checkForFirstLogin");
+        File f = new File("/data/data/npe/com/restonpe/shared_prefs/Settings.xml");
+
+        if(!f.exists()){
+            Log.d(TAG,"Prefs to not exist");
+            Intent intent = new Intent(this,LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
+    }
+
     /**
      * Inserts the index fragment into the content view using
      * the fragment manager.

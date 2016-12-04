@@ -91,6 +91,13 @@
     <string name="email_error">Not a valid email</string>
     <string name="no_dial">Unable to dial phone number.</string>
 
+    <!-- Login related strings -->
+    <string name="login_email">Email</string>
+    <string name="login_name">Name</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">LOGIN</string>
+
+
     <string name="tip_10">10%</string>
     <string name="tip_15">15%</string>
     <string name="tip_20">20%</string>
