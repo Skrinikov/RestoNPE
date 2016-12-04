@@ -142,22 +142,22 @@ public class AboutFragment extends Fragment {
                     case "jeegna":
                         Log.d(TAG, "authorClickEvents - jeegna");
                         builder.setTitle(getString(R.string.jeegna));
-                        builder.setMessage(getString(R.string.cindy_info));
+                        builder.setMessage(getString(R.string.jeegna_info));
                         break;
                     case "thaivu":
                         Log.d(TAG, "authorClickEvents - thaivu");
                         builder.setTitle(getString(R.string.thaivu));
-                        builder.setMessage(getString(R.string.cindy_info));
+                        builder.setMessage(getString(R.string.thaivu_info));
                         break;
                     case "danieil":
                         Log.d(TAG, "authorClickEvents - danieil");
                         builder.setTitle(getString(R.string.danieil));
-                        builder.setMessage(getString(R.string.cindy_info));
+                        builder.setMessage(getString(R.string.danieil_info));
                         break;
                     case "haugilles":
                         Log.d(TAG, "authorClickEvents - haugilles");
                         builder.setTitle(getString(R.string.haugilles));
-                        builder.setMessage(getString(R.string.cindy_info));
+                        builder.setMessage(getString(R.string.haugilles_info));
                         break;
                 }
 

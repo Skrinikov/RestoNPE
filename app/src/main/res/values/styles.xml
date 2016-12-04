@@ -46,6 +46,8 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+
+
     <!-- for list layout -->
 
     <style name="ListTextViewTheme">
