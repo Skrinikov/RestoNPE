@@ -2,12 +2,9 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 
 import npe.com.restonpe.Fragments.NearRestoFragment;
-import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
  * Creates an instance of the NearRestos Activity. This {@code Activity} will show the user the
@@ -32,33 +29,6 @@ public class NearRestosActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setTitle(R.string.title_activity_restos_near);
         createFragments();
-
-        // Get location from shared prefs
-        SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
-        String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
-        String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
-        displayInformation(latitude, longitude);
-
-        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
-        if (latitude != null && longitude != null) {
-            zomatoRestos.findNearbyRestos(latitude, longitude);
-        } else {
-            // TODO Somehow tell user location was not found
-        }
-    }
-
-    /**
-     * Displays the latitude and longitude on the screen.
-     *
-     * @param latitude The latitude to display on the screen
-     * @param longitude The longitude to display on the screen
-     */
-    // FIXME This method is temporary. It is only used in phase 1.
-    private void displayInformation(String latitude, String longitude) {
-
-        Log.i(TAG, "Location found: " + latitude + ", " + longitude);
-//        ((TextView) findViewById(R.id.textView)).setText(String.format(getString(R.string.latitude), latitude));
-//        ((TextView) findViewById(R.id.textView2)).setText(String.format(getString(R.string.longitude), longitude));
     }
 
     /**
