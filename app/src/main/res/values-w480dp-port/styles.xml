@@ -16,7 +16,6 @@
     </style>
 
     <style name="TextViewTheme.SubTextTheme">
-        <item name="android:textColor">#8a4c4c53</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">15sp</item>
     </style>
@@ -29,5 +28,12 @@
 
     <style name="ListSubTextTheme">
         <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- index/main layout -->
+    <style name="Main_TextViewTheme">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">40sp</item>
     </style>
 </resources>
