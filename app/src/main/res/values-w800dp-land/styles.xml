@@ -1,0 +1,11 @@
+<resources>
+    <!-- About Activity -->
+    <style name="AboutDawsonTheme">
+        <item name="android:textSize">50sp</item>
+    </style>
+
+    <style name="AboutSmallTextTheme">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+</resources>
