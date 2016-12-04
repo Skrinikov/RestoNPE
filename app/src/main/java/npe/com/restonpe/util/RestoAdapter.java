@@ -3,6 +3,7 @@ package npe.com.restonpe.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,8 @@ import android.widget.Toast;
 import java.util.List;
 
 import npe.com.restonpe.Beans.RestoItem;
-import npe.com.restonpe.Fragments.ShowRestoFragment;
 import npe.com.restonpe.R;
+import npe.com.restonpe.ShowRestoActivity;
 
 /**
  * Custom adapter made to display information about restaurants
@@ -34,6 +35,10 @@ public class RestoAdapter extends BaseAdapter {
     private double longitude, latitude;
     private static LayoutInflater inflater = null;
 
+    public static final String ID = "id";
+
+    private static final String TAG = RestoAdapter.class.getSimpleName();
+
     /**
      * Constructor that will keep a reference to the given parameter and parse the
      * String longitude and latitude to double and create a layoutInflater.
@@ -48,13 +53,13 @@ public class RestoAdapter extends BaseAdapter {
         this.list = list;
         this.longitude = Double.parseDouble(longitude);
         this.latitude = Double.parseDouble(latitude);
-        this.inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
      * Returns the size of the data list.
      *
-     * @return int
+     * @return int The size of the list
      */
     @Override
     public int getCount() {
@@ -65,7 +70,7 @@ public class RestoAdapter extends BaseAdapter {
      * Returns the resto at the given position in the list.
      *
      * @param position The index of the object to retrieve.
-     * @return RestoItem
+     * @return RestoItem The {@code RestoItem} at the given position
      */
     @Override
     public Object getItem(int position) {
@@ -76,7 +81,7 @@ public class RestoAdapter extends BaseAdapter {
      * Returns the id of the restoItem at the position in the list.
      *
      * @param position The index of the object's id to retrieve.
-     * @return long
+     * @return long The id of the item at the given position
      */
     @Override
     public long getItemId(int position) {
@@ -90,9 +95,10 @@ public class RestoAdapter extends BaseAdapter {
      * Data being: the resto's name, price range, calculated distance from current
      * location using the DistanceCalculator.
      *
-     * @param position
-     * @param convertView
-     * @param parent
+     * @param position The position in the data list
+     * @param convertView The old view to reuse, if possible.
+     * @param parent The parent view of this list item
+     *
      * @return View The View of one single item/row.
      */
     @Override
@@ -106,6 +112,8 @@ public class RestoAdapter extends BaseAdapter {
         double calculated_distance = DistanceCalculator.calculateDistance
                 (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
 
+        // Put id of RestoItem into list item so that it may be retrieved later when ShowRestoActivity is created
+        rowView.setTag(list.get(position).getId());
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
         distance.setText(String.format("%.1f km", calculated_distance));
@@ -122,7 +130,11 @@ public class RestoAdapter extends BaseAdapter {
              */
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ShowRestoFragment.class);
+                Intent intent = new Intent(context, ShowRestoActivity.class);
+                int id = (int) v.getTag();
+                Log.i(TAG, "Putting id of " + id + " in extras");
+                intent.putExtra(ID, id);
+                context.startActivity(intent);
             }
         });
 

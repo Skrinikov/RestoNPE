@@ -56,6 +56,7 @@
     <string name="title_activity_search_restos">Find a Restaurant</string>
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
+    <string name="title_activity_show_restos">Restaurant</string>
 
     <string name="location_not_found">Location not found</string>
     <string name="latitude">Latitude: %1$s</string>
