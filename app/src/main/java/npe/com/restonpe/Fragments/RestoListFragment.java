@@ -24,6 +24,7 @@ public class RestoListFragment extends Fragment {
     }
 
     public void showRestoInformation(View v) {
-
+        // TODO
+        // Show detailed information about the restaurant in the ShowRestoFragment
     }
 }

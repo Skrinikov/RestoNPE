@@ -20,6 +20,7 @@ import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.util.RestoAdapter;
 
 /**
+ * Fragment class that will load the content of the NearRestosActivity.
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
  * @version 1.0
@@ -50,10 +51,9 @@ public class NearRestoFragment extends Fragment {
     }
 
     /**
-     * Sets up the onclick events for the 6 clickable items which will
-     * all start a different activity.
+     * Gets the nearby restaurants and displays them on the RestoListFragment
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -72,6 +72,12 @@ public class NearRestoFragment extends Fragment {
         getRestaurants(latitude, longitude);
     }
 
+    /**
+     * Gets a list of nearby restaurants to display on the ListView
+     *
+     * @param latitude The latitude to search for the nearby restaurants
+     * @param longitude The longitude to search for the nearby restaurants
+     */
     private void getRestaurants(final String latitude, final String longitude) {
         ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
             @Override
