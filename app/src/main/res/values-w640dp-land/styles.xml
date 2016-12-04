@@ -60,4 +60,18 @@
         <item name="android:gravity">center</item>
         <item name="android:textSize">35sp</item>
     </style>
+
+    <style name="Main_TextViewThemeLand">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">35sp</item>
+    </style>
+
+    <!-- tip calculator -->
+    <style name="Tip_Subtotal">
+        <item name="android:gravity">center</item>
+        <item name="android:hint">@string/hint_dollar</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:textSize">40sp</item>
+    </style>
 </resources>

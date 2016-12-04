@@ -8,6 +8,7 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!-- came with drawer layout -->
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
@@ -17,6 +18,7 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!-- about activity profile pics -->
     <style name="ImageViewPadding">
         <item name="android:padding">3dp</item>
         <item name="android:layout_marginTop">30dp</item>
@@ -29,6 +31,7 @@
         <item name="android:layout_marginBottom">5dp</item>
     </style>
 
+    <!-- for setting -->
     <style name="TextViewTheme">
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">18dp</item>
@@ -48,6 +51,7 @@
         <item name="android:layout_margin">2dp</item>
     </style>
 
+    <!-- for list layout -->
     <style name="ListTextViewTheme">
         <item name="android:textSize">15sp</item>
     </style>
@@ -56,9 +60,18 @@
         <item name="android:textSize">8sp</item>
     </style>
 
-    <style name="Main_TextViewTheme">
+    <!-- for index -->
+    <style name="Main_TextViewThemeLand">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!-- tip calculator -->
+    <style name="Tip_Subtotal">
+        <item name="android:gravity">center</item>
+        <item name="android:hint">@string/hint_dollar</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:textSize">20sp</item>
     </style>
 </resources>
