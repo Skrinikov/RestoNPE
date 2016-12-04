@@ -97,7 +97,7 @@ public class RestoAdapter extends BaseAdapter {
      */
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
-        View rowView = inflater.inflate(R.layout.resto_list, null);
+        View rowView = inflater.inflate(R.layout.resto_item, null);
         //ImageView icon = (ImageView) rowView.findViewById(R.id.cuisine_icon);
         TextView name = (TextView) rowView.findViewById(R.id.resto_name);
         TextView price = (TextView) rowView.findViewById(R.id.resto_price);

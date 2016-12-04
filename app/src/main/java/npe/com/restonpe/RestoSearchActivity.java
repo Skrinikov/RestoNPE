@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import npe.com.restonpe.Fragments.RestoSearchFragment;
-import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
  * Creates an instance of the RestoSearch Activity. This {@code Activity} will allow the user to
@@ -40,7 +39,7 @@ public class RestoSearchActivity extends BaseActivity {
         String[] cuisines;
 
 
-        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
+//        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
 //        zomatoRestos.findRestos(name, city, cuisines);
     }
 
@@ -49,8 +48,8 @@ public class RestoSearchActivity extends BaseActivity {
         String latitude = preferences.getString(BaseActivity.LATITUDE, null);
         String longitude = preferences.getString(BaseActivity.LONGITUDE, null);
 
-        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
-        zomatoRestos.findCuisines(latitude, longitude);
+//        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
+//        zomatoRestos.findCuisines(latitude, longitude);
     }
 
     /**
