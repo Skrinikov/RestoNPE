@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textViewLatitude" />
 
-    <fragment android:name="npe.com.restonpe.Fragments.RestoListFragment"
+    <ListView android:name="npe.com.restonpe.Fragments.RestoListFragment"
         android:id="@+id/list"
         android:layout_weight="1"
         android:layout_width="match_parent"
