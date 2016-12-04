@@ -1,4 +1,12 @@
 <resources>
+    <!-- Launcher-->
+    <style name="Launcher" parent="AppTheme"/>
+    <style name="Launcher.Splash" parent="AppTheme">
+        4
+        <item name="android:windowBackground">@drawable/splash</item>
+        5
+    </style>
+
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
