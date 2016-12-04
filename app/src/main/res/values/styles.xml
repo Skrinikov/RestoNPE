@@ -33,13 +33,9 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-
-
-
-    <!-- setting -->
+    <!-- For the setting activity -->
     <style name="TextViewTheme">
         <item name="android:gravity">center_vertical</item>
-        <item name="android:paddingLeft">25dp</item>
         <item name="android:textSize">20sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -50,10 +46,9 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="TextFieldTheme">
-        <item name="android:background">@drawable/text_field_bg</item>
-        <item name="android:layout_margin">2dp</item>
-    </style>
+
+
+
 
     <!-- for list layout -->
 

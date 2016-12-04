@@ -7,4 +7,17 @@
     <style name="AboutSmallTextTheme">
         <item name="android:textSize">25sp</item>
     </style>
+
+    <!-- For the setting activity -->
+    <style name="TextViewTheme">
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextViewTheme.SubTextTheme">
+        <item name="android:textColor">#8a4c4c53</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">15sp</item>
+    </style>
 </resources>
