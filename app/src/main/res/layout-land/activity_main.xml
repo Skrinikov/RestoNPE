@@ -38,14 +38,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="@string/action_fav"
-                    style="@style/Main_TextViewThemeLand"/>
+                    style="@style/Main_TextViewTheme"/>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/fav_icon"
-                    style="@style/ImageViewPaddingLand"/>
+                    style="@style/ImageViewPadding"/>
             </LinearLayout>
 
             <LinearLayout
@@ -61,14 +61,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="@string/title_activity_search_restos"
-                    style="@style/Main_TextViewThemeLand"/>
+                    style="@style/Main_TextViewTheme"/>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/find_icon"
-                    style="@style/ImageViewPaddingLand"/>
+                    style="@style/ImageViewPadding"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -93,14 +93,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="@string/title_activity_restos_near"
-                    style="@style/Main_TextViewThemeLand"/>
+                    style="@style/Main_TextViewTheme"/>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/nearby_icon"
-                    style="@style/ImageViewPaddingLand"/>
+                    style="@style/ImageViewPadding"/>
             </LinearLayout>
 
             <LinearLayout
@@ -116,14 +116,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="@string/tip_calculator"
-                    style="@style/Main_TextViewThemeLand"/>
+                    style="@style/Main_TextViewTheme"/>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/tip_icon"
-                    style="@style/ImageViewPaddingLand"/>
+                    style="@style/ImageViewPadding"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -145,14 +145,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="@string/title_activity_restos_add"
-                    style="@style/Main_TextViewThemeLand"/>
+                    style="@style/Main_TextViewTheme"/>
 
                 <ImageView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:src="@drawable/add_icon"
-                    style="@style/ImageViewPaddingLand"/>
+                    style="@style/ImageViewPadding"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
