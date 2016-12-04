@@ -44,6 +44,7 @@
         <activity android:name=".AddRestoActivity" />
         <activity android:name=".FavRestoActivity"></activity>
         <activity android:name=".LoginActivity"></activity>
+        <activity android:name=".ShowRestoActivity" />
     </application>
 
 </manifest>
