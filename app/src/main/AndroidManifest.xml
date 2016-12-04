@@ -30,10 +30,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".TipActivity" />
         <activity android:name=".AboutActivity" />
-
         <activity android:name=".SettingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -41,12 +39,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity android:name=".RestoSearchActivity" />
         <activity android:name=".NearRestosActivity" />
         <activity android:name=".AddRestoActivity" />
-        <activity android:name=".FavRestoActivity">
-        </activity>
+        <activity android:name=".FavRestoActivity" />
+        <activity android:name=".ShowRestoActivity" />
     </application>
 
 </manifest>
