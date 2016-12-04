@@ -441,6 +441,7 @@ public class RestoDAO extends SQLiteOpenHelper {
                 cv.put(COLUMN_LAT, address.getLatitude());
                 cv.put(COLUMN_SUITE, address.getSuite());
                 cv.put(COLUMN_RESTO_FK, restoId);
+                cv.put(COLUMN_PROVINCE, address.getProvince());
 
                 getWritableDatabase().insert(TABLE_ADDRESS, null, cv);
             }

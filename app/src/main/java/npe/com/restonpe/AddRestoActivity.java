@@ -93,7 +93,8 @@ public class AddRestoActivity extends BaseActivity {
         String name = ((EditText)findViewById(R.id.restoName)).getText().toString();
         resto.setName(name);
         String phone = ((EditText)findViewById(R.id.restoPhone)).getText().toString();
-        resto.setPhone(Long.parseLong(phone));
+        if(!phone.isEmpty())
+            resto.setPhone(Long.parseLong(phone));
         String email = ((EditText)findViewById(R.id.restoEmail)).getText().toString();
         resto.setName(email);
         String link = ((EditText)findViewById(R.id.restoLink)).getText().toString();
@@ -205,7 +206,7 @@ public class AddRestoActivity extends BaseActivity {
             }
         };
 
-        Address addr = lm.getLocationFromName(address+", "+city+", "+province+", "+country+", "+postal);
+        Address addr = lm.getLocationFromName(postal);
 
         if(addr == null) {
             Log.d(TAG,"Did not find address");
