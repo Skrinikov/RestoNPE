@@ -34,6 +34,8 @@ public abstract class ZomatoRestos {
     private static final String RESTO_LOCATION_LONGITUDE = "longitude";
     private static final String RESTO_LOCATION_POSTAL = "postal";
 
+    private static final String RESTO_REVIEW_AVG = "aggregate_rating";
+
     private static final String RESTO_USER_NAME = "username";
 
     private Context mContext;
@@ -515,7 +517,6 @@ public abstract class ZomatoRestos {
         return values;
     }
 
-    private static final String RESTO_REVIEW_AVG = "aggregate_rating";
     /**
      * Gets all the reviews from the JSON
      *

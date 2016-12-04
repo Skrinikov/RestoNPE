@@ -62,6 +62,33 @@
     <string name="longitude">Longitude: %1$s</string>
 
     <string name="no_result">No result found.</string>
+
+    <!-- Add Resto Strings -->
+    <string name="restaurant">Restaurant</string>
+    <string name="resto_address">Restaurant address</string>
+    <string name="resto_address_hint">Address*</string>
+    <string name="resto_name_hint">Restaurant name*</string>
+    <string name="resto_genre_hint">Genre</string>
+    <string name="resto_price_range_hint">Price Range</string>
+    <string name="resto_city_hint">City*</string>
+    <string name="resto_province_hint">Province*</string>
+    <string name="resto_postal_hint">Postal Code*</string>
+    <string name="resto_country_hint">Country*</string>
+    <string name="resto_phone_hint">Phone</string>
+    <string name="resto_email_hint">Email</string>
+    <string name="resto_link_hint">Link</string>
+    <string name="add_resto">Add the Restaurant</string>
+    <string name="resto_contact">Contact</string>
+    <string name="required">* indicates required field</string>
+
+    <!-- Add Resto Errors -->
+    <string name="name_error">Restaurant name is required</string>
+    <string name="address_error">Hint: 3040, Sherbrooke West</string>
+    <string name="city_error">City is required</string>
+    <string name="province_error">Province is required</string>
+    <string name="postal_error">Postal code is required</string>
+    <string name="country_error">Country is required</string>
+    <string name="email_error">Not a valid email</string>
     <string name="no_dial">Unable to dial phone number.</string>
 
     <string name="tip_10">10%</string>

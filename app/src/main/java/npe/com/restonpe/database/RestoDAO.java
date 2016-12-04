@@ -33,7 +33,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     // Database related information.
     private static final String DATABASE_NAME = "resto.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Table names
     private static final String TABLE_GENRE = "genre";
@@ -63,8 +63,9 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     // Address table
     private static final String COLUMN_CIVIC = "civic";
-    private static final String COLUMN_STREET = "street";
+    private static final String COLUMN_STREET_ADDRESS = "street_address";
     private static final String COLUMN_CITY = "city";
+    private static final String COLUMN_PROVINCE = "province";
     private static final String COLUMN_COUNTRY = "country";
     private static final String COLUMN_LAT = "lat";
     private static final String COLUMN_LONG = "long";
@@ -105,14 +106,14 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     private static final String CREATE_ADDRESS = "create table " + TABLE_ADDRESS + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_CIVIC + " integer not null, " +
-            COLUMN_STREET + " text not null, " +
+            COLUMN_STREET_ADDRESS + " text not null, " +
             COLUMN_COUNTRY + " text not null, " +
             COLUMN_CITY + " text not null, " +
+            COLUMN_PROVINCE + " text not null, " +
             COLUMN_LONG + " real not null, " +
             COLUMN_LAT + " real not null, " +
             COLUMN_POSTAL + " text not null, " +
-            COLUMN_SUITE + " integer not null, " +
+            COLUMN_SUITE + " integer, " +
             COLUMN_RESTO_FK + " integer, " +
             "FOREIGN KEY (" + COLUMN_RESTO_FK + ") REFERENCES " + TABLE_RESTO + "(" + COLUMN_ID + ") ON DELETE CASCADE);";
 
@@ -231,8 +232,8 @@ public class RestoDAO extends SQLiteOpenHelper {
      *
      * @return limited data for each restaurant in the database.
      */
-    public List<RestoItem> getAllRestaurantsSmall(){
-        Cursor c = getReadableDatabase().query(TABLE_RESTO,new String[]{COLUMN_ID, COLUMN_RESTO_NAME,COLUMN_PRICE_RANGE,COLUMN_PHONE},null,null,null,null,null);
+    public List<RestoItem> getAllRestaurantsSmall() {
+        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, null, null, null, null, null);
         List<RestoItem> restos = new ArrayList<>();
         RestoItem temp;
         while (c.moveToNext()) {
@@ -246,7 +247,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
             restos.add(temp);
         }
-        Log.i(TAG,"getAllRestaurantsSmall(), Size: "+restos.size());
+        Log.i(TAG, "getAllRestaurantsSmall(), Size: " + restos.size());
 
         return restos;
     }
@@ -258,8 +259,8 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param id primary key of the restaurant to retrieve.
      * @return Full Resto bean which contains all the data about this restaurant in the database.
      */
-    public Resto getSingleRestaurant(long id){
-        if(id < 1)
+    public Resto getSingleRestaurant(long id) {
+        if (id < 1)
             return null;
         Resto r = new Resto();
 
@@ -278,7 +279,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             getReviewList(r);
             getUser(r, c.getLong(c.getColumnIndex(COLUMN_USER_FK)));
         }
-        Log.i(TAG,"getSingleRestaurant()");
+        Log.i(TAG, "getSingleRestaurant()");
         return r;
     }
 
@@ -294,9 +295,9 @@ public class RestoDAO extends SQLiteOpenHelper {
      */
     private void getGenre(Resto resto, long genreId) {
 
-        Cursor c = getReadableDatabase().query(TABLE_GENRE,new String[]{COLUMN_GENRE},COLUMN_ID+"=?",new String[]{genreId+""},null,null,null);
+        Cursor c = getReadableDatabase().query(TABLE_GENRE, new String[]{COLUMN_GENRE}, COLUMN_ID + "=?", new String[]{genreId + ""}, null, null, null);
 
-        if(c.moveToNext())
+        if (c.moveToNext())
             resto.setGenre(c.getString(c.getColumnIndex(COLUMN_GENRE)));
     }
 
@@ -309,21 +310,20 @@ public class RestoDAO extends SQLiteOpenHelper {
     private void getAddressList(Resto resto) {
         long id = resto.getId();
 
-        Cursor c = getReadableDatabase().query(TABLE_ADDRESS,null,COLUMN_RESTO_FK+"=?",new String[]{id+""},null,null,null);
-        List<Address> addresses = new ArrayList<>();
-        while(c.moveToNext()){
-            Address temp = new Address();
-            temp.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
-            temp.setCivic(c.getInt(c.getColumnIndex(COLUMN_CIVIC)));
-            temp.setCountry(c.getString(c.getColumnIndex(COLUMN_COUNTRY)));
-            temp.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
-            temp.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
-            temp.setPostal(c.getString(c.getColumnIndex(COLUMN_POSTAL)));
-            temp.setStreet(c.getString(c.getColumnIndex(COLUMN_STREET)));
-            temp.setSuite(c.getInt(c.getColumnIndex(COLUMN_SUITE)));
-            addresses.add(temp);
-        }
-        resto.setAddress(addresses);
+        Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
+
+
+        Address address = new Address();
+        address.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
+        address.setAddress(c.getString(c.getColumnIndex(COLUMN_STREET_ADDRESS)));
+        address.setCountry(c.getString(c.getColumnIndex(COLUMN_COUNTRY)));
+        address.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
+        address.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
+        address.setPostal(c.getString(c.getColumnIndex(COLUMN_POSTAL)));
+        address.setProvince(c.getString(c.getColumnIndex(COLUMN_PROVINCE)));
+        address.setSuite(c.getInt(c.getColumnIndex(COLUMN_SUITE)));
+
+        resto.setAddress(address);
     }
 
     /**
@@ -335,9 +335,9 @@ public class RestoDAO extends SQLiteOpenHelper {
     private void getReviewList(Resto resto) {
         long id = resto.getId();
 
-        Cursor c = getReadableDatabase().query(TABLE_REVIEW,null,COLUMN_RESTO_FK+"=?",new String[]{id+""},null,null,null);
+        Cursor c = getReadableDatabase().query(TABLE_REVIEW, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
         List<Review> reviews = new ArrayList<>();
-        while(c.moveToNext()){
+        while (c.moveToNext()) {
             Review rev = new Review();
             rev.setContent(c.getString(c.getColumnIndex(COLUMN_CONTENT)));
             rev.setLikes(c.getInt(c.getColumnIndex(COLUMN_lIKES)));
@@ -373,7 +373,7 @@ public class RestoDAO extends SQLiteOpenHelper {
         else {
             temp.setRating(score / reviews);
         }
-        Log.i(TAG,"getRatingForResto()");
+        Log.i(TAG, "getRatingForResto()");
     }
 
     /**
@@ -391,7 +391,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             temp.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
             temp.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
         }
-        Log.i(TAG,"getAddressForResto()");
+        Log.i(TAG, "getAddressForResto()");
     }
 
 
@@ -419,7 +419,7 @@ public class RestoDAO extends SQLiteOpenHelper {
                 getWritableDatabase().insert(TABLE_REVIEW, null, cv);
             }
         }
-        Log.i(TAG,"insertReviews()");
+        Log.i(TAG, "insertReviews()");
     }
 
     /**
@@ -428,26 +428,25 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param address List of addresses fir the given restaurant.
      * @param restoId primary kry of a restaurant to reference.
      */
-    private void insertAddress(List<Address> address, long restoId) {
+    private void insertAddress(Address address, long restoId) {
         if (address != null) {
             ContentValues cv;
-            for (Address addr : address) {
                 cv = new ContentValues();
 
-                cv.put(COLUMN_CIVIC, addr.getCivic());
-                cv.put(COLUMN_STREET, addr.getStreet());
-                cv.put(COLUMN_COUNTRY, addr.getCountry());
-                cv.put(COLUMN_CITY, addr.getCity());
-                cv.put(COLUMN_POSTAL, addr.getPostal());
-                cv.put(COLUMN_LONG, addr.getLongitude());
-                cv.put(COLUMN_LAT, addr.getLatitude());
-                cv.put(COLUMN_SUITE, addr.getSuite());
+                cv.put(COLUMN_STREET_ADDRESS, address.getAddress());
+                cv.put(COLUMN_COUNTRY, address.getCountry());
+                cv.put(COLUMN_CITY, address.getCity());
+                cv.put(COLUMN_POSTAL, address.getPostal());
+                cv.put(COLUMN_LONG, address.getLongitude());
+                cv.put(COLUMN_LAT, address.getLatitude());
+                cv.put(COLUMN_SUITE, address.getSuite());
                 cv.put(COLUMN_RESTO_FK, restoId);
+                cv.put(COLUMN_PROVINCE, address.getProvince());
 
                 getWritableDatabase().insert(TABLE_ADDRESS, null, cv);
             }
-        }
-        Log.i(TAG,"insertAddress()");
+
+        Log.i(TAG, "insertAddress()");
     }
 
     /**
@@ -474,7 +473,7 @@ public class RestoDAO extends SQLiteOpenHelper {
         cv.put(COLUMN_GENRE_FK, genreId);
 
         long id = getWritableDatabase().insert(TABLE_RESTO, null, cv);
-        Log.i(TAG,"insertResto()");
+        Log.i(TAG, "insertResto()");
         return id;
     }
 
@@ -514,7 +513,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         Cursor c = getReadableDatabase().query(TABLE_GENRE, new String[]{COLUMN_ID}, GET_GENRE, new String[]{genre}, null, null, null, null);
 
-        if(c.moveToNext())
+        if (c.moveToNext())
             id = c.getInt(c.getColumnIndex(COLUMN_ID));
 
         if (id < 0) {
@@ -522,7 +521,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             cv.put(COLUMN_GENRE, genre);
             id = getWritableDatabase().insert(TABLE_GENRE, null, cv);
         }
-        Log.i(TAG,"getGenreID()");
+        Log.i(TAG, "getGenreID()");
         return id;
     }
 
@@ -535,7 +534,7 @@ public class RestoDAO extends SQLiteOpenHelper {
         long id = -1;
 
         Cursor c = getReadableDatabase().query(TABLE_USERS, new String[]{COLUMN_ID}, GET_USER, new String[]{submitterEmail}, null, null, null, null);
-        if(c.moveToNext())
+        if (c.moveToNext())
             id = c.getInt(c.getColumnIndex(COLUMN_ID));
 
         if (id < 0) {
@@ -544,7 +543,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             cv.put(COLUMN_USERNAME, submitter);
             id = getWritableDatabase().insert(TABLE_USERS, null, cv);
         }
-        Log.i(TAG,"getUserId()");
+        Log.i(TAG, "getUserId()");
         return id;
     }
 
@@ -552,13 +551,13 @@ public class RestoDAO extends SQLiteOpenHelper {
      * Fetches a user from the database using the supplied foreign key, then adds a reference of oit
      * to the given resto bean
      *
-     * @param resto Bean to which add the user.
+     * @param resto  Bean to which add the user.
      * @param userId Primary key of the user.
      */
-    private void getUser(Resto resto, long userId){
-        Cursor c = getReadableDatabase().query(TABLE_USERS,null,COLUMN_ID+"=?",new String[]{userId+""},null,null,null);
+    private void getUser(Resto resto, long userId) {
+        Cursor c = getReadableDatabase().query(TABLE_USERS, null, COLUMN_ID + "=?", new String[]{userId + ""}, null, null, null);
 
-        if(c.moveToNext()){
+        if (c.moveToNext()) {
             resto.setSubmitterEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
             resto.setSubmitterName(c.getString(c.getColumnIndex(COLUMN_USERNAME)));
         }
@@ -571,10 +570,10 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param review Bean to which add the user.
      * @param userId Primary key of the user.
      */
-    private void getUser(Review review, long userId){
-        Cursor c = getReadableDatabase().query(TABLE_USERS,null,COLUMN_ID+"=?",new String[]{userId+""},null,null,null);
+    private void getUser(Review review, long userId) {
+        Cursor c = getReadableDatabase().query(TABLE_USERS, null, COLUMN_ID + "=?", new String[]{userId + ""}, null, null, null);
 
-        if(c.moveToNext()){
+        if (c.moveToNext()) {
             review.setSubmitterEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
             review.setSubmitter(c.getString(c.getColumnIndex(COLUMN_USERNAME)));
         }

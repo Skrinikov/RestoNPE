@@ -21,7 +21,7 @@ public class Resto {
     private String email;
     private String link;
     private long phone;
-    private List<Address> address;
+    private Address address;
     private List<Review> reviews;
 
     // Submitter info
@@ -40,7 +40,7 @@ public class Resto {
         email = "";
         link = "";
         phone  = 0;
-        address = new ArrayList<>();
+        address = new Address();
         reviews = new ArrayList<>();
     }
     
@@ -158,7 +158,7 @@ public class Resto {
      *
      * @return all the addresses that match this restaurant.
      */
-    public List<Address> getAddress() {
+    public Address getAddress() {
         return address;
     }
 
@@ -167,18 +167,10 @@ public class Resto {
      * 
      * @param address single address for the restaurant.
      */
-    public void setAddress(List<Address> address) {
+    public void setAddress(Address address) {
         this.address = address;
     }
 
-    /**
-     * Adds the given {@code Address} to this restaurant.
-     *
-     * @param address The address to add
-     */
-    public void addAddress(Address address) {
-        this.address.add(address);
-    }
     /**
      * Returns a list of reviews for this restaurant.
      * 
