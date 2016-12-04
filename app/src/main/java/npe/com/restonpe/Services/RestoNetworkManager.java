@@ -32,8 +32,10 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_NEAR_URL = "https://developers.zomato.com/api/v2.1/geocode?lat=%1$s&lon=%2$s";
     // The URL to hit to search for restaurants with place holder for search terms
     private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?q=%1$s&count=50&lat=%2$s&lon=%3$s&radius=50&cuisines=%4$s&sort=real_distance&order=asc";
-    // The URL to hit to search for all cuisines in the current city
+    // The URL to hit to search for all cuisines in a given city's latitude and longitude
     private static final String RESTO_CUISINE_URL = "https://developers.zomato.com/api/v2.1/cuisines?lat=%1$s&lon=%2$s";
+    // The URL to hit to find specific information on a single restaurant with a placeholder for the restuarant's id
+    private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -130,6 +132,26 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
         // Add search terms to url, and make them valid for URLs. I.e. replace spaces with %20 and commas with %2C
         String updatedURL = String.format(RESTO_SEARCH_URL, Uri.encode(name), latitude, longitude, Uri.encode(cuisinesString));
+
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
+    }
+
+    /**
+     * A convenience method for finding specific information on the restaurant with the given id
+     *
+     * @param id The id of the restaurant whose information is to be found
+     */
+    public void findRestoInformation(int id) {
+        // Add id to url
+        String updatedURL = String.format(RESTO_URL, id);
 
         try {
             URL url = new URL(updatedURL);
