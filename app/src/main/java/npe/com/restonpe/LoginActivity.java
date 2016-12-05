@@ -37,6 +37,10 @@ public class LoginActivity extends AppCompatActivity {
         Log.i(TAG, "onCreate()");
     }
 
+    /**
+     * Validates that all the fields are provided
+     * @param view
+     */
     public void attemptLogin(View view) {
         if (validateInputs()) {
             Log.d(TAG, "input valid, attempting to login");

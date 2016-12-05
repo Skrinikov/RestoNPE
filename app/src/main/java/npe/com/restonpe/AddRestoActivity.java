@@ -91,14 +91,16 @@ public class AddRestoActivity extends BaseActivity {
         Resto resto = new Resto();
 
         String name = ((EditText)findViewById(R.id.restoName)).getText().toString();
+        Log.d(TAG, name);
         resto.setName(name);
+        Log.d(TAG, "Returned: "+resto.getName());
         String phone = ((EditText)findViewById(R.id.restoPhone)).getText().toString();
         if(!phone.isEmpty())
             resto.setPhone(Long.parseLong(phone));
         String email = ((EditText)findViewById(R.id.restoEmail)).getText().toString();
-        resto.setName(email);
+        resto.setEmail(email);
         String link = ((EditText)findViewById(R.id.restoLink)).getText().toString();
-        resto.setName(link);
+        resto.setLink(link);
         resto.setAddress(restoAddress);
 
         //Spinners
@@ -143,7 +145,7 @@ public class AddRestoActivity extends BaseActivity {
         }
 
         //City
-        TextInputEditText city = (TextInputEditText) findViewById(R.id.restoName);
+        TextInputEditText city = (TextInputEditText) findViewById(R.id.restoCity);
         if(city.getText().toString().isEmpty()){
             isValid = false;
             TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoCityLbl);
@@ -152,7 +154,7 @@ public class AddRestoActivity extends BaseActivity {
         }
 
         // Postal Code
-        TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoName);
+        TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoPostal);
         if(postal.getText().toString().isEmpty()){
             isValid = false;
             TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoPostalLbl);
@@ -161,7 +163,7 @@ public class AddRestoActivity extends BaseActivity {
         }
 
         // Country
-        TextInputEditText country = (TextInputEditText) findViewById(R.id.restoName);
+        TextInputEditText country = (TextInputEditText) findViewById(R.id.restoCountry);
         if(country.getText().toString().isEmpty()){
             isValid = false;
             TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoCountryLbl);
@@ -170,7 +172,7 @@ public class AddRestoActivity extends BaseActivity {
         }
 
         // Checking if email is in correct format if it is not empty.
-        TextInputEditText email = (TextInputEditText) findViewById(R.id.restoName);
+        TextInputEditText email = (TextInputEditText) findViewById(R.id.restoEmail);
         if(!email.getText().toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
             isValid = false;
             TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoEmailLbl);
@@ -209,8 +211,12 @@ public class AddRestoActivity extends BaseActivity {
         Address addr = lm.getLocationFromName(postal.toUpperCase());
 
         if(addr == null) {
-            Log.d(TAG,"Did not find address");
-            return false;
+            Log.d(TAG,"Did not find address with Postal code");
+            addr = lm.getLocationFromName(address+", "+city+" "+province+", "+country);
+            if(addr == null){
+                Log.d(TAG,"Did not find address with all variables");
+                return false;
+            }
         }
 
         // Should have named the address bean something else :/
@@ -222,6 +228,8 @@ public class AddRestoActivity extends BaseActivity {
         restoAddress.setPostal(postal);
         restoAddress.setCountry(country);
         restoAddress.setProvince(province);
+        Log.d(TAG, "latitude: "+addr.getLatitude());
+        Log.d(TAG, "longitude: "+addr.getLongitude());
 
 
         return true;

@@ -464,6 +464,8 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
 
+        Log.d(TAG, resto.getName()+" is the name");
+
         cv.put(COLUMN_RESTO_NAME, resto.getName());
         cv.put(COLUMN_EMAIL, resto.getEmail());
         cv.put(COLUMN_PHONE, resto.getPhone());
