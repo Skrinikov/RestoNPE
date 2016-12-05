@@ -8,4 +8,21 @@
         <item name="android:textSize">25sp</item>
     </style>
 
+    <!-- for list layout -->
+
+    <style name="ListTextViewTheme">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="ListSubTextTheme">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- index/main layout -->
+    <style name="Main_TextViewTheme">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">40sp</item>
+    </style>
+
 </resources>
