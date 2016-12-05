@@ -109,6 +109,6 @@
     <!--Search restos-->
     <string name="search_name">Name</string>
     <string name="search_city">City</string>
-    <string name="search_cuisines">Cuisines</string>
+    <string name="search_cuisines">Cuisine</string>
     <string name="search_button">Search</string>
 </resources>

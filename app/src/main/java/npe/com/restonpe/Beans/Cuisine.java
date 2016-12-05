@@ -20,6 +20,16 @@ public class Cuisine {
     }
 
     /**
+     * Creates a bean with the given name.
+     *
+     * @param name The name to use.
+     */
+    public Cuisine(String name) {
+        id = 0;
+        this.name = name;
+    }
+
+    /**
      * Gets the id of the cuisine
      *
      * @return The id of the cuisine
@@ -57,6 +67,6 @@ public class Cuisine {
 
     @Override
     public  String toString() {
-        return String.format("Cuisine[id=%1$s, name=%2$s]", id, name);
+        return name;
     }
 }
