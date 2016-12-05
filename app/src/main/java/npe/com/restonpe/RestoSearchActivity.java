@@ -2,14 +2,22 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 
+import java.util.List;
+
 import npe.com.restonpe.Beans.Cuisine;
+import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Fragments.RestoSearchFragment;
+import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.util.RestoAdapter;
 
 /**
  * Creates an instance of the RestoSearch Activity. This {@code Activity} will allow the user to
@@ -61,15 +69,32 @@ public class RestoSearchActivity extends BaseActivity {
         String city = cityEditText.getText().toString();
         Cuisine cuisine = (Cuisine)cuisineSpinner.getSelectedItem();
 
-        Log.i(TAG, "Searching for name: " + name);
-        Log.i(TAG, "Searching for city: " + city);
-        Log.i(TAG, "Searching for cuisine: " + cuisine);
-
+        if (name.isEmpty()) {
+            name = null;
+        }
+        if (city.isEmpty()) {
+            city = null;
+        }
         if (cuisine.getName().equals(getString(R.string.search_cuisines))) {
-            // The user selected no cuisines.
+            // The user selected default cuisine, and therefore does not want to search with cuisine
+            cuisine = null;
         }
 
-//        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
-//        zomatoRestos.findRestos(name, city, cuisine.getId());
+        SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
+        final String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, "");
+        final String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, "");
+        final Context context = this;
+
+        ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
+            @Override
+            public void handleResults(List<?> list) {
+                List<RestoItem> restos = (List<RestoItem>) list;
+                ListView listView = (ListView) findViewById(R.id.find_list);
+
+                RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude);
+                listView.setAdapter(adapter);
+            }
+        };
+        zomatoRestos.findRestos(name, city, cuisine);
     }
 }

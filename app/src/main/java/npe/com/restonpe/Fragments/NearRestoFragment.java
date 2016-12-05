@@ -83,7 +83,7 @@ public class NearRestoFragment extends Fragment {
             @Override
             public void handleResults(List<?> list) {
                 List<RestoItem> restos = (List<RestoItem>) list;
-                ListView listView = (ListView) activity.findViewById(R.id.list);
+                ListView listView = (ListView) activity.findViewById(R.id.near_list);
 
                 RestoAdapter adapter = new RestoAdapter(activity, restos, longitude, latitude);
                 listView.setAdapter(adapter);
