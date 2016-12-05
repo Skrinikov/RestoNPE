@@ -3,6 +3,7 @@ package npe.com.restonpe;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,9 +44,9 @@ public class MainActivity extends BaseActivity {
      */
     private void checkForFirstLogin() {
         Log.i(TAG,"checkForFirstLogin");
-        File f = new File("/data/data/npe/com/restonpe/shared_prefs/Settings.xml");
+        SharedPreferences preferences = getSharedPreferences("Settings", MODE_PRIVATE);
 
-        if(!f.exists()){
+        if(!preferences.contains("emailAdr") || !preferences.contains("username")){
             Log.d(TAG,"Prefs to not exist");
             Intent intent = new Intent(this,LoginActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

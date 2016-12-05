@@ -1,5 +1,7 @@
 package npe.com.restonpe;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,44 +21,59 @@ import android.widget.EditText;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
+    EditText email;
+    EditText name;
+    EditText pwd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        Log.i(TAG,"onCreate()");
+
+        email = (EditText) findViewById(R.id.email);
+        name = (EditText) findViewById(R.id.name);
+        pwd = (EditText) findViewById(R.id.password);
+
+        Log.i(TAG, "onCreate()");
     }
 
     public void attemptLogin(View view) {
         if (validateInputs()) {
-            Log.d(TAG,"input valid, attempting to login");
+            Log.d(TAG, "input valid, attempting to login");
+            SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+            prefs.edit()
+                    .putString("username", name.getText().toString().trim())
+                    .putString("emailAdr", email.getText().toString().trim())
+                    .apply();
 
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
     }
+
 
     private boolean validateInputs() {
         boolean isValid = true;
 
-        EditText email = (EditText) findViewById(R.id.email);
         if (email.getText().toString().trim().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.emailLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.emailLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.login_email_error));
         }
 
-        EditText name = (EditText) findViewById(R.id.email);
         if (name.getText().toString().trim().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.nameLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.nameLbl);
             temp.setError(getString(R.string.login_name_error));
             temp.setErrorEnabled(true);
         }
 
-        EditText pass = (EditText) findViewById(R.id.email);
-        if (pass.getText().toString().trim().length() < 6) {
+        if (pwd.getText().toString().trim().length() < 6) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.passwordLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.passwordLbl);
             temp.setError(getString(R.string.login_password_error));
             temp.setErrorEnabled(true);
         }
