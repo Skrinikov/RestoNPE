@@ -206,7 +206,7 @@ public class AddRestoActivity extends BaseActivity {
             }
         };
 
-        Address addr = lm.getLocationFromName(postal);
+        Address addr = lm.getLocationFromName(postal.toUpperCase());
 
         if(addr == null) {
             Log.d(TAG,"Did not find address");
