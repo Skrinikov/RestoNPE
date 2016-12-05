@@ -21,7 +21,7 @@
     <string name="danieil_info">Grad Dawson CS 2017\n\nDanieil is the type of person who likes to take a big part of the project by himself, but ultimately forgets that he has a Chemistry class and ends up pulling all&#8211;nighters to be done in time.</string>
     <string name="jeegna_info">Grad Dawson CS 2017\n\nProgrammer by day, batman by night.</string>
     <string name="thaivu_info">Grad Dawson CS 2017\n\nThai Vu is an overfed cat, that obviously spent too much time in restaurants.</string>
-    <string name="haugilles_info">Grad Dawson CS 2017\n\nCrazy cat lady.</string>
+    <string name="haugilles_info">Grad Dawson CS 2017\n\nLolicon and Troll</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -78,7 +78,7 @@
     <string name="resto_phone_hint">Phone</string>
     <string name="resto_email_hint">Email</string>
     <string name="resto_link_hint">Link</string>
-    <string name="add_resto">Add the Restaurant</string>
+    <string name="add_resto">Add Restaurant</string>
     <string name="resto_contact">Contact</string>
     <string name="required">* indicates required field</string>
 
