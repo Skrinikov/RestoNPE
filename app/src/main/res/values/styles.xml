@@ -1,4 +1,29 @@
 <resources>
+    <!-- Launcher-->
+    <!-- Tutorial used for this screen: https://plus.google.com/+AndroidDevelopers/posts/Z1Wwainpjhd -->
+    <style name="Launcher" parent="AppTheme"/>
+    <style name="Launcher.Splash" parent="AppTheme">
+        4
+        <item name="android:windowBackground">@drawable/splash</item>
+        5
+    </style>
+
+    <style name="error_login" parent="Widget.Design.TextInputLayout">
+        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <!-- Login Style -->
+    <style name="Login_only" parent="Widget.Design.TextInputLayout">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">#FFCDD2</item>
+        <item name="android:textSize">20sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorControlNormal">#FFCDD2</item>
+        <item name="colorControlActivated">#FFFFFF</item>
+        <item name="android:textColorPrimary">#fff</item>
+    </style>
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">

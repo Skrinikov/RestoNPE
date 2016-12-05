@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import java.util.List;
 
@@ -61,17 +63,6 @@ public class RestoSearchFragment extends Fragment {
         findCuisines();
     }
 
-    public void buttonSearchClick(View v) {
-
-        String name;
-        String city;
-        String[] cuisines;
-
-
-//        ZomatoRestos zomatoRestos = new ZomatoRestos(this);
-//        zomatoRestos.findRestos(name, city, cuisines);
-    }
-
     private void findCuisines() {
         SharedPreferences preferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
         String latitude = preferences.getString(BaseActivity.LATITUDE, null);
@@ -81,6 +72,15 @@ public class RestoSearchFragment extends Fragment {
             @Override
             public void handleResults(List<?> list) {
                 List<Cuisine> cuisines = (List<Cuisine>) list;
+                
+                // Add empty cuisine, so that user may select nothing on the cuisine spinner
+                cuisines.add(0, new Cuisine(activity.getString(R.string.search_cuisines)));
+
+                Spinner genres = (Spinner) activity.findViewById(R.id.cuisines_spinner);
+                ArrayAdapter<Cuisine> adapter = new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item, cuisines);
+
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                genres.setAdapter(adapter);
             }
         };
         zomatoRestos.findCuisines(latitude, longitude);

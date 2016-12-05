@@ -18,8 +18,9 @@
     <string name="haugilles">Hau Gilles Che</string>
 
     <string name="cindy_info">Grad Dawson CS 2017\n\nUen Yi aka Cindy is a person where, the more you know her, the more you realize that she is just a violent crazy cat lady who sometimes can not keep her mouth shut from rambling nonsense.</string>
-    <string name="jeegna_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
     <string name="danieil_info">Grad Dawson CS 2017\n\nDanieil is the type of person who likes to take a big part of the project by himself, but ultimately forgets that he has a Chemistry class and ends up pulling all&#8211;nighters to be done in time.</string>
+    <string name="jeegna_info">Grad Dawson CS 2017\nProgrammer by day, batman by night.</string>
+    <string name="danieil_info">Grad Dawson CS 2017\n\nDanieil is the type of person who likes to take a big part of the project by himself, but ultimately forget that he has a Chemistry class and end up having all&#8211;nighters to be done in time.</string>
     <string name="thaivu_info">Grad Dawson CS 2017\nThai Vu is an overfed cat, that obviously spent too much time in restaurants.</string>
     <string name="haugilles_info">Grad Dawson CS 2017\nCrazy cat lady.</string>
 
@@ -92,7 +93,23 @@
     <string name="email_error">Not a valid email</string>
     <string name="no_dial">Unable to dial phone number.</string>
 
+    <!-- Login related strings -->
+    <string name="login_email">Email</string>
+    <string name="login_name">Name</string>
+    <string name="login_password">Password</string>
+    <string name="login_button">LOGIN</string>
+    <string name="login_email_error">Must provide email</string>
+    <string name="login_name_error">Must provide name</string>
+    <string name="login_password_error">Must provide password</string>
+
+
     <string name="tip_10">10%</string>
     <string name="tip_15">15%</string>
     <string name="tip_20">20%</string>
+
+    <!--Search restos-->
+    <string name="search_name">Name</string>
+    <string name="search_city">City</string>
+    <string name="search_cuisines">Cuisine</string>
+    <string name="search_button">Search</string>
 </resources>
