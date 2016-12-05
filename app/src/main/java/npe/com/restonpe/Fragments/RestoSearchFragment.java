@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import npe.com.restonpe.BaseActivity;
 import npe.com.restonpe.Beans.Cuisine;
 import npe.com.restonpe.R;
 import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.util.CuisineAdapter;
 
 /**
  * Fragment class that will load the content of the RestoSearchActivity.
@@ -81,6 +83,10 @@ public class RestoSearchFragment extends Fragment {
             @Override
             public void handleResults(List<?> list) {
                 List<Cuisine> cuisines = (List<Cuisine>) list;
+                ListView listView = (ListView) activity.findViewById(R.id.selectList);
+
+                CuisineAdapter adapter = new CuisineAdapter(activity, cuisines);
+                listView.setAdapter(adapter);
             }
         };
         zomatoRestos.findCuisines(latitude, longitude);
