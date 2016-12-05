@@ -1,7 +1,9 @@
 package npe.com.restonpe.Fragments;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +33,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class FavRestoFragment extends Fragment {
     private RestoDAO restoDAO;
     private final String TAG = "FavRestoFragment";
+    private SharedPreferences prefs;
 
     /**
      * Inflates a layout to be the content layout of the FavRestoActivity.
@@ -65,12 +68,17 @@ public class FavRestoFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         super.onActivityCreated(savedInstanceState);
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
+        /*
         ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
-        TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);
+        TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);*/
 
         if (prefs != null) {
             Log.d(TAG, "onActivityCreated: prefs is not null.");
+            DataLoader loader = new DataLoader();
+            loader.execute();
+
+            /*
             restoDAO = RestoDAO.getDatabase(getActivity());
             List<RestoItem> restos = restoDAO.getAllRestaurantsSmall();
 
@@ -83,6 +91,51 @@ public class FavRestoFragment extends Fragment {
                 resto_list.setAdapter(restoAdapter);
 
 
+            } else {
+                no_result.setVisibility(View.VISIBLE);
+            }*/
+        }
+    }
+
+    /**
+     * AsyncTask that will call in the background database actions.
+     */
+    public class DataLoader extends AsyncTask<Void,Integer,List<RestoItem>>{
+        private final ProgressDialog dialog = new ProgressDialog(getActivity());
+
+        /**
+         * Gets the restaurant data from SQLite database. All done in the bkg.
+         *
+         * @param params
+         * @return
+         */
+        @Override
+        protected List<RestoItem> doInBackground(Void... params) {
+            restoDAO = RestoDAO.getDatabase(getActivity());
+            return restoDAO.getAllRestaurantsSmall();
+        }
+
+        /**
+         * Verify if there is data in the list. If there is no result, will display a no result TextView.
+         * Else will populate the list using a custom adapter, RestoAdapter.
+         *
+         * @param restos The list data return by the query.
+         */
+        protected void onPostExecute(List<RestoItem> restos) {
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
+            TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);
+
+            if (restos.size() > 0) {
+                Log.d(TAG, "onActivityCreated: there are restos.");
+                no_result.setVisibility(View.GONE);
+
+                RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos, prefs.getString("longitude", "0"),
+                        prefs.getString("latitude", "0"));
+                resto_list.setAdapter(restoAdapter);
             } else {
                 no_result.setVisibility(View.VISIBLE);
             }
