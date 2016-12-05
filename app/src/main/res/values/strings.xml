@@ -90,6 +90,7 @@
     <string name="resto_contact">Contact</string>
     <string name="required">* indicates required field</string>
     <string name="added">Favorited</string>
+    <string name="removed">Unfavorited</string>
 
     <!-- Add Resto Errors -->
     <string name="name_error">Restaurant name is required</string>

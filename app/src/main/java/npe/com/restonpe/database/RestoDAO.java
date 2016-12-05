@@ -312,18 +312,19 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
 
+        if(c.moveToNext()) {
+            Address address = new Address();
+            address.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
+            address.setAddress(c.getString(c.getColumnIndex(COLUMN_STREET_ADDRESS)));
+            address.setCountry(c.getString(c.getColumnIndex(COLUMN_COUNTRY)));
+            address.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
+            address.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
+            address.setPostal(c.getString(c.getColumnIndex(COLUMN_POSTAL)));
+            address.setProvince(c.getString(c.getColumnIndex(COLUMN_PROVINCE)));
+            address.setSuite(c.getInt(c.getColumnIndex(COLUMN_SUITE)));
 
-        Address address = new Address();
-        address.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
-        address.setAddress(c.getString(c.getColumnIndex(COLUMN_STREET_ADDRESS)));
-        address.setCountry(c.getString(c.getColumnIndex(COLUMN_COUNTRY)));
-        address.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
-        address.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
-        address.setPostal(c.getString(c.getColumnIndex(COLUMN_POSTAL)));
-        address.setProvince(c.getString(c.getColumnIndex(COLUMN_PROVINCE)));
-        address.setSuite(c.getInt(c.getColumnIndex(COLUMN_SUITE)));
-
-        resto.setAddress(address);
+            resto.setAddress(address);
+        }
     }
 
     /**

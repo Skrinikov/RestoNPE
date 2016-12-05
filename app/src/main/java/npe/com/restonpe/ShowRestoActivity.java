@@ -2,13 +2,22 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Toast;
 
+import java.util.List;
+
+import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.ShowRestoFragment;
+import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.database.RestoDAO;
+import npe.com.restonpe.util.RestoAdapter;
 
 /**
  * Creates an instance of the ShowResto Activity. This {@code Activity} will allow the user to
@@ -60,6 +69,13 @@ public class ShowRestoActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
+
+        if(getIntent().getExtras().get("submitter").toString().length() > 0){
+            menu.getItem(0).setIcon(R.drawable.ic_remove);
+        }else{
+            menu.getItem(0).setIcon(R.drawable.ic_add);
+        }
+
         return true;
     }
 
@@ -74,10 +90,24 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onOptionsItemSelected called");
         int id = item.getItemId();
 
-        if (id == R.id.add_resto) {
-            Intent intent = new Intent(this,AddRestoActivity.class);
-            startActivity(intent);
-            return true;
+        if(getIntent().getExtras().get("submitter").toString().length() > 0){
+            Toast.makeText(this,R.string.removed,Toast.LENGTH_LONG).show();
+        }else{
+            ZomatoRestos zomato = new ZomatoRestos(this) {
+                @Override
+                public void handleResults(List<?> list) {
+                    if (list.size() == 1) {
+                        RestoDAO dao = RestoDAO.getDatabase(ShowRestoActivity.this);
+                        Resto resto = (Resto) list.get(0);
+                        resto.setSubmitterName("Zomato");
+                        resto.setSubmitterEmail("ZomatoEmail");
+                        dao.addRestaurant(resto);
+                        Toast.makeText(ShowRestoActivity.this, R.string.added, Toast.LENGTH_LONG).show();
+                    }
+                }
+            };
+
+            zomato.findRestoInformation(getIntent().getExtras().getInt("id"));
         }
 
         return super.onOptionsItemSelected(item);

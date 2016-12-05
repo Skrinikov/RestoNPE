@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
     <item
         android:id="@+id/add_resto"
-        android:title="@string/add_resto"
         app:showAsAction="always"
         tools:ignore="AppCompatResource"/>
     </menu>

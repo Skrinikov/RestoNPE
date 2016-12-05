@@ -42,7 +42,7 @@ public class RestoAdapter extends BaseAdapter {
     private static LayoutInflater inflater = null;
 
     public static final String ID = "id";
-
+    private static final String SUBMITTER = "submitter";
     private static final String TAG = RestoAdapter.class.getSimpleName();
 
     /**
@@ -167,14 +167,14 @@ public class RestoAdapter extends BaseAdapter {
                                 resto.setSubmitterName("Zomato");
                                 resto.setSubmitterEmail("ZomatoEmail");
                                 dao.addRestaurant(resto);
-                                Toast.makeText(context,R.string.added,Toast.LENGTH_LONG).show();
+                                Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
                             }
                         }
                     };
 
-                    Log.d(TAG, "view's id is " + ((View)v.getParent()).getTag());
+                    Log.d(TAG, "view's id is " + ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato find");
-                    zomato.findRestoInformation((int)((View)v.getParent()).getTag());
+                    zomato.findRestoInformation((int) ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: after Zomato find");
                 }
             }
@@ -184,7 +184,7 @@ public class RestoAdapter extends BaseAdapter {
     /**
      * Code that creates and set the event handler for the rowView resto to db.
      *
-     * @param rowView the View to contain the handler.
+     * @param rowView  the View to contain the handler.
      * @param position The item index
      */
     private void setRowViewListener(View rowView, final int position) {
@@ -204,9 +204,18 @@ public class RestoAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.d(TAG, "setRowViewListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowRestoActivity.class);
+
                 int id = (int) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
+
+                Resto resto = RestoDAO.getDatabase(context).getSingleRestaurant(id);
+                if(resto.getSubmitterName() != null) {
+                    intent.putExtra(SUBMITTER, resto.getSubmitterName());
+                }else{
+                    intent.putExtra(SUBMITTER, "");
+                }
+
                 context.startActivity(intent);
             }
         });
@@ -237,7 +246,7 @@ public class RestoAdapter extends BaseAdapter {
                     Log.d(TAG, "onLongClick: null");
                     Toast.makeText(context, R.string.no_dial, Toast.LENGTH_LONG).show();
                 }
-                
+
                 return false;
             }
         });
