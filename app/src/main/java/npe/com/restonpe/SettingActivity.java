@@ -124,7 +124,7 @@ public class SettingActivity extends BaseActivity {
         Log.d(TAG, "saveInfo called");
         SharedPreferences.Editor editor = pref.edit();
 
-        if (username.getText().length() > 0 && emailAdr.getText().length() > 0  && postalCode.getText().length() > 0 ) {
+        if (username.getText().length() > 0 && emailAdr.getText().length() > 0 && postalCode.getText().length() > 0) {
             Log.d(TAG, "Fields are: " + username.getText() + "\t" + emailAdr.getText() + "\t" + postalCode.getText());
             Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + postalCode.getText().toString());
 
@@ -138,6 +138,8 @@ public class SettingActivity extends BaseActivity {
             } else {
                 Toast.makeText(this, R.string.incomplete, Toast.LENGTH_LONG).show();
             }
+        } else {
+            Toast.makeText(this, R.string.incomplete, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -160,11 +162,11 @@ public class SettingActivity extends BaseActivity {
         // Check if there the text fields are the same as in the prefs in there is one.
         if (pref != null) {
             Log.d(TAG, "onBackPressed: prefs is not null");
-            if (!username.getText().toString().trim().equals(pref.getString("username", null))) {
+            if (!username.getText().toString().trim().equals(pref.getString("username", ""))) {
                 dataSaved = false;
-            } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", null))) {
+            } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", ""))) {
                 dataSaved = false;
-            } else if (!postalCode.getText().toString().trim().equals(pref.getString("postalCode", null))) {
+            } else if (!postalCode.getText().toString().trim().equals(pref.getString("postalCode", ""))) {
                 dataSaved = false;
             }
         } else if (username.getText().length() < 1 && emailAdr.getText().length() < 1 && postalCode.getText().length() < 1) {
