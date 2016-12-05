@@ -11,6 +11,10 @@
     <string name="setting_saved">Changes have been saved.</string>
     <string name="incomplete">Cannot save, please fill in all the fields</string>
 
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- author strings -->
     <string name="cindy">Uen Yi Hung</string>
     <string name="jeegna">Jeegna Patel</string>
     <string name="danieil">Danieil Skrinikov</string>
@@ -23,9 +27,13 @@
     <string name="thaivu_info">Grad Dawson CS 2017\n\nThai Vu is an overfed cat, that obviously spent too much time in restaurants.</string>
     <string name="haugilles_info">Grad Dawson CS 2017\n\nBiggest troll in Dawson\'s 3rd Computer Science. Worships another Computer Science student on a daily basis.</string>
 
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <!-- general activity names-->
+    <string name="title_activity_base">BaseActivity</string>
+    <string name="title_activity_restos_near">Nearby Restaurant</string>
+    <string name="title_activity_search_restos">Find a Restaurant</string>
+    <string name="title_activity_restos_add">Add a Restaurant</string>
+    <string name="title_activity_restos_fav">Favorites</string>
+    <string name="title_activity_show_restos">Restaurant</string>
     <string name="action_home">Home</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>
@@ -34,6 +42,10 @@
 
     <string name="course_id">420&#8211;518&#8211;DW Mobile</string>
 
+    <!-- Calculator -->
+    <string name="tip_10">10%</string>
+    <string name="tip_15">15%</string>
+    <string name="tip_20">20%</string>
     <string name="tip_calculator">Tip Calculator</string>
     <string name="subtotal">Bill Subtotal $</string>
     <string name="hint_dollar">0.00</string>
@@ -45,23 +57,19 @@
     <string name="amount_person">Each Person Pays $</string>
     <string name="grand_total">Grand Total $</string>
 
+    <!-- setting -->
     <string name="username">Username</string>
     <string name="email">Email Address</string>
     <string name="postal_code">Postal Code</string>
     <string name="save">Save</string>
     <string name="discard">Discard changes?</string>
 
-    <string name="title_activity_base">BaseActivity</string>
-    <string name="title_activity_restos_near">Nearby Restaurant</string>
-    <string name="title_activity_search_restos">Find a Restaurant</string>
-    <string name="title_activity_restos_add">Add a Restaurant</string>
-    <string name="title_activity_restos_fav">Favorites</string>
-    <string name="title_activity_show_restos">Restaurant</string>
-
+    <!-- geo stuff -->
     <string name="location_not_found">Location not found</string>
     <string name="latitude">Latitude: %1$s</string>
     <string name="longitude">Longitude: %1$s</string>
 
+    <!-- error message -->
     <string name="no_result">No result found.</string>
 
     <!-- Add Resto Strings -->
@@ -100,11 +108,6 @@
     <string name="login_email_error">Must provide email</string>
     <string name="login_name_error">Must provide name</string>
     <string name="login_password_error">Must provide password</string>
-
-
-    <string name="tip_10">10%</string>
-    <string name="tip_15">15%</string>
-    <string name="tip_20">20%</string>
 
     <!--Search restos-->
     <string name="search_name">Name</string>
