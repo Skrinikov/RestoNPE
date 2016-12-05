@@ -8,14 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
 
+import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.RestoItem;
+import npe.com.restonpe.FavRestoActivity;
 import npe.com.restonpe.R;
 import npe.com.restonpe.ShowRestoActivity;
+import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.database.RestoDAO;
 
 /**
  * Custom adapter made to display information about restaurants
@@ -27,7 +33,7 @@ import npe.com.restonpe.ShowRestoActivity;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.0
- * @since 01/12/2016
+ * @since 05/12/2016
  */
 public class RestoAdapter extends BaseAdapter {
     private final Context context;
@@ -95,10 +101,9 @@ public class RestoAdapter extends BaseAdapter {
      * Data being: the resto's name, price range, calculated distance from current
      * location using the DistanceCalculator.
      *
-     * @param position The position in the data list
+     * @param position    The position in the data list
      * @param convertView The old view to reuse, if possible.
-     * @param parent The parent view of this list item
-     *
+     * @param parent      The parent view of this list item
      * @return View The View of one single item/row.
      */
     @Override
@@ -108,6 +113,7 @@ public class RestoAdapter extends BaseAdapter {
         TextView name = (TextView) rowView.findViewById(R.id.resto_name);
         TextView price = (TextView) rowView.findViewById(R.id.resto_price);
         TextView distance = (TextView) rowView.findViewById(R.id.resto_distance);
+        final ImageView addResto = (ImageView) rowView.findViewById(R.id.resto_add);
 
         double calculated_distance = DistanceCalculator.calculateDistance
                 (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
@@ -117,6 +123,72 @@ public class RestoAdapter extends BaseAdapter {
         name.setText(list.get(position).getName());
         price.setText(list.get(position).getPriceRange());
         distance.setText(String.format("%.1f km", calculated_distance));
+
+        if (FavRestoActivity.class == context.getClass()) {
+            addResto.setImageResource(R.drawable.ic_remove);
+        } else {
+            addResto.setImageResource(R.drawable.ic_add);
+        }
+
+        setAddRestoListener(addResto);
+        setRowViewListener(rowView, position);
+
+        return rowView;
+    }
+
+    /**
+     * Code that creates and set the event handler for adding resto to db.
+     *
+     * @param addResto the View to contain the handler.
+     */
+    private void setAddRestoListener(ImageView addResto) {
+        Log.d(TAG, "setAddRestoListener called");
+        addResto.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Event handler that will add the clicked item's row to the
+             * database.
+             *
+             * @param v The view which triggers the event.
+             */
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "setAddRestoListener - onClick called");
+
+                if (FavRestoActivity.class == context.getClass()) {
+                    //delete?
+                } else {
+                    Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
+                    ZomatoRestos zomato = new ZomatoRestos(context) {
+                        @Override
+                        public void handleResults(List<?> list) {
+                            if (list.size() == 1) {
+                                RestoDAO dao = RestoDAO.getDatabase(context);
+                                Resto resto = (Resto) list.get(0);
+                                resto.setSubmitterName("Zomato");
+                                resto.setSubmitterEmail("ZomatoEmail");
+                                dao.addRestaurant(resto);
+                                Toast.makeText(context,R.string.added,Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    };
+
+                    Log.d(TAG, "view's id is " + ((View)v.getParent()).getTag());
+                    Log.d(TAG, "setAddRestoListener - onClick: before Zomato find");
+                    zomato.findRestoInformation((int)((View)v.getParent()).getTag());
+                    Log.d(TAG, "setAddRestoListener - onClick: after Zomato find");
+                }
+            }
+        });
+    }
+
+    /**
+     * Code that creates and set the event handler for the rowView resto to db.
+     *
+     * @param rowView the View to contain the handler.
+     * @param position The item index
+     */
+    private void setRowViewListener(View rowView, final int position) {
+        Log.d(TAG, "setRowViewListener called");
 
         rowView.setOnClickListener(new View.OnClickListener() {
             /**
@@ -130,6 +202,7 @@ public class RestoAdapter extends BaseAdapter {
              */
             @Override
             public void onClick(View v) {
+                Log.d(TAG, "setRowViewListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowRestoActivity.class);
                 int id = (int) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
@@ -152,22 +225,21 @@ public class RestoAdapter extends BaseAdapter {
              */
             @Override
             public boolean onLongClick(View v) {
-                Log.d(TAG,"onLongClick called");
+                Log.d(TAG, "setRowViewListener - setOnLongClickListener called");
+                Log.d(TAG, "onLongClick called");
                 String phone = (list.get(position).getPhone() > 0) ? list.get(position).getPhone() + "" : "";
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
 
                 if (intent.resolveActivity(context.getPackageManager()) != null) {
-                    Log.d(TAG,"onLongClick: not null");
+                    Log.d(TAG, "onLongClick: not null");
                     context.startActivity(intent);
                 } else {
-                    Log.d(TAG,"onLongClick: null");
+                    Log.d(TAG, "onLongClick: null");
                     Toast.makeText(context, R.string.no_dial, Toast.LENGTH_LONG).show();
                 }
-
+                
                 return false;
             }
         });
-
-        return rowView;
     }
 }
