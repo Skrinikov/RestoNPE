@@ -236,6 +236,7 @@ public class RestoAdapter extends BaseAdapter {
             public boolean onLongClick(View v) {
                 Log.d(TAG, "setRowViewListener - setOnLongClickListener called");
                 Log.d(TAG, "onLongClick called");
+
                 String phone = (list.get(position).getPhone() > 0) ? list.get(position).getPhone() + "" : "";
                 Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
 

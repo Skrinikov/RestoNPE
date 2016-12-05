@@ -2,6 +2,7 @@
     <string name="app_name">RestoNPE</string>
     <string name="slogan">Food always within reach.</string>
     <string name="about_app">Thank you for using our App RestoNPE. Our delicious intention was to bring food closer to you and help you make the most difficult decision of what to eat now.</string>
+    <string name="welcome">Welcome</string>
 
     <string name="close">Close</string>
     <string name="unsaved">Unsaved Changes</string>

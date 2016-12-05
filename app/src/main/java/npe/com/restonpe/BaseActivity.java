@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import npe.com.restonpe.Services.RestoLocationManager;
 
@@ -31,12 +33,16 @@ public class BaseActivity extends AppCompatActivity
     public static final String SHARED_PREFS = "Settings";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
+    private SharedPreferences prefs;
 
     private String TAG = "BaseActivity";
 
     /**
      * Creates the basic xml layout with a new main toolbar. Along with the
      * auto generated-code which creates the drawer and navigation view.
+     * <p>
+     * Used as reference
+     * source: http://stackoverflow.com/questions/33194594/navigationview-get-find-header-layout
      *
      * @param savedInstanceState bundle where the values are stored.
      */
@@ -45,6 +51,8 @@ public class BaseActivity extends AppCompatActivity
         setTheme(R.style.AppTheme_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -61,12 +69,19 @@ public class BaseActivity extends AppCompatActivity
         });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //((TextView)drawer.findViewById(R.id.hello_user)).setText(prefs.getString("username","user"));
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+
+        View header = navigationView.getHeaderView(0);
+        TextView hello = (TextView)header.findViewById(R.id.hello_user);
+        hello.setText(R.string.welcome + " " + prefs.getString("username", "User"));
+
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -147,7 +162,7 @@ public class BaseActivity extends AppCompatActivity
     /**
      * Method that calls upon the RestoLocationManager to get current
      * longitude and latitude location then saved is to the sharedPreferences.
-     *
+     * <p>
      * Used as reference
      * Source: Jeegna's NearRestoActivity
      */
@@ -170,11 +185,11 @@ public class BaseActivity extends AppCompatActivity
      */
     private void saveToPrefs(Location location) {
         if (location != null) {
-            SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+            prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
 
-            editor.putString(LATITUDE, location.getLatitude()+"");
-            editor.putString(LONGITUDE, location.getLongitude()+"");
+            editor.putString(LATITUDE, location.getLatitude() + "");
+            editor.putString(LONGITUDE, location.getLongitude() + "");
             editor.apply();
         }
     }
