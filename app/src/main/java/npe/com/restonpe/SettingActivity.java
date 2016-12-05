@@ -64,9 +64,9 @@ public class SettingActivity extends BaseActivity {
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
         if (pref != null) {
-            username.setText(pref.getString("username", ""));
-            emailAdr.setText(pref.getString("emailAdr", ""));
-            postalCode.setText(pref.getString("postalCode", ""));
+            username.setText(pref.getString("username", null));
+            emailAdr.setText(pref.getString("emailAdr", null));
+            postalCode.setText(pref.getString("postalCode", null));
         }
 
         Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + postalCode);
@@ -124,7 +124,7 @@ public class SettingActivity extends BaseActivity {
         Log.d(TAG, "saveInfo called");
         SharedPreferences.Editor editor = pref.edit();
 
-        if (username.getText() != null && emailAdr.getText() != null && postalCode.getText() != null) {
+        if (username.getText().length() > 0 && emailAdr.getText().length() > 0  && postalCode.getText().length() > 0 ) {
             Log.d(TAG, "Fields are: " + username.getText() + "\t" + emailAdr.getText() + "\t" + postalCode.getText());
             Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + postalCode.getText().toString());
 
@@ -154,11 +154,12 @@ public class SettingActivity extends BaseActivity {
      */
     @Override
     public void onBackPressed() {
-        Log.d(TAG, "onBackPressed called");
+        Log.d(TAG, "onBackPressed called" + pref.toString());
         boolean dataSaved = true;
 
         // Check if there the text fields are the same as in the prefs in there is one.
         if (pref != null) {
+            Log.d(TAG, "onBackPressed: prefs is not null");
             if (!username.getText().toString().trim().equals(pref.getString("username", null))) {
                 dataSaved = false;
             } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", null))) {
@@ -166,7 +167,11 @@ public class SettingActivity extends BaseActivity {
             } else if (!postalCode.getText().toString().trim().equals(pref.getString("postalCode", null))) {
                 dataSaved = false;
             }
+        } else if (username.getText().length() < 1 && emailAdr.getText().length() < 1 && postalCode.getText().length() < 1) {
+            Log.d(TAG, "onBackPressed: prefs is null but empty fields");
+            dataSaved = true;
         } else {
+            Log.d(TAG, "onBackPressed: prefs is null but NOT empty fields");
             dataSaved = false;
         }
 
