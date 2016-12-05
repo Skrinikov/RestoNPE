@@ -122,19 +122,17 @@ public abstract class ZomatoRestos {
      *
      * @param name The name for which to search
      * @param city The city in which to search
-     * @param cuisines The cuisines for which to search
+     * @param cuisine The cuisine for which to search
      */
-    public void findRestos(String name, String city, Integer[] cuisines) {
-        Log.i(TAG, String.format("Finding restaurants matching name=%1$s, city=%2$s", name, city));
+    public void findRestos(String name, String city, Cuisine cuisine) {
+        Log.i(TAG, String.format("Finding restaurants matching name=%1$s, city=%2$s, and cuisine=%3$s", name, city, cuisine));
 
-        // Get latitude and longitude of given city.
         RestoLocationManager restoLocationManager = new RestoLocationManager(mContext) {
             @Override
             public void onLocationChanged(Location location) {
                 // Do nothing
             }
         };
-        android.location.Address address = restoLocationManager.getLocationFromName(city);
 
         RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
@@ -155,15 +153,22 @@ public abstract class ZomatoRestos {
             }
         };
 
-        // If an address was returned, it was not vague, so get the lat/long and continue.
-        if (address != null) {
-            String latitude = address.getLatitude() + "";
-            String longitude = address.getLongitude() + "";
+        String latitude = null;
+        String longitude = null;
 
-            restoNetworkManager.findRestos(name, latitude, longitude, cuisines);
-        } else {
-            // TODO No location was found
+        // Get latitude and longitude of given city.
+        if (city != null) {
+            // User wanted to search with a city
+            android.location.Address address = restoLocationManager.getLocationFromName(city);
+
+            // If an address was returned, the city was not vague, so get the lat/long of it.
+            if (address != null) {
+                latitude = address.getLatitude() + "";
+                longitude = address.getLongitude() + "";
+            }
         }
+
+        restoNetworkManager.findRestos(name, latitude, longitude, cuisine);
     }
 
     /**
@@ -230,7 +235,7 @@ public abstract class ZomatoRestos {
                 if (name.equals(jsonName)) {
                     reader.beginArray();
 
-                    // Read all nearby restaurants
+                    // Read all restaurant objects
                     while (reader.hasNext()) {
 
                         // Get each restaurant from the response
@@ -497,7 +502,7 @@ public abstract class ZomatoRestos {
         String currency = "";
 
         // Read all fields in "restaurant" object
-        for (int i = 0; i < 21; i++) {
+        while (reader.hasNext()) {
             JsonToken token = reader.peek();
 
             if (token.name().equals(JsonToken.NAME.toString())) {
@@ -565,12 +570,22 @@ public abstract class ZomatoRestos {
                         Log.i(TAG, "The " + name + " was ignored.");
                         reader.skipValue();
                 }
+            } else if (token.name().equals(JsonToken.END_OBJECT)) {
+                // Change price range
+                for (int i = 1; i < priceRange; i++) {
+                    currency += currency;
+                }
+                Log.i(TAG, "Changed price range to " + currency);
+                map.put(RESTO_PRICE, currency);
+
+                return map;
             } else {
                 Log.i(TAG, "Skipping " + token.name());
                 reader.skipValue();
             }
         }
 
+        // This is not necessary, but here just so an infinite loop NEVER happens
         // Change price range
         for (int i = 1; i < priceRange; i++) {
             currency += currency;

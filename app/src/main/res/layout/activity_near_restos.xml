@@ -24,7 +24,7 @@
         android:id="@+id/textViewLatitude" />
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/near_list"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"

@@ -5,7 +5,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.text.TextUtils;
 import android.util.JsonReader;
 import android.util.Log;
 
@@ -15,6 +14,8 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+
+import npe.com.restonpe.Beans.Cuisine;
 
 /**
  * Manages network connections for the application. This class extends ASyncTask so that it may do
@@ -30,11 +31,11 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
     // The URL to hit for finding nearby restaurants with placeholders for latitude and longitude.
     private static final String RESTO_NEAR_URL = "https://developers.zomato.com/api/v2.1/geocode?lat=%1$s&lon=%2$s";
-    // The URL to hit to search for restaurants with place holder for search terms
-    private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?q=%1$s&count=50&lat=%2$s&lon=%3$s&radius=50&cuisines=%4$s&sort=real_distance&order=asc";
     // The URL to hit to search for all cuisines in a given city's latitude and longitude
     private static final String RESTO_CUISINE_URL = "https://developers.zomato.com/api/v2.1/cuisines?lat=%1$s&lon=%2$s";
-    // The URL to hit to find specific information on a single restaurant with a placeholder for the restuarant's id
+    // The URL to hit to search for restaurants with place holder for search terms
+    private static final String RESTO_SEARCH_URL = "https://developers.zomato.com/api/v2.1/search?%1$s%2$s%3$scount=50&radius=50&sort=real_distance&order=asc";
+    // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
     private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
 
     // HTTP request constants
@@ -86,6 +87,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
                     list = readJson(reader);
 
                     conn.disconnect();
+                } else {
+                    Log.w(TAG, "Something went wrong. The URL was " +  url + " The HTTP response was " + response);
                 }
             }
         } catch (IOException e) {
@@ -123,15 +126,33 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      * @param name The name of the restaurant for which to search
      * @param latitude The latitude of the area of which to search
      * @param longitude The longitude of the area of which to search
-     * @param cuisines An array of cuisine IDs
+     * @param cuisine A {@code Cuisine} object with the id of the cuisine for which to search
      */
-    public void findRestos(String name, String latitude, String longitude, Integer[] cuisines) {
+    public void findRestos(String name, String latitude, String longitude, Cuisine cuisine) {
+        String queryURL = "q=%1$s&";
+        String latlonURL = "lat=%1$s&lon=%2$s&";
+        String cuisineURL = "cuisines=%1$s&";
 
-        // Convert cuisine ids to comma-separated string
-        String cuisinesString = TextUtils.join(",", cuisines);
+        // Update all GET urls with the appropriate value. If the given parameters are null, remove the GET completely
+        if (name != null) {
+            // Make search term valid for URLs. I.e. replace spaces with %20
+            queryURL = String.format(queryURL, Uri.encode(name));
+        } else {
+            queryURL = "";
+        }
+        if (latitude != null && longitude != null) {
+            latlonURL = String.format(latlonURL, latitude, longitude);
+        } else {
+            latlonURL = "";
+        }
+        if (cuisine != null) {
+            cuisineURL = String.format(cuisineURL, cuisine.getId());
+        } else {
+            cuisineURL = "";
+        }
 
-        // Add search terms to url, and make them valid for URLs. I.e. replace spaces with %20 and commas with %2C
-        String updatedURL = String.format(RESTO_SEARCH_URL, Uri.encode(name), latitude, longitude, Uri.encode(cuisinesString));
+        // Add search terms to url, or blanks if the parameter for it was null
+        String updatedURL = String.format(RESTO_SEARCH_URL, queryURL, latlonURL, cuisineURL);
 
         try {
             URL url = new URL(updatedURL);
