@@ -15,7 +15,7 @@ import npe.com.restonpe.Fragments.ShowRestoFragment;
  * view details of a restaurant.
  *
  * @author Jeegna Patel
- * @since 21/11/2016
+ * @since 04/12/2016
  * @version 1.0
  */
 public class ShowRestoActivity extends BaseActivity {
@@ -64,7 +64,7 @@ public class ShowRestoActivity extends BaseActivity {
     }
 
     /**
-     * Saves the input fields into the shared preferences.
+     * Starts the add resto activity.
      *
      * @param item The selected item.
      * @return boolean depicting that an item has been clicked.
