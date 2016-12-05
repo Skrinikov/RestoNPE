@@ -2,8 +2,11 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import npe.com.restonpe.Fragments.ShowRestoFragment;
 
@@ -45,5 +48,38 @@ public class ShowRestoActivity extends BaseActivity {
         ShowRestoFragment fragment = new ShowRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    /**
+     * Inflates the show resto menu using an inflater.
+     *
+     * @param menu The view where the xml will be inflated into.
+     * @return boolean representing the success of the inflation.
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu called");
+        getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
+        return true;
+    }
+
+    /**
+     * Saves the input fields into the shared preferences.
+     *
+     * @param item The selected item.
+     * @return boolean depicting that an item has been clicked.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected called");
+        int id = item.getItemId();
+
+        if (id == R.id.add_resto) {
+            Intent intent = new Intent(this,AddRestoActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,17 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <stroke android:width="2dip"
-        android:color="#540909" />
+<!-- Used as reference to put a background image
+source: http://stackoverflow.com/questions/21002224/add-a-background-image-to-shape-in-xml-android
+-->
 
-    <corners android:radius="0dip"/>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <gradient android:angle="270"
-        android:endColor="#d9b9b9"
-        android:startColor="#ff4541" />
+            <stroke
+                android:width="2dip"
+                android:color="#540909" />
 
-    <padding android:left="5dip"
-        android:top="5dip"
-        android:right="5dip"
-        android:bottom="5dip" />
-</shape>
+            <corners android:radius="0dip" />
+
+            <gradient
+                android:angle="270"
+                android:startColor="#ff5a50"
+                android:endColor="#535252"/>
+
+            <padding
+                android:bottom="5dip"
+                android:left="5dip"
+                android:right="5dip"
+                android:top="5dip" />
+        </shape>
+    </item>
+    <item android:drawable="@drawable/pattern"></item>
+</layer-list>
