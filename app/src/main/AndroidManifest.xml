@@ -13,7 +13,8 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:theme="@style/Launcher.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -42,7 +43,8 @@
         <activity android:name=".RestoSearchActivity" />
         <activity android:name=".NearRestosActivity" />
         <activity android:name=".AddRestoActivity" />
-        <activity android:name=".FavRestoActivity" />
+        <activity android:name=".FavRestoActivity"></activity>
+        <activity android:name=".LoginActivity"></activity>
         <activity android:name=".ShowRestoActivity" />
     </application>
 
