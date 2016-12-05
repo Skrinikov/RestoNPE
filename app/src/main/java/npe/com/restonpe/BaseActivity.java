@@ -134,10 +134,6 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.tip) {
             Log.d(TAG, "onNavigationItemSelected - tip");
             intent = new Intent(this, TipActivity.class);
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         if (intent != null)

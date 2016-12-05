@@ -54,7 +54,7 @@ public class FavRestoFragment extends Fragment {
     }
 
     /**
-     * Attempts to list all the resto store in database into the ListView.
+     * Attempts to list all the resto store in database into the ListView using AsyncTask.
      * <p>
      * Uses the custom RestoAdapter to list the objects. Needs to have sharedPreferences
      * set in order to be used, because it needs the longitude and latitude of the user.
