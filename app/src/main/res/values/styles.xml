@@ -97,7 +97,7 @@
     <style name="Main_TextViewTheme">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">25sp</item>
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="Main_ItemTheme">
