@@ -98,7 +98,7 @@ public class FindRestoActivity extends BaseActivity {
                     List<RestoItem> restos = (List<RestoItem>) list;
                     ListView listView = (ListView) findViewById(R.id.find_list);
 
-                    RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude);
+                    RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude, true);
                     listView.setAdapter(adapter);
                 } else {
                     // Tell user there were no results

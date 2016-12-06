@@ -16,6 +16,7 @@ import npe.com.restonpe.Beans.Review;
 import npe.com.restonpe.R;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.database.RestoDAO;
 import npe.com.restonpe.util.RestoAdapter;
 
 /**
@@ -61,10 +62,13 @@ public class ShowRestoFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         activity = getActivity();
 
-        int id = activity.getIntent().getExtras().getInt(RestoAdapter.ID);
+        Bundle bundle = activity.getIntent().getExtras();
+
+        int id = bundle.getInt(RestoAdapter.ID);
+        boolean isZomatoId = bundle.getBoolean(RestoAdapter.IS_ZOMATO_ID);
 
         // Get nearby restaurants
-        getRestaurant(id);
+        getRestaurant(id, isZomatoId);
     }
 
     /**
@@ -72,17 +76,27 @@ public class ShowRestoFragment extends Fragment {
      *
      * @param id The id of the restaurant whose information is to be retrieved.
      */
-    private void getRestaurant(int id) {
-        ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
-            @Override
-            public void handleResults(List<?> list) {
-                if (list.size() == 1) {
-                    displayInformation((Resto)list.get(0));
+    private void getRestaurant(int id, boolean isZomatoId) {
+        if (isZomatoId) {
+            ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
+                @Override
+                public void handleResults(List<?> list) {
+                    if (list.size() == 1) {
+                        displayInformation((Resto) list.get(0));
+                    }
                 }
-            }
-        };
+            };
 
-        zomatoRestos.findRestoInformation(id);
+            zomatoRestos.findRestoInformation(id);
+        } else {
+            // TODO get from local db
+            RestoDAO restoDAO = RestoDAO.getDatabase(activity);
+            Resto resto = restoDAO.getSingleRestaurant(id);
+
+            if (resto != null) {
+                displayInformation(resto);
+            }
+        }
     }
 
     /**

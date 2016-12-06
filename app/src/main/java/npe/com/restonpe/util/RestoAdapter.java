@@ -39,8 +39,10 @@ public class RestoAdapter extends BaseAdapter {
     private List<RestoItem> list;
     private double longitude, latitude;
     private static LayoutInflater inflater = null;
+    private boolean isZomatoId;
 
     public static final String ID = "id";
+    public static final String IS_ZOMATO_ID = "isZomatoId";
     private static final String SUBMITTER = "submitter";
     private static final String TAG = RestoAdapter.class.getSimpleName();
 
@@ -48,12 +50,14 @@ public class RestoAdapter extends BaseAdapter {
      * Constructor that will keep a reference to the given parameter and parse the
      * String longitude and latitude to double and create a layoutInflater.
      *
-     * @param context   The activity that instantiate this object.
-     * @param list      The data in List form.
-     * @param longitude The current longitude location.
-     * @param latitude  The current latitude location.
+     * @param context    The activity that instantiate this object.
+     * @param list       The data in List form.
+     * @param longitude  The current longitude location.
+     * @param latitude   The current latitude location.
+     * @param isZomatoId {@code True} if the list of RestoItem's comes from the Zomato API, {@code
+     *                   False} if the list comes from the local database.
      */
-    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude, boolean isZomatoId) {
         this.context = context;
         this.list = list;
         if (latitude != null && longitude != null) {
@@ -64,6 +68,7 @@ public class RestoAdapter extends BaseAdapter {
             this.latitude = -1;
         }
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.isZomatoId = isZomatoId;
     }
 
     /**
@@ -73,7 +78,7 @@ public class RestoAdapter extends BaseAdapter {
      */
     @Override
     public int getCount() {
-          return list.size();
+        return list.size();
     }
 
     /**
@@ -215,11 +220,12 @@ public class RestoAdapter extends BaseAdapter {
                 int id = (int) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
+                intent.putExtra(IS_ZOMATO_ID, isZomatoId);
 
                 Resto resto = RestoDAO.getDatabase(context).getSingleRestaurant(id);
-                if(resto.getSubmitterName() != null) {
+                if (resto.getSubmitterName() != null) {
                     intent.putExtra(SUBMITTER, resto.getSubmitterName());
-                }else{
+                } else {
                     intent.putExtra(SUBMITTER, "");
                 }
 
