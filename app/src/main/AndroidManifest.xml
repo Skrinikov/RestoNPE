@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".RestoSearchActivity" />
+        <activity android:name=".FindRestoActivity" />
         <activity android:name=".NearRestosActivity" />
         <activity android:name=".AddRestoActivity" />
         <activity android:name=".FavRestoActivity"></activity>

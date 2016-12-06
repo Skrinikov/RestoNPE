@@ -19,20 +19,20 @@ import npe.com.restonpe.R;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
- * Fragment class that will load the content of the RestoSearchActivity.
+ * Fragment class that will load the content of the FindRestoActivity.
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
  * @version 1.0
  * @since 11/29/2016
  */
-public class RestoSearchFragment extends Fragment {
+public class FindRestoFragment extends Fragment {
 
     private static final String TAG = NearRestoFragment.class.getSimpleName();
 
     private Activity activity;
 
     /**
-     * Inflates a layout to be the content layout of the RestoSearchActivity.
+     * Inflates a layout to be the content layout of the FindRestoActivity.
      *
      * Used as reference
      * source: https://developer.android.com/guide/components/fragments.html
@@ -85,7 +85,9 @@ public class RestoSearchFragment extends Fragment {
                 ArrayAdapter<Cuisine> adapter = new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item, cuisines);
 
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                genres.setAdapter(adapter);
+                if (genres != null) {
+                    genres.setAdapter(adapter);
+                }
             }
         };
 

@@ -17,7 +17,7 @@ import java.util.List;
 
 import npe.com.restonpe.Beans.Cuisine;
 import npe.com.restonpe.Beans.RestoItem;
-import npe.com.restonpe.Fragments.RestoSearchFragment;
+import npe.com.restonpe.Fragments.FindRestoFragment;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.util.RestoAdapter;
 
@@ -29,9 +29,9 @@ import npe.com.restonpe.util.RestoAdapter;
  * @version 1.0
  * @since 21/11/2016
  */
-public class RestoSearchActivity extends BaseActivity {
+public class FindRestoActivity extends BaseActivity {
 
-    private static final String TAG = RestoSearchActivity.class.getSimpleName();
+    private static final String TAG = FindRestoActivity.class.getSimpleName();
 
     /**
      * Creates the {@code Activity}.
@@ -59,7 +59,7 @@ public class RestoSearchActivity extends BaseActivity {
 
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        RestoSearchFragment fragment = new RestoSearchFragment();
+        FindRestoFragment fragment = new FindRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
     }

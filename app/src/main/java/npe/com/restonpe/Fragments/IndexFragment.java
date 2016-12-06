@@ -9,12 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import npe.com.restonpe.AboutActivity;
 import npe.com.restonpe.AddRestoActivity;
 import npe.com.restonpe.FavRestoActivity;
-import npe.com.restonpe.RestoSearchActivity;
+import npe.com.restonpe.FindRestoActivity;
 import npe.com.restonpe.NearRestosActivity;
 import npe.com.restonpe.R;
 import npe.com.restonpe.TipActivity;
@@ -88,7 +87,7 @@ public class IndexFragment extends Fragment {
                         break;
                     case R.id.findResto:
                         Log.d(TAG, "onActivityCreated - onClick: findResto");
-                        intent = new Intent(getActivity(), RestoSearchActivity.class);
+                        intent = new Intent(getActivity(), FindRestoActivity.class);
                         break;
                     case R.id.addResto:
                         Log.d(TAG, "onActivityCreated - onClick: addResto");
