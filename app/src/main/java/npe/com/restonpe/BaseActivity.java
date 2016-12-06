@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.GravityCompat;
@@ -131,7 +132,7 @@ public class BaseActivity extends AppCompatActivity
      * @return boolean Depicts an item has been selected and have processed the intention.
      */
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         Intent intent = null;
@@ -181,6 +182,13 @@ public class BaseActivity extends AppCompatActivity
         RestoLocationManager restoLocationManager = new RestoLocationManager(this) {
             @Override
             public void onLocationChanged(Location location) {
+                saveToPrefs(location);
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+                // Get location
+                Location location = getLocation();
                 saveToPrefs(location);
             }
         };
