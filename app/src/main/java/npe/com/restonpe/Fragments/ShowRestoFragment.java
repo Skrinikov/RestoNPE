@@ -23,8 +23,8 @@ import npe.com.restonpe.util.RestoAdapter;
  * Fragment class that will load the content of the ShowRestoActivity.
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
- * @since 01/12/2016
  * @version 1.0
+ * @since 01/12/2016
  */
 public class ShowRestoFragment extends Fragment {
 
@@ -34,12 +34,12 @@ public class ShowRestoFragment extends Fragment {
 
     /**
      * Inflates a layout to be the content layout of the ShowRestoActivity.
-     *
+     * <p>
      * Used as reference
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater Layout inflater needed to inflate the xml file.
-     * @param container View where the xml file will be loaded into.
+     * @param inflater           Layout inflater needed to inflate the xml file.
+     * @param container          View where the xml file will be loaded into.
      * @param savedInstanceState bundle where values are stored.
      * @return The View inflated.
      */
@@ -74,7 +74,9 @@ public class ShowRestoFragment extends Fragment {
     /**
      * Gets the information of the restaurant with the given id.
      *
-     * @param id The id of the restaurant whose information is to be retrieved.
+     * @param id         The id of the restaurant whose information is to be retrieved.
+     * @param isZomatoId {@code True} if the given id corresponds to one on the Zomato API, {@code
+     *                   False} if it corresponds to one on the local database.
      */
     private void getRestaurant(int id, boolean isZomatoId) {
         if (isZomatoId) {
@@ -89,7 +91,6 @@ public class ShowRestoFragment extends Fragment {
 
             zomatoRestos.findRestoInformation(id);
         } else {
-            // TODO get from local db
             RestoDAO restoDAO = RestoDAO.getDatabase(activity);
             Resto resto = restoDAO.getSingleRestaurant(id);
 
@@ -105,13 +106,13 @@ public class ShowRestoFragment extends Fragment {
      * @param resto The {@code Resto} whose information is to be displayed on the screen
      */
     private void displayInformation(Resto resto) {
-        TextView name = (TextView)activity.findViewById(R.id.textViewShowName);
-        TextView address = (TextView)activity.findViewById(R.id.textViewShowAddress);
-        TextView cuisines = (TextView)activity.findViewById(R.id.textViewShowCuisines);
-        TextView priceRange = (TextView)activity.findViewById(R.id.textViewShowPriceRange);
-        TextView email = (TextView)activity.findViewById(R.id.textViewShowEmail);
-        TextView link = (TextView)activity.findViewById(R.id.textViewShowLink);
-        TextView phone = (TextView)activity.findViewById(R.id.textViewShowPhone);
+        TextView name = (TextView) activity.findViewById(R.id.textViewShowName);
+        TextView address = (TextView) activity.findViewById(R.id.textViewShowAddress);
+        TextView cuisines = (TextView) activity.findViewById(R.id.textViewShowCuisines);
+        TextView priceRange = (TextView) activity.findViewById(R.id.textViewShowPriceRange);
+        TextView email = (TextView) activity.findViewById(R.id.textViewShowEmail);
+        TextView link = (TextView) activity.findViewById(R.id.textViewShowLink);
+        TextView phone = (TextView) activity.findViewById(R.id.textViewShowPhone);
 
         name.setText(resto.getName());
         address.setText(resto.getAddress().getAddress());
