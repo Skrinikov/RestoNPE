@@ -167,6 +167,7 @@ public class BaseActivity extends AppCompatActivity
      * <p>
      * Used as reference
      * Source: Jeegna's NearRestoActivity
+     * Source: https://developer.android.com/training/permissions/requesting.html
      */
     private void locationSetting() {
         // Request location permission
