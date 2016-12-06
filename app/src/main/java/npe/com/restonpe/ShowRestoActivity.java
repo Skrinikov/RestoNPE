@@ -2,13 +2,14 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -17,7 +18,6 @@ import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.ShowRestoFragment;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.database.RestoDAO;
-import npe.com.restonpe.util.RestoAdapter;
 
 /**
  * Creates an instance of the ShowResto Activity. This {@code Activity} will allow the user to
@@ -111,5 +111,29 @@ public class ShowRestoActivity extends BaseActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant
+    /**
+     * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
+     *
+     * @param v The textview with the restaurant's name
+     */
+    public void searchGoogle(View v) {
+        // Format for google search, with placeholder for query string
+        String googleSearchURL = "https://www.google.ca/#q=%1$s";
+
+        TextView textViewName = (TextView) findViewById(R.id.textViewName);
+        String restoName = textViewName.getText().toString();
+
+        googleSearchURL = String.format(googleSearchURL, Uri.encode(restoName));
+
+        Uri search = Uri.parse(googleSearchURL);
+
+        // Launch web browser
+        Intent intent = new Intent(Intent.ACTION_VIEW, search);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
 }
