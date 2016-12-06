@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -75,26 +76,30 @@ public class RestoSearchActivity extends BaseActivity {
         if (city.isEmpty()) {
             city = null;
         }
-        if (cuisine.getName().equals(getString(R.string.search_cuisines))) {
+        if (cuisine != null && cuisine.getName().equals(getString(R.string.search_cuisines))) {
             // The user selected default cuisine, and therefore does not want to search with cuisine
             cuisine = null;
         }
 
         SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
-        final String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, "");
-        final String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, "");
+        final String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
+        final String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
         final Context context = this;
 
-        ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
-            @Override
-            public void handleResults(List<?> list) {
-                List<RestoItem> restos = (List<RestoItem>) list;
-                ListView listView = (ListView) findViewById(R.id.find_list);
+        if (latitude == null || longitude == null) {
+            Toast.makeText(this, getString(R.string.search_no_location), Toast.LENGTH_LONG).show();
+        } else {
+            ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
+                @Override
+                public void handleResults(List<?> list) {
+                    List<RestoItem> restos = (List<RestoItem>) list;
+                    ListView listView = (ListView) findViewById(R.id.find_list);
 
-                RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude);
-                listView.setAdapter(adapter);
-            }
-        };
-        zomatoRestos.findRestos(name, city, cuisine);
+                    RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude);
+                    listView.setAdapter(adapter);
+                }
+            };
+            zomatoRestos.findRestos(name, city, cuisine);
+        }
     }
 }

@@ -118,4 +118,7 @@
     <string name="search_city">City</string>
     <string name="search_cuisines">Cuisine</string>
     <string name="search_button">Search</string>
+
+    <!--Search resto error -->
+    <string name="search_no_location">The city was not found. Please</string>
 </resources>

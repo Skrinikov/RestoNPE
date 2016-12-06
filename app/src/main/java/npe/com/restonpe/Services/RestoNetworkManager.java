@@ -88,7 +88,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
                     conn.disconnect();
                 } else {
-                    Log.w(TAG, "Something went wrong. The URL was " +  url + " The HTTP response was " + response);
+                    Log.e(TAG, "Something went wrong. The URL was " +  url + " The HTTP response was " + response);
                 }
             }
         } catch (IOException e) {
