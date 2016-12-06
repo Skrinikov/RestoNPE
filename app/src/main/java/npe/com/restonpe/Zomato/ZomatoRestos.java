@@ -570,7 +570,7 @@ public abstract class ZomatoRestos {
                         Log.i(TAG, "The " + name + " was ignored.");
                         reader.skipValue();
                 }
-            } else if (token.name().equals(JsonToken.END_OBJECT)) {
+            } else if (token.name().equals(JsonToken.END_OBJECT.name())) {
                 // Change price range
                 for (int i = 1; i < priceRange; i++) {
                     currency += currency;

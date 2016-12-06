@@ -11,21 +11,34 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="npe.com.restonpe.RestoSearchActivity">
 
-    <EditText
-        android:id="@+id/editTextName"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/restoSearchName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/search_name"
-        android:inputType="textPersonName" />
+        android:layout_marginTop="16dp">
 
-    <EditText
-        android:id="@+id/editTextCity"
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/search_name"
+            android:inputType="textCapWords|textPersonName" />
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/restoSearchCity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/search_city"
-        android:inputType="textPersonName" />
+        android:layout_marginTop="16dp">
+        <EditText
+            android:id="@+id/editTextCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/search_city"
+            android:inputType="textCapWords|textPostalAddress" />
+    </android.support.design.widget.TextInputLayout>
 
     <Spinner
         android:id="@+id/cuisines_spinner"
@@ -41,8 +54,7 @@
 
     <ListView
         android:id="@+id/find_list"
-        android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        />
+        android:layout_weight="1" />
 </LinearLayout>

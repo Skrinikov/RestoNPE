@@ -24,16 +24,16 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Info"
+                android:text="@string/info"
                 android:textColor="@color/bigLabel"
                 android:textSize="20sp" />
 
             <!-- Resto Name -->
             <android.support.design.widget.TextInputLayout
+                android:id="@+id/restoNameLbl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:id="@+id/restoNameLbl">
+                android:layout_marginTop="16dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/restoName"
@@ -53,6 +53,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
                     android:layout_marginLeft="6dp">
 
                     <TextView
@@ -75,7 +76,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:baselineAligned="false">
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -132,7 +134,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
@@ -170,7 +173,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:baselineAligned="false">
 
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
@@ -222,6 +226,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_telephone"
                     android:drawableLeft="@drawable/ic_add_telephone"
                     android:hint="@string/resto_phone_hint"
                     android:id="@+id/restoPhone"
@@ -238,6 +243,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_email"
                     android:drawableLeft="@drawable/ic_add_email"
                     android:hint="@string/resto_email_hint"
                     android:id="@+id/restoEmail"
@@ -252,6 +258,7 @@
                 <android.support.design.widget.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_add_link"
                     android:drawableLeft="@drawable/ic_add_link"
                     android:hint="@string/resto_link_hint"
                     android:id="@+id/restoLink"
@@ -260,7 +267,6 @@
             </android.support.design.widget.TextInputLayout>
 
             <!-- Button -->
-
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -270,7 +276,6 @@
                 android:background="@color/colorAccent"
                 android:onClick="addRestaurant"/>
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -279,5 +284,4 @@
 
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

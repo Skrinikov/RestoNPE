@@ -117,13 +117,13 @@ public class ShowRestoActivity extends BaseActivity {
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *
-     * @param v The textview with the restaurant's name
+     * @param v The TextView with the restaurant's name
      */
     public void searchGoogle(View v) {
         // Format for google search, with placeholder for query string
         String googleSearchURL = "https://www.google.ca/#q=%1$s";
 
-        TextView textViewName = (TextView) findViewById(R.id.textViewName);
+        TextView textViewName = (TextView) v;
         String restoName = textViewName.getText().toString();
 
         googleSearchURL = String.format(googleSearchURL, Uri.encode(restoName));
