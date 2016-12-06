@@ -12,6 +12,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Resto;
+import npe.com.restonpe.Beans.Review;
 import npe.com.restonpe.R;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.Zomato.ZomatoRestos;
@@ -90,14 +91,32 @@ public class ShowRestoFragment extends Fragment {
      * @param resto The {@code Resto} whose information is to be displayed on the screen
      */
     private void displayInformation(Resto resto) {
-        TextView name = (TextView)activity.findViewById(R.id.textViewName);
-        TextView address = (TextView)activity.findViewById(R.id.textViewAddress);
-        TextView cuisines = (TextView)activity.findViewById(R.id.textViewCuisines);
-        TextView priceRange = (TextView)activity.findViewById(R.id.textViewPriceRange);
+        TextView name = (TextView)activity.findViewById(R.id.textViewShowName);
+        TextView address = (TextView)activity.findViewById(R.id.textViewShowAddress);
+        TextView cuisines = (TextView)activity.findViewById(R.id.textViewShowCuisines);
+        TextView priceRange = (TextView)activity.findViewById(R.id.textViewShowPriceRange);
+        TextView email = (TextView)activity.findViewById(R.id.textViewShowEmail);
+        TextView link = (TextView)activity.findViewById(R.id.textViewShowLink);
+        TextView phone = (TextView)activity.findViewById(R.id.textViewShowPhone);
 
         name.setText(resto.getName());
         address.setText(resto.getAddress().getAddress());
         cuisines.setText(resto.getGenre());
         priceRange.setText(resto.getPriceRange());
+        email.setText(resto.getEmail());
+        link.setText(resto.getLink());
+
+        long phoneNumber = resto.getPhone();
+        if (phoneNumber != 0) {
+            phone.setText(String.valueOf(resto.getPhone()));
+        } else {
+            phone.setText(getString(R.string.show_phone_error));
+        }
+
+        // TODO
+        List<Review> reviewsList = resto.getReviews();
+        if (reviewsList == null || reviewsList.size() == 0) {
+
+        }
     }
 }

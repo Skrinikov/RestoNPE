@@ -121,4 +121,8 @@
 
     <!--Search resto error -->
     <string name="search_no_location">The city was not found. Please</string>
+
+    <!--Show resto errors-->
+    <string name="show_phone_error">No phone number was found</string>
+    <string name="show_review_error">No reviews were found</string>
 </resources>
