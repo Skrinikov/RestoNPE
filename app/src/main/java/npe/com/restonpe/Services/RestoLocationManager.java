@@ -29,6 +29,7 @@ public abstract class RestoLocationManager implements LocationListener {
 
     private final Context mContext;
 
+    public static final int LOCATION_MANAGER_REQUEST_CODE = 1;
     // The distance required to travel to update, in meters
     private static final long UPDATE_DISTANCE = 10; // 10 meters
     // The time between updates, in milliseconds
