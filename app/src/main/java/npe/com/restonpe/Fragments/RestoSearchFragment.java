@@ -63,7 +63,12 @@ public class RestoSearchFragment extends Fragment {
         findCuisines();
     }
 
+    /**
+     * Finds a list of cuisines in the user's current location. If the user's current location could
+     * not be found, the cuisines will not be found.
+     */
     private void findCuisines() {
+        // This location is used to find cuisines from the Zomato API
         SharedPreferences preferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
         String latitude = preferences.getString(BaseActivity.LATITUDE, null);
         String longitude = preferences.getString(BaseActivity.LONGITUDE, null);
@@ -83,6 +88,9 @@ public class RestoSearchFragment extends Fragment {
                 genres.setAdapter(adapter);
             }
         };
-        zomatoRestos.findCuisines(latitude, longitude);
+
+        if (latitude != null && longitude != null) {
+            zomatoRestos.findCuisines(latitude, longitude);
+        }
     }
 }

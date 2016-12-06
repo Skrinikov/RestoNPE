@@ -100,7 +100,7 @@ public class ShowRestoActivity extends BaseActivity {
             ZomatoRestos zomato = new ZomatoRestos(this) {
                 @Override
                 public void handleResults(List<?> list) {
-                    if (list.size() == 1) {
+                    if (list != null && list.size() == 1) {
                         RestoDAO dao = RestoDAO.getDatabase(ShowRestoActivity.this);
                         Resto resto = (Resto) list.get(0);
                         resto.setSubmitterName("Zomato");

@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ import npe.com.restonpe.util.RestoAdapter;
  * find restaurants using the Zomato API.
  *
  * @author Jeegna Patel
- * @since 21/11/2016
  * @version 1.0
+ * @since 21/11/2016
  */
 public class RestoSearchActivity extends BaseActivity {
 
@@ -72,7 +72,7 @@ public class RestoSearchActivity extends BaseActivity {
 
         String name = nameEditText.getText().toString();
         String city = cityEditText.getText().toString();
-        Cuisine cuisine = (Cuisine)cuisineSpinner.getSelectedItem();
+        Cuisine cuisine = (Cuisine) cuisineSpinner.getSelectedItem();
 
         if (name.isEmpty()) {
             name = null;
@@ -85,25 +85,29 @@ public class RestoSearchActivity extends BaseActivity {
             cuisine = null;
         }
 
+        // This location is used to determine the distance between the user and the restaurant
         SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
         final String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
         final String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
         final Context context = this;
 
-        if (latitude == null || longitude == null) {
-            Toast.makeText(this, getString(R.string.search_no_location), Toast.LENGTH_LONG).show();
-        } else {
-            ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
-                @Override
-                public void handleResults(List<?> list) {
+        ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
+            @Override
+            public void handleResults(List<?> list) {
+                if (list != null && list.size() > 0) {
                     List<RestoItem> restos = (List<RestoItem>) list;
                     ListView listView = (ListView) findViewById(R.id.find_list);
 
                     RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude);
                     listView.setAdapter(adapter);
+                } else {
+                    // Tell user there were no results
+                    new AlertDialog.Builder(context)
+                            .setMessage(getString(R.string.no_result))
+                            .show();
                 }
-            };
-            zomatoRestos.findRestos(name, city, cuisine);
-        }
+            }
+        };
+        zomatoRestos.findRestos(name, city, cuisine);
     }
 }

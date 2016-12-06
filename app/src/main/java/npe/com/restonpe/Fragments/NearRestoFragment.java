@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -82,15 +83,23 @@ public class NearRestoFragment extends Fragment {
         ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
             @Override
             public void handleResults(List<?> list) {
-                List<RestoItem> restos = (List<RestoItem>) list;
-                ListView listView = (ListView) activity.findViewById(R.id.near_list);
+                if (list != null && list.size() > 0) {
+                    List<RestoItem> restos = (List<RestoItem>) list;
+                    ListView listView = (ListView) activity.findViewById(R.id.near_list);
 
-                RestoAdapter adapter = new RestoAdapter(activity, restos, longitude, latitude);
-                listView.setAdapter(adapter);
+                    RestoAdapter adapter = new RestoAdapter(activity, restos, longitude, latitude);
+                    listView.setAdapter(adapter);
+                }
             }
         };
+
         if (latitude != null && longitude != null) {
             zomatoRestos.findNearbyRestos(latitude, longitude);
+        } else {
+            // Tell user there were no results
+            new AlertDialog.Builder(activity)
+                    .setMessage(getString(R.string.no_result))
+                    .show();
         }
     }
 

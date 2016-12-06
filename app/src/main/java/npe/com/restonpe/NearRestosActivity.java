@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.Log;
 
 import npe.com.restonpe.Fragments.NearRestoFragment;
 
@@ -27,6 +28,7 @@ public class NearRestosActivity extends BaseActivity {
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -40,6 +42,7 @@ public class NearRestosActivity extends BaseActivity {
      * the fragment manager.
      */
     private void createFragments() {
+        Log.i(TAG, "createFragments called");
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
         NearRestoFragment fragment = new NearRestoFragment();

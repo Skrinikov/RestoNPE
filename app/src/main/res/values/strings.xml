@@ -71,7 +71,7 @@
     <string name="longitude">Longitude: %1$s</string>
 
     <!-- error message -->
-    <string name="no_result">No result found.</string>
+    <string name="no_result">No results found.</string>
 
     <!-- Add Resto Strings -->
     <string name="restaurant">Restaurant</string>

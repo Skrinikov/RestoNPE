@@ -127,6 +127,7 @@ public abstract class ZomatoRestos {
     public void findRestos(String name, String city, Cuisine cuisine) {
         Log.i(TAG, String.format("Finding restaurants matching name=%1$s, city=%2$s, and cuisine=%3$s", name, city, cuisine));
 
+        // Used to convert city to latitude/longitude
         RestoLocationManager restoLocationManager = new RestoLocationManager(mContext) {
             @Override
             public void onLocationChanged(Location location) {
@@ -134,6 +135,7 @@ public abstract class ZomatoRestos {
             }
         };
 
+        // Used to find restaurants on Zomato
         RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
             public void onPostExecute(List<RestoItem> list) {

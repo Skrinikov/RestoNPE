@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,19 +56,24 @@ public class RestoAdapter extends BaseAdapter {
     public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
         this.context = context;
         this.list = list;
-        this.longitude = Double.parseDouble(longitude);
-        this.latitude = Double.parseDouble(latitude);
+        if (latitude != null && longitude != null) {
+            this.longitude = Double.parseDouble(longitude);
+            this.latitude = Double.parseDouble(latitude);
+        } else {
+            this.longitude = -1;
+            this.latitude = -1;
+        }
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     /**
      * Returns the size of the data list.
      *
-     * @return int The size of the list
+     * @return int The size of the list, or -1 if the list does not exist.
      */
     @Override
     public int getCount() {
-        return list.size();
+          return list.size();
     }
 
     /**
@@ -115,8 +119,11 @@ public class RestoAdapter extends BaseAdapter {
         TextView distance = (TextView) rowView.findViewById(R.id.resto_distance);
         final ImageView addResto = (ImageView) rowView.findViewById(R.id.resto_add);
 
-        double calculated_distance = DistanceCalculator.calculateDistance
-                (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
+        double calculated_distance = -1;
+        if (latitude != -1 && longitude != -1) {
+            calculated_distance = DistanceCalculator.calculateDistance
+                    (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
+        }
 
         // Put id of RestoItem into list item so that it may be retrieved later when ShowRestoActivity is created
         rowView.setTag(list.get(position).getId());
