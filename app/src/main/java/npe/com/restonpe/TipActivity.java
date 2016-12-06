@@ -2,10 +2,9 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
-import npe.com.restonpe.Fragments.AboutFragment;
 import npe.com.restonpe.Fragments.TipFragment;
 
 /**
@@ -28,7 +27,10 @@ public class TipActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.tip_calculator);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.tip_calculator);
+        }
         createFragments();
     }
 

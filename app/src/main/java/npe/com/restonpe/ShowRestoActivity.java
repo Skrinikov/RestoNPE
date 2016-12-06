@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,7 +42,10 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
 
-        getSupportActionBar().setTitle(R.string.title_activity_show_restos);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.title_activity_show_restos);
+        }
         createFragments();
     }
 
@@ -113,7 +117,7 @@ public class ShowRestoActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant
+    // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant, for when the GUI is complete
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *

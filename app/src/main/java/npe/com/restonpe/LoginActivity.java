@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /**
      * Validates that all the fields are provided
-     * @param view
+     * @param view The view upon which the event was called
      */
     public void attemptLogin(View view) {
         if (validateInputs()) {
@@ -58,6 +58,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Validates the login screen input.
+     *
+     * @return {@code True} if all fields in the screen have valid input, {@code False} otherwise.
+     */
     private boolean validateInputs() {
         boolean isValid = true;
 

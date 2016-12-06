@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -42,7 +43,10 @@ public class RestoSearchActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate called");
 
-        getSupportActionBar().setTitle(R.string.title_activity_search_restos);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.title_activity_search_restos);
+        }
         createFragments();
     }
 

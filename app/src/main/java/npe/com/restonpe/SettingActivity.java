@@ -5,9 +5,9 @@ import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,7 +39,10 @@ public class SettingActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.action_settings);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.action_settings);
+        }
         createFragments();
     }
 
@@ -133,7 +136,7 @@ public class SettingActivity extends BaseActivity {
                 editor.putString("emailAdr", emailAdr.getText().toString().trim());
                 editor.putString("postalCode", postalCode.getText().toString().trim());
 
-                editor.commit();
+                editor.apply();
                 Toast.makeText(this, R.string.setting_saved, Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, R.string.incomplete, Toast.LENGTH_LONG).show();

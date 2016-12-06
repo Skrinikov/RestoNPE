@@ -8,6 +8,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.ActionBar;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -44,7 +45,10 @@ public class AddRestoActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.title_activity_restos_add);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.title_activity_restos_add);
+        }
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
         createFragments();
     }
@@ -67,7 +71,7 @@ public class AddRestoActivity extends BaseActivity {
      *
      * TODO use async task later to message the server to add the resto.
      *
-     * @param view
+     * @param view The view upon which the event was called
      */
     public void addRestaurant(View view){
         Log.d(TAG,"addRestaurant()");
@@ -117,9 +121,10 @@ public class AddRestoActivity extends BaseActivity {
     }
 
     /**
-     * Validates that all the required input fields were set. If any errors occur, displayes an appropriate
+     * Validates that all the required input fields were set. If any errors occur, displays an appropriate
      * error message next to the edit text field.
-     * @return
+     *
+     * @return {@code True} if all the required fields were set, {@code False} otherwise.
      */
     private boolean validateInputFields() {
         boolean isValid = true;

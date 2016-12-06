@@ -3,6 +3,7 @@ package npe.com.restonpe;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 
 import npe.com.restonpe.Fragments.NearRestoFragment;
 
@@ -27,7 +28,10 @@ public class NearRestosActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle(R.string.title_activity_restos_near);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.title_activity_restos_near);
+        }
         createFragments();
     }
 

@@ -127,7 +127,6 @@ public class BaseActivity extends AppCompatActivity
      * @param item The item which was selected.
      * @return boolean Depicts an item has been selected and have processed the intention.
      */
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
