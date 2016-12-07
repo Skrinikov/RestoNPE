@@ -247,6 +247,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
             restos.add(temp);
         }
+        c.close();
         Log.i(TAG, "getAllRestaurantsSmall(), Size: " + restos.size());
 
         return restos;
@@ -279,8 +280,91 @@ public class RestoDAO extends SQLiteOpenHelper {
             getReviewList(r);
             getUser(r, c.getLong(c.getColumnIndex(COLUMN_USER_FK)));
         }
+        c.close();
         Log.i(TAG, "getSingleRestaurant()");
         return r;
+    }
+
+    /**
+     * Deletes a single email from the TABLE_RESTO_COLUMN. ALl subsequent foreign key constraints
+     * will delete on cascade.
+     * <p>
+     * ISSUE: When adding a restaurant row into the database, if the submitter(user) does not exist he
+     * will be added to the database. However when a restaurant is deleted the user is NOT affected.
+     * This can cause a problem if the phone will continually store lots of restaurants and deleting
+     * them.
+     *
+     * @param id primary key of the restaurant to delete.
+     * @return number of rows affected by the deletion. Should be one, cascaded deletions do not count
+     * towards this return.
+     */
+    public int deleteRestaurant(long id) {
+        return getWritableDatabase().delete(TABLE_RESTO, COLUMN_ID + "=?", new String[]{id + ""});
+    }
+
+    /**
+     * Updates the information of the restaurant. Only the primary key which is given by the id in the
+     * resto bean and the submitter will remain unchanged. All other data WILL be overriden.
+     *
+     * @param resto updated version of the resto. Must contain a primary key.
+     */
+    public void updateRestaurant(Resto resto) {
+        if (resto.getId() < 1)
+            throw new IllegalArgumentException("No valid id given");
+        ContentValues cv = new ContentValues();
+        long genreId = getGenreID(resto.getGenre());
+
+        cv.put(COLUMN_RESTO_NAME, resto.getName());
+        cv.put(COLUMN_EMAIL, resto.getEmail());
+        cv.put(COLUMN_PHONE, resto.getPhone());
+        cv.put(COLUMN_LINK, resto.getLink());
+        cv.put(COLUMN_PRICE_RANGE, resto.getPriceRange());
+        cv.put(COLUMN_GENRE_FK, genreId);
+
+        getWritableDatabase().update(TABLE_RESTO, cv, COLUMN_ID + "=?", new String[]{resto.getId() + ""});
+
+        updateAddress(resto.getAddress(), resto.getId());
+    }
+
+    /**
+     * Updates the address for a given restaurant. This method WILL override any previous existing data!
+     *
+     *
+     * @param address address to be changed.
+     * @param restoId primary key of restaurant to which change the address.
+     */
+    public void updateAddress(Address address, Long restoId) {
+        if (restoId < 1)
+            throw new IllegalArgumentException("No valid id given");
+
+        ContentValues cv = new ContentValues();
+
+        cv.put(COLUMN_STREET_ADDRESS, address.getAddress());
+        cv.put(COLUMN_COUNTRY, address.getCountry());
+        cv.put(COLUMN_CITY, address.getCity());
+        cv.put(COLUMN_POSTAL, address.getPostal());
+        cv.put(COLUMN_LONG, address.getLongitude());
+        cv.put(COLUMN_LAT, address.getLatitude());
+        cv.put(COLUMN_SUITE, address.getSuite());
+        cv.put(COLUMN_PROVINCE, address.getProvince());
+
+        getWritableDatabase().update(TABLE_ADDRESS, cv, COLUMN_RESTO_FK, new String[]{restoId + ""});
+    }
+
+    /**
+     * Adds a review to the restaurant under the given id. Does not check if such review already exists.
+     *
+     * @param review Review to add to the restaurant
+     * @param restoId primary key of the restaurant.
+     * @return primary key of the newly created review.
+     */
+    public long addReview(Review review, long restoId){
+        if(restoId < 1)
+            throw new IllegalArgumentException("Invalid id given");
+        if(review == null)
+            throw new IllegalArgumentException("No review to add");
+
+        return insertReview(review, restoId);
     }
 
     /*
@@ -299,6 +383,8 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         if (c.moveToNext())
             resto.setGenre(c.getString(c.getColumnIndex(COLUMN_GENRE)));
+
+        c.close();
     }
 
     /**
@@ -312,7 +398,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
 
-        if(c.moveToNext()) {
+        if (c.moveToNext()) {
             Address address = new Address();
             address.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
             address.setAddress(c.getString(c.getColumnIndex(COLUMN_STREET_ADDRESS)));
@@ -325,6 +411,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
             resto.setAddress(address);
         }
+        c.close();
     }
 
     /**
@@ -347,6 +434,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             reviews.add(rev);
         }
 
+        c.close();
         resto.setReviews(reviews);
 
     }
@@ -374,13 +462,14 @@ public class RestoDAO extends SQLiteOpenHelper {
         else {
             temp.setRating(score / reviews);
         }
+        c.close();
         Log.i(TAG, "getRatingForResto()");
     }
 
     /**
-     * Fetches tge city, longitude and latitude for a given restaurant.
+     * Fetches the city, longitude and latitude for a given restaurant.
      *
-     * @param temp
+     * @param temp resto item for which look up the long and lat
      */
     private void getAddressForResto(RestoItem temp) {
         int id = temp.getId();
@@ -392,6 +481,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             temp.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
             temp.setLatitude(c.getDouble(c.getColumnIndex(COLUMN_LAT)));
         }
+        c.close();
         Log.i(TAG, "getAddressForResto()");
     }
 
@@ -404,23 +494,27 @@ public class RestoDAO extends SQLiteOpenHelper {
      */
     private void insertReviews(List<Review> reviews, long restoId) {
         if (reviews != null) {
-            ContentValues cv;
             long userId;
             for (Review r : reviews) {
-                cv = new ContentValues();
-
-                cv.put(COLUMN_TITLE, r.getTitle());
-                cv.put(COLUMN_CONTENT, r.getContent());
-                cv.put(COLUMN_RATING, r.getRating());
-                cv.put(COLUMN_lIKES, r.getLikes());
-                userId = getUserId(r.getSubmitterEmail(), r.getSubmitter());
-                cv.put(COLUMN_USER_FK, userId);
-                cv.put(COLUMN_RESTO_FK, restoId);
-
-                getWritableDatabase().insert(TABLE_REVIEW, null, cv);
+                insertReview(r, restoId);
             }
         }
         Log.i(TAG, "insertReviews()");
+    }
+
+    private long insertReview(Review review, long restoId){
+        ContentValues cv;
+        cv = new ContentValues();
+
+        cv.put(COLUMN_TITLE, review.getTitle());
+        cv.put(COLUMN_CONTENT, review.getContent());
+        cv.put(COLUMN_RATING, review.getRating());
+        cv.put(COLUMN_lIKES, review.getLikes());
+        long userId = getUserId(review.getSubmitterEmail(), review.getSubmitter());
+        cv.put(COLUMN_USER_FK, userId);
+        cv.put(COLUMN_RESTO_FK, restoId);
+
+        return getWritableDatabase().insert(TABLE_REVIEW, null, cv);
     }
 
     /**
@@ -432,20 +526,20 @@ public class RestoDAO extends SQLiteOpenHelper {
     private void insertAddress(Address address, long restoId) {
         if (address != null) {
             ContentValues cv;
-                cv = new ContentValues();
+            cv = new ContentValues();
 
-                cv.put(COLUMN_STREET_ADDRESS, address.getAddress());
-                cv.put(COLUMN_COUNTRY, address.getCountry());
-                cv.put(COLUMN_CITY, address.getCity());
-                cv.put(COLUMN_POSTAL, address.getPostal());
-                cv.put(COLUMN_LONG, address.getLongitude());
-                cv.put(COLUMN_LAT, address.getLatitude());
-                cv.put(COLUMN_SUITE, address.getSuite());
-                cv.put(COLUMN_RESTO_FK, restoId);
-                cv.put(COLUMN_PROVINCE, address.getProvince());
+            cv.put(COLUMN_STREET_ADDRESS, address.getAddress());
+            cv.put(COLUMN_COUNTRY, address.getCountry());
+            cv.put(COLUMN_CITY, address.getCity());
+            cv.put(COLUMN_POSTAL, address.getPostal());
+            cv.put(COLUMN_LONG, address.getLongitude());
+            cv.put(COLUMN_LAT, address.getLatitude());
+            cv.put(COLUMN_SUITE, address.getSuite());
+            cv.put(COLUMN_RESTO_FK, restoId);
+            cv.put(COLUMN_PROVINCE, address.getProvince());
 
-                getWritableDatabase().insert(TABLE_ADDRESS, null, cv);
-            }
+            getWritableDatabase().insert(TABLE_ADDRESS, null, cv);
+        }
 
         Log.i(TAG, "insertAddress()");
     }
@@ -465,7 +559,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         ContentValues cv = new ContentValues();
 
-        Log.d(TAG, resto.getName()+" is the name");
+        Log.d(TAG, resto.getName() + " is the name");
 
         cv.put(COLUMN_RESTO_NAME, resto.getName());
         cv.put(COLUMN_EMAIL, resto.getEmail());
@@ -524,6 +618,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             cv.put(COLUMN_GENRE, genre);
             id = getWritableDatabase().insert(TABLE_GENRE, null, cv);
         }
+        c.close();
         Log.i(TAG, "getGenreID()");
         return id;
     }
@@ -546,6 +641,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             cv.put(COLUMN_USERNAME, submitter);
             id = getWritableDatabase().insert(TABLE_USERS, null, cv);
         }
+        c.close();
         Log.i(TAG, "getUserId()");
         return id;
     }
@@ -564,6 +660,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             resto.setSubmitterEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
             resto.setSubmitterName(c.getString(c.getColumnIndex(COLUMN_USERNAME)));
         }
+        c.close();
     }
 
     /**
@@ -580,6 +677,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             review.setSubmitterEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
             review.setSubmitter(c.getString(c.getColumnIndex(COLUMN_USERNAME)));
         }
+        c.close();
         //I did overloaded methods because I was too lazy to make a common interface.
     }
 

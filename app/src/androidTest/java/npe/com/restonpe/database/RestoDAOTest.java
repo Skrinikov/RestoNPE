@@ -60,16 +60,13 @@ public class RestoDAOTest {
         r.setSubmitterName("submitter name");
         Address a = new Address();
         a.setCity("city");
-        a.setCivic(2);
         a.setCountry("country");
         a.setLatitude(1);
         a.setLongitude(1);
         a.setPostal("h4h4h4");
-        a.setStreet("Street");
         a.setSuite(0);
-        List<Address> a2 = new ArrayList<>();
-        a2.add(a);
-        r.setAddress(a2);
+
+        r.setAddress(a);
 
         db.addRestaurant(r);
 
@@ -91,26 +88,14 @@ public class RestoDAOTest {
 
         Address a = new Address();
         a.setCity("city");
-        a.setCivic(2);
         a.setCountry("country");
         a.setLatitude(1);
         a.setLongitude(1);
         a.setPostal("h4h4h4");
-        a.setStreet("Street");
+        a.setAddress("3040 Sherbrooke");
         a.setSuite(0);
-        Address b = new Address();
-        b.setCity("Montreal");
-        b.setCivic(122);
-        b.setCountry("Canada");
-        b.setLatitude(1);
-        b.setLongitude(1);
-        b.setPostal("h1h1h1");
-        b.setStreet("Guy");
-        b.setSuite(99);
-        List<Address> a2 = new ArrayList<>();
-        a2.add(a);
-        a2.add(b);
-        r.setAddress(a2);
+
+        r.setAddress(a);
 
         Review rev = new Review();
         rev.setContent("Worst Restaurant Ever will not recommend");
@@ -150,6 +135,18 @@ public class RestoDAOTest {
         Log.d(TAG,result.toString());
     }
 
+    @Test
+    public void deleteTest() throws Exception{
+        Resto r = createNewResto();
+
+        long id = db.addRestaurant(r);
+
+        int result = db.deleteRestaurant(id);
+
+        Log.d(TAG, "Result is: "+result);
+        assertEquals(result,1);
+    }
+
     private boolean validateResult(Resto r, List<RestoItem> result) {
         RestoItem item = result.get(3);
         Log.d(TAG,r.getName()+"-"+item.getName());
@@ -176,13 +173,10 @@ public class RestoDAOTest {
         addr.setLongitude(23.54);
         addr.setLatitude(45.98);
         addr.setPostal("h0h0h0");
-        addr.setCivic(2);
         addr.setCountry("France");
-        addr.setStreet("Sherbrooke");
+        addr.setAddress("3040 Sherbrooke");
         addr.setSuite(2);
-        List<Address> addrL = new ArrayList<>();
-        addrL.add(addr);
-        r.setAddress(addrL);
+        r.setAddress(addr);
 
 
         Review rev = new Review();
