@@ -157,8 +157,8 @@ public class RestoAdapter extends BaseAdapter {
         Log.d(TAG, "setAddRestoListener called");
         addResto.setOnClickListener(new View.OnClickListener() {
             /**
-             * Event handler that will add the clicked item's row to the
-             * database.
+             * Event handler that will add or remove the clicked item's row to the
+             * database depending on which Activity class called this adapter.
              *
              * @param v The view which triggers the event.
              */
@@ -167,7 +167,11 @@ public class RestoAdapter extends BaseAdapter {
                 Log.d(TAG, "setAddRestoListener - onClick called");
 
                 if (FavRestoActivity.class == context.getClass()) {
-                    //delete?
+                    View row = (View) v.getParent();
+                    Log.d(TAG,"id to remove is: " + row.getTag());
+                    RestoDAO.getDatabase(context).deleteRestaurant(Long.valueOf(row.getTag().toString()));
+                    Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
+                    ((FavRestoActivity)context).updateDbList();
                 } else {
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
                     RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {

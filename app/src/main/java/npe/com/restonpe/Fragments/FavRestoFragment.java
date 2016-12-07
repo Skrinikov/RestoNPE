@@ -77,24 +77,12 @@ public class FavRestoFragment extends Fragment {
             Log.d(TAG, "onActivityCreated: prefs is not null.");
             DataLoader loader = new DataLoader();
             loader.execute();
-
-            /*
-            restoDAO = RestoDAO.getDatabase(getActivity());
-            List<RestoItem> restos = restoDAO.getAllRestaurantsSmall();
-
-            if (restos.size() > 0) {
-                Log.d(TAG, "onActivityCreated: there are restos.");
-                no_result.setVisibility(View.GONE);
-
-                RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos, prefs.getString("longitude", "0"),
-                        prefs.getString("latitude", "0"));
-                resto_list.setAdapter(restoAdapter);
-
-
-            } else {
-                no_result.setVisibility(View.VISIBLE);
-            }*/
         }
+    }
+
+    public void getDbRestoList(){
+        DataLoader loader = new DataLoader();
+        loader.execute();
     }
 
     /**
@@ -128,6 +116,7 @@ public class FavRestoFragment extends Fragment {
 
             ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
             TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);
+            resto_list.setAdapter(null);
 
             if (restos.size() > 0) {
                 Log.d(TAG, "onActivityCreated: there are restos.");

@@ -25,4 +25,13 @@
         <item name="android:textSize">40sp</item>
     </style>
 
+    <!-- resto detail -->
+    <style name="RestoNameTheme">
+        <item name="android:textSize">50sp</item>
+    </style>
+
+    <style name="RestoDetailTheme">
+        <item name="android:textSize">25sp</item>
+    </style>
+
 </resources>

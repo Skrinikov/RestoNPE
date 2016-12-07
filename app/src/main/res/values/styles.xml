@@ -97,10 +97,19 @@
     <style name="Main_TextViewTheme">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:gravity">center</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="Main_ItemTheme">
         <item name="android:background">@drawable/button_bg</item>
+    </style>
+
+    <!-- resto detail -->
+    <style name="RestoNameTheme">
+        <item name="android:textSize">25sp</item>
+    </style>
+
+    <style name="RestoDetailTheme">
+        <item name="android:textSize">15sp</item>
     </style>
 </resources>

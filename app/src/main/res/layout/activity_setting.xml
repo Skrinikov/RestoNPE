@@ -49,15 +49,15 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/postal_code"
+            android:text="@string/login_password"
             style="@style/TextViewTheme"/>
 
         <EditText
-            android:id="@+id/postal_code_input"
+            android:id="@+id/password_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/postal_code"
-            android:inputType="textPostalAddress"
+            android:hint="@string/login_password"
+            android:inputType="textPassword"
             style="@style/TextViewTheme.SubTextTheme"/>
     </LinearLayout>
 </LinearLayout>

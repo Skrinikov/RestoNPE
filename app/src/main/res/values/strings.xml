@@ -35,6 +35,8 @@
     <string name="title_activity_restos_add">Add a Restaurant</string>
     <string name="title_activity_restos_fav">Favorites</string>
     <string name="title_activity_show_restos">Restaurant</string>
+    <string name="title_activity_find_from_somewhere">Find Resto from Somewhere</string>
+
     <string name="action_home">Home</string>
     <string name="action_settings">Settings</string>
     <string name="action_about">About</string>

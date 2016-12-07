@@ -25,7 +25,7 @@ import npe.com.restonpe.Fragments.SettingFragment;
  * @since 29/11/2016
  */
 public class SettingActivity extends BaseActivity {
-    private TextView username, emailAdr, postalCode;
+    private TextView username, emailAdr, password;
     private SettingFragment fragment;
     private final String TAG = "SettingActivity";
     private SharedPreferences pref;
@@ -63,16 +63,16 @@ public class SettingActivity extends BaseActivity {
 
         username = (TextView) fragment.getView().findViewById(R.id.username_input);
         emailAdr = (TextView) fragment.getView().findViewById(R.id.email_adr_input);
-        postalCode = (TextView) fragment.getView().findViewById(R.id.postal_code_input);
+        password = (TextView) fragment.getView().findViewById(R.id.password_input);
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
         if (pref != null) {
             username.setText(pref.getString("username", null));
             emailAdr.setText(pref.getString("emailAdr", null));
-            postalCode.setText(pref.getString("postalCode", null));
+            password.setText(pref.getString("password", null));
         }
 
-        Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + postalCode);
+        Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + password);
     }
 
     /**
@@ -127,14 +127,14 @@ public class SettingActivity extends BaseActivity {
         Log.d(TAG, "saveInfo called");
         SharedPreferences.Editor editor = pref.edit();
 
-        if (username.getText().length() > 0 && emailAdr.getText().length() > 0 && postalCode.getText().length() > 0) {
-            Log.d(TAG, "Fields are: " + username.getText() + "\t" + emailAdr.getText() + "\t" + postalCode.getText());
-            Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + postalCode.getText().toString());
+        if (username.getText().length() > 0 && emailAdr.getText().length() > 0 && password.getText().length() > 0) {
+            Log.d(TAG, "Fields are: " + username.getText() + "\t" + emailAdr.getText() + "\t" + password.getText());
+            Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + password.getText().toString());
 
-            if (username.getText().toString().trim().length() > 0 && emailAdr.getText().toString().trim().length() > 0 && postalCode.getText().toString().trim().length() > 0) {
+            if (username.getText().toString().trim().length() > 0 && emailAdr.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
                 editor.putString("username", username.getText().toString().trim());
                 editor.putString("emailAdr", emailAdr.getText().toString().trim());
-                editor.putString("postalCode", postalCode.getText().toString().trim());
+                editor.putString("password", password.getText().toString().trim());
 
                 editor.apply();
                 Toast.makeText(this, R.string.setting_saved, Toast.LENGTH_LONG).show();
@@ -169,10 +169,10 @@ public class SettingActivity extends BaseActivity {
                 dataSaved = false;
             } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", ""))) {
                 dataSaved = false;
-            } else if (!postalCode.getText().toString().trim().equals(pref.getString("postalCode", ""))) {
+            } else if (!password.getText().toString().trim().equals(pref.getString("password", ""))) {
                 dataSaved = false;
             }
-        } else if (username.getText().length() < 1 && emailAdr.getText().length() < 1 && postalCode.getText().length() < 1) {
+        } else if (username.getText().length() < 1 && emailAdr.getText().length() < 1 && password.getText().length() < 1) {
             Log.d(TAG, "onBackPressed: prefs is null but empty fields");
             dataSaved = true;
         } else {

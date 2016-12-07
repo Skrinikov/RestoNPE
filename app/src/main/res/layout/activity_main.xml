@@ -45,7 +45,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/fav_icon"
+                    android:src="@drawable/icon_fav"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
 
@@ -68,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/find_icon"
+                    android:src="@drawable/icon_find"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
 
@@ -100,7 +100,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/nearby_icon"
+                    android:src="@drawable/icon_nearby"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
 
@@ -123,7 +123,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/tip_icon"
+                    android:src="@drawable/icon_tip"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
         </LinearLayout>
@@ -152,7 +152,30 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:src="@drawable/add_icon"
+                    android:src="@drawable/icon_add"
+                    style="@style/ImageViewPadding"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/findFromSomewhere"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                style="@style/Main_ItemTheme"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:text="@string/title_activity_find_from_somewhere"
+                    style="@style/Main_TextViewTheme"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:src="@drawable/icon_somewhere"
                     style="@style/ImageViewPadding"/>
             </LinearLayout>
         </LinearLayout>

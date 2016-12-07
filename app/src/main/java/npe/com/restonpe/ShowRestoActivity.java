@@ -30,7 +30,7 @@ import npe.com.restonpe.database.RestoDAO;
  *
  * @author Jeegna Patel
  * @version 1.0
- * @since 04/12/2016
+ * @since 07/12/2016
  */
 public class ShowRestoActivity extends BaseActivity {
 
@@ -88,7 +88,8 @@ public class ShowRestoActivity extends BaseActivity {
     }
 
     /**
-     * Starts the add resto activity.
+     * Add or remove a resto to database based on if the resto object has
+     * a submitter or not.
      *
      * @param item The selected item.
      * @return boolean depicting that an item has been clicked.
@@ -102,6 +103,7 @@ public class ShowRestoActivity extends BaseActivity {
         Bundle extras = getIntent().getExtras();
 
         if (extras.get("submitter").toString().length() > 0) {
+            RestoDAO.getDatabase(this).deleteRestaurant(Long.valueOf(extras.getInt("id")));
             Toast.makeText(this, R.string.removed, Toast.LENGTH_LONG).show();
         } else {
             RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(this) {
@@ -133,12 +135,11 @@ public class ShowRestoActivity extends BaseActivity {
 
             restoNetworkManager.findRestoInformation(extras.getInt("id"));
         }
-
+        item.setVisible(false);
         return super.onOptionsItemSelected(item);
     }
 
     // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant, for when the GUI is complete
-
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *
