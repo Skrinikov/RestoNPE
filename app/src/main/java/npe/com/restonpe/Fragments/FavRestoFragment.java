@@ -117,7 +117,7 @@ public class FavRestoFragment extends Fragment {
             ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
             TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);
             resto_list.setAdapter(null);
-            
+
             if (restos.size() > 0) {
                 Log.d(TAG, "onActivityCreated: there are restos.");
                 no_result.setVisibility(View.GONE);
