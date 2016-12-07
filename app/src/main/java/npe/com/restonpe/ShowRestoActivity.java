@@ -25,8 +25,8 @@ import npe.com.restonpe.database.RestoDAO;
  * view details of a restaurant.
  *
  * @author Jeegna Patel
- * @since 04/12/2016
  * @version 1.0
+ * @since 04/12/2016
  */
 public class ShowRestoActivity extends BaseActivity {
 
@@ -74,9 +74,9 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        if(getIntent().getExtras().get("submitter").toString().length() > 0){
+        if (getIntent().getExtras().get("submitter").toString().length() > 0) {
             menu.getItem(0).setIcon(R.drawable.ic_remove);
-        }else{
+        } else {
             menu.getItem(0).setIcon(R.drawable.ic_add);
         }
 
@@ -94,10 +94,10 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onOptionsItemSelected called");
         int id = item.getItemId();
 
-        if(getIntent().getExtras().get("submitter").toString().length() > 0){
+        if (getIntent().getExtras().get("submitter").toString().length() > 0) {
             RestoDAO.getDatabase(this).deleteRestaurant(Long.valueOf(getIntent().getExtras().getInt("id")));
-            Toast.makeText(this,R.string.removed,Toast.LENGTH_LONG).show();
-        }else{
+            Toast.makeText(this, R.string.removed, Toast.LENGTH_LONG).show();
+        } else {
             ZomatoRestos zomato = new ZomatoRestos(this) {
                 @Override
                 public void handleResults(List<?> list) {
@@ -114,11 +114,12 @@ public class ShowRestoActivity extends BaseActivity {
 
             zomato.findRestoInformation(getIntent().getExtras().getInt("id"));
         }
-
+        item.setVisible(false);
         return super.onOptionsItemSelected(item);
     }
 
     // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant, for when the GUI is complete
+
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *
