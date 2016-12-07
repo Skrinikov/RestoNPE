@@ -26,7 +26,7 @@ public abstract class HerokuRestos {
 
     private static final String TAG = HerokuRestos.class.getSimpleName();
 
-    //    Resto fields
+    // Resto fields
     private static final String RESTO_ID = "resto_id";
     private static final String RESTO_NAME = "name";
     private static final String RESTO_PHONE = "phone";
@@ -47,7 +47,7 @@ public abstract class HerokuRestos {
     private static final String RESTO_LONGITUDE = "longitude";
     private static final String RESTO_DISTANCE = "distance";
 
-    //    Review fields
+    // Review fields
     private static final String REVIEW_ID = "review_id";
     private static final String REVIEW_TITLE = "title";
     private static final String REVIEW_CONTENT = "content";
@@ -193,7 +193,8 @@ public abstract class HerokuRestos {
      * Gets the information of a restaurant from the {@code JsonReader}
      *
      * @param reader A {@code JsonReader} with the next object being a restaurant
-     * @return A {@code RestoItem} with the data from the {@code JsonReader}
+     * @return A {@code HasMap} of key-value pairs with the keys being fields in the JSON that
+     * correspond to fields of a {@code Review}
      * @throws IOException If an IOException occurs while reading the JSON
      */
     private HashMap<String, String> getResto(JsonReader reader) throws IOException {
@@ -405,10 +406,11 @@ public abstract class HerokuRestos {
 
 
     /**
-     * Gets the information of a restaurant from the {@code JsonReader}
+     * Gets the information of a review from the {@code JsonReader}
      *
-     * @param reader A {@code JsonReader} with the next object being a restaurant
-     * @return A {@code RestoItem} with the data from the {@code JsonReader}
+     * @param reader A {@code JsonReader} with the next object being a review
+     * @return A {@code HasMap} of key-value pairs with the keys being fields in the JSON that
+     * correspond to fields of a {@code Review}
      * @throws IOException If an IOException occurs while reading the JSON
      */
     private HashMap<String, String> getReview(JsonReader reader) throws IOException {
