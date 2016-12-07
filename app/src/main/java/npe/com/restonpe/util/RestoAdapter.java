@@ -167,7 +167,10 @@ public class RestoAdapter extends BaseAdapter {
                 Log.d(TAG, "setAddRestoListener - onClick called");
 
                 if (FavRestoActivity.class == context.getClass()) {
-                    //delete?
+                    View row = (View) v.getParent();
+                    Log.d(TAG,"id to remove is: " + row.getTag());
+                    RestoDAO.getDatabase(context).deleteRestaurant(Long.valueOf(row.getTag().toString()));
+                    Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
                 } else {
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
                     ZomatoRestos zomato = new ZomatoRestos(context) {

@@ -95,6 +95,7 @@ public class ShowRestoActivity extends BaseActivity {
         int id = item.getItemId();
 
         if(getIntent().getExtras().get("submitter").toString().length() > 0){
+            RestoDAO.getDatabase(this).deleteRestaurant(Long.valueOf(getIntent().getExtras().getInt("id")));
             Toast.makeText(this,R.string.removed,Toast.LENGTH_LONG).show();
         }else{
             ZomatoRestos zomato = new ZomatoRestos(this) {
