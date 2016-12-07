@@ -13,11 +13,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity"
-            android:theme="@style/Launcher.Splash">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Launcher.Splash"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,25 +28,40 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".TipActivity" />
-        <activity android:name=".AboutActivity" />
-        <activity android:name=".SettingActivity">
+        <activity
+            android:name=".TipActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".AboutActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".SettingActivity"
+            android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".FindRestoActivity" />
-        <activity android:name=".NearRestosActivity" />
-        <activity android:name=".AddRestoActivity" />
-        <activity android:name=".FavRestoActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".ShowRestoActivity" />
+        <activity
+            android:name=".FindRestoActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".NearRestosActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".AddRestoActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".FavRestoActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".LoginActivity"
+            android:noHistory="true" />
+        <activity
+            android:name=".ShowRestoActivity"
+            android:noHistory="true" />
     </application>
-
 </manifest>
