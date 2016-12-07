@@ -36,6 +36,8 @@ public class ShowRestoActivity extends BaseActivity {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
+    private Context mContext;
+
     /**
      * Creates the {@code Activity}.
      *
@@ -45,6 +47,8 @@ public class ShowRestoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
+
+        this.mContext = this;
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -99,10 +103,9 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onOptionsItemSelected called");
         int id = item.getItemId();
 
-        final Context context = this;
         Bundle extras = getIntent().getExtras();
 
-        if (extras.get("submitter").toString().length() > 0) {
+        if (extras.get("submitter") != null && extras.get("submitter").toString().length() > 0) {
             RestoDAO.getDatabase(this).deleteRestaurant(Long.valueOf(extras.getInt("id")));
             Toast.makeText(this, R.string.removed, Toast.LENGTH_LONG).show();
         } else {
@@ -124,7 +127,7 @@ public class ShowRestoActivity extends BaseActivity {
                     Log.i(TAG, "Reading Json response...");
 
                     try {
-                        ZomatoRestos zomato = new ZomatoRestos(context);
+                        ZomatoRestos zomato = new ZomatoRestos(mContext);
                         return zomato.readRestoInformation(reader);
                     } catch (IOException e) {
                         Log.i(TAG, "An IO exception occurred: " + e.getMessage());
