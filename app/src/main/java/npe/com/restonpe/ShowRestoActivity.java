@@ -104,21 +104,22 @@ public class ShowRestoActivity extends BaseActivity {
         int id = item.getItemId();
 
         Bundle extras = getIntent().getExtras();
+        Object submitter = extras.get("submitter");
 
-        if (extras.get("submitter") != null && extras.get("submitter").toString().length() > 0) {
-            RestoDAO.getDatabase(this).deleteRestaurant(Long.valueOf(extras.getInt("id")));
-            Toast.makeText(this, R.string.removed, Toast.LENGTH_LONG).show();
+        if (submitter != null && submitter.toString().length() > 0) {
+            RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong("id"));
+            Toast.makeText(mContext, R.string.removed, Toast.LENGTH_LONG).show();
         } else {
-            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(this) {
+            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
                 @Override
                 public void onPostExecute(List<Resto> list) {
                     if (list != null && list.size() == 1) {
-                        RestoDAO dao = RestoDAO.getDatabase(ShowRestoActivity.this);
+                        RestoDAO dao = RestoDAO.getDatabase(mContext);
                         Resto resto = list.get(0);
                         resto.setSubmitterName("Zomato");
                         resto.setSubmitterEmail("ZomatoEmail");
                         dao.addRestaurant(resto);
-                        Toast.makeText(ShowRestoActivity.this, R.string.added, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, R.string.added, Toast.LENGTH_LONG).show();
                     }
                 }
 
@@ -142,7 +143,6 @@ public class ShowRestoActivity extends BaseActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant, for when the GUI is complete
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *
