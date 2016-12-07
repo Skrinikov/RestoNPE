@@ -38,6 +38,11 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
     private static final String RESTO_URL = "https://developers.zomato.com/api/v2.1/restaurant?res_id=%1$s";
 
+    // The URL to hit for finding nearby restaurants from Heroku with placeholders for latitude and longitude.
+    private static final String RESTO_NEAR_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/restos?lat=%1$s&long=%2$s";
+    // The URL to hit for finding reviews from Heroku with a placeholder for the restaurant id
+    private static final String RESTO_REVIEW_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews?id=%1$s";
+
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
     private static final String RESTO_ACCEPT = "application/json; charset=UTF-8";
@@ -173,6 +178,47 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     public void findRestoInformation(int id) {
         // Add id to url
         String updatedURL = String.format(RESTO_URL, id);
+
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
+    }
+
+    /**
+     * A convenience method for finding reviews from Heroku of the restaurant with the given id
+     *
+     * @param id The id of the restaurant whose information is to be found
+     */
+    public void findRestoReviewsFromHeroku(int id) {
+        // Add id to url
+        String updatedURL = String.format(RESTO_REVIEW_URL_HEROKU, id);
+
+        try {
+            URL url = new URL(updatedURL);
+
+            Log.i(TAG, "Hitting " + updatedURL);
+
+            execute(url);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + updatedURL);
+        }
+    }
+
+    /**
+     * A convenience method for finding nearby restaurants from Heroku
+     *
+     * @param latitude The latitude of the area of which to search
+     * @param longitude The longitude of the area of which to search
+     */
+    public void findNearbyRestosFromHeroku(String latitude, String longitude) {
+        // Add id to url
+        String updatedURL = String.format(RESTO_NEAR_URL_HEROKU, latitude, longitude);
 
         try {
             URL url = new URL(updatedURL);
