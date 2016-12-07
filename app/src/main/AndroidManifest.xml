@@ -45,17 +45,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FindRestoActivity"
-            android:noHistory="true" />
+            android:name=".FindRestoActivity" />
         <activity
-            android:name=".NearRestosActivity"
-            android:noHistory="true" />
+            android:name=".NearRestosActivity" />
         <activity
             android:name=".AddRestoActivity"
             android:noHistory="true" />
         <activity
-            android:name=".FavRestoActivity"
-            android:noHistory="true" />
+            android:name=".FavRestoActivity" />
         <activity
             android:name=".LoginActivity"
             android:noHistory="true" />

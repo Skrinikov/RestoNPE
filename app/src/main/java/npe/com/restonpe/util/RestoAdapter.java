@@ -3,6 +3,7 @@ package npe.com.restonpe.util;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,12 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.FavRestoActivity;
 import npe.com.restonpe.R;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.database.RestoDAO;
@@ -39,10 +42,8 @@ public class RestoAdapter extends BaseAdapter {
     private List<RestoItem> list;
     private double longitude, latitude;
     private static LayoutInflater inflater = null;
-    private boolean isZomatoId;
 
     public static final String ID = "id";
-    public static final String IS_ZOMATO_ID = "isZomatoId";
     private static final String SUBMITTER = "submitter";
     private static final String TAG = RestoAdapter.class.getSimpleName();
 
@@ -52,15 +53,15 @@ public class RestoAdapter extends BaseAdapter {
      *
      * @param context    The activity that instantiate this object.
      * @param list       The data in List form.
-     * @param longitude  The current longitude location.
-     * @param latitude   The current latitude location.
-     * @param isZomatoId {@code True} if the list of RestoItem's comes from the Zomato API, {@code
-     *                   False} if the list comes from the local database.
+     * @param longitude  The current longitude location. If {@code null} or empty string, the
+     *                   latitude will be set to -1.
+     * @param latitude   The current latitude location. If {@code null} or empty string, the
+     *                   longitude will be set to -1.
      */
-    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude, boolean isZomatoId) {
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
         this.context = context;
         this.list = list;
-        if (latitude != null && longitude != null) {
+        if ((latitude != null && longitude != null) && (!latitude.isEmpty() && !longitude.isEmpty())) {
             this.longitude = Double.parseDouble(longitude);
             this.latitude = Double.parseDouble(latitude);
         } else {
@@ -68,7 +69,6 @@ public class RestoAdapter extends BaseAdapter {
             this.latitude = -1;
         }
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.isZomatoId = isZomatoId;
     }
 
     /**
@@ -170,23 +170,37 @@ public class RestoAdapter extends BaseAdapter {
                     //delete?
                 } else {
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
-                    ZomatoRestos zomato = new ZomatoRestos(context) {
+                    RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {
                         @Override
-                        public void handleResults(List<?> list) {
+                        public void onPostExecute(List<Resto> list) {
                             if (list.size() == 1) {
                                 RestoDAO dao = RestoDAO.getDatabase(context);
-                                Resto resto = (Resto) list.get(0);
+                                Resto resto = list.get(0);
                                 resto.setSubmitterName("Zomato");
                                 resto.setSubmitterEmail("ZomatoEmail");
                                 dao.addRestaurant(resto);
                                 Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
                             }
                         }
+
+                        @Override
+                        protected List<Resto> readJson(JsonReader reader) {
+                            Log.i(TAG, "Reading Json response...");
+
+                            try {
+                                ZomatoRestos zomatoRestos = new ZomatoRestos(context);
+                                return zomatoRestos.readRestoInformation(reader);
+                            } catch (IOException e) {
+                                Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                            }
+                            return null;
+                        }
                     };
+
 
                     Log.d(TAG, "view's id is " + ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato find");
-                    zomato.findRestoInformation((int) ((View) v.getParent()).getTag());
+                    restoNetworkManager.findRestoInformation((int) ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: after Zomato find");
                 }
             }
@@ -220,7 +234,6 @@ public class RestoAdapter extends BaseAdapter {
                 int id = (int) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
-                intent.putExtra(IS_ZOMATO_ID, isZomatoId);
 
                 Resto resto = RestoDAO.getDatabase(context).getSingleRestaurant(id);
                 if (resto.getSubmitterName() != null) {

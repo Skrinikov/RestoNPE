@@ -4,20 +4,26 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Cuisine;
 import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Fragments.FindRestoFragment;
+import npe.com.restonpe.Services.RestoLocationManager;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.util.RestoAdapter;
 
@@ -33,6 +39,11 @@ public class FindRestoActivity extends BaseActivity {
 
     private static final String TAG = FindRestoActivity.class.getSimpleName();
 
+    private Context mContext;
+
+    private String userLatitude;
+    private String userLongitude;
+
     /**
      * Creates the {@code Activity}.
      *
@@ -42,6 +53,15 @@ public class FindRestoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(TAG, "onCreate called");
+
+        // Get shared preferences
+        SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
+
+        // Initialise fields
+        // This location is used to determine the distance between the user and the restaurant
+        this.mContext = this;
+        this.userLongitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
+        this.userLatitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -65,7 +85,6 @@ public class FindRestoActivity extends BaseActivity {
     }
 
     public void buttonSearchClick(View v) {
-
         EditText nameEditText = (EditText) findViewById(R.id.editTextName);
         EditText cityEditText = (EditText) findViewById(R.id.editTextCity);
         Spinner cuisineSpinner = (Spinner) findViewById(R.id.cuisines_spinner);
@@ -85,29 +104,65 @@ public class FindRestoActivity extends BaseActivity {
             cuisine = null;
         }
 
-        // This location is used to determine the distance between the user and the restaurant
-        SharedPreferences sharedPreferences = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
-        final String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
-        final String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
-        final Context context = this;
-
-        ZomatoRestos zomatoRestos = new ZomatoRestos(this) {
+        RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
-            public void handleResults(List<?> list) {
+            public void onPostExecute(List<RestoItem> list) {
                 if (list != null && list.size() > 0) {
-                    List<RestoItem> restos = (List<RestoItem>) list;
                     ListView listView = (ListView) findViewById(R.id.find_list);
 
-                    RestoAdapter adapter = new RestoAdapter(context, restos, longitude, latitude, true);
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude);
                     listView.setAdapter(adapter);
                 } else {
                     // Tell user there were no results
-                    new AlertDialog.Builder(context)
+                    new AlertDialog.Builder(mContext)
                             .setMessage(getString(R.string.no_result))
                             .show();
                 }
             }
+
+            @Override
+            protected List<RestoItem> readJson(JsonReader reader) {
+                Log.i(TAG, "Reading Json response...");
+
+                try {
+                    ZomatoRestos zomatoRestos = new ZomatoRestos(mContext);
+                    return zomatoRestos.readResto(reader, "restaurants");
+                } catch (IOException e) {
+                    Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                }
+                return null;
+            }
         };
-        zomatoRestos.findRestos(name, city, cuisine);
+
+        String latitude = null;
+        String longitude = null;
+
+        Address address = getAddressOfCity(city);
+        if (address != null) {
+            latitude = String.valueOf(address.getLatitude());
+            longitude = String.valueOf(address.getLongitude());
+        }
+
+        restoNetworkManager.findRestos(name, latitude, longitude, cuisine);
+    }
+
+    private Address getAddressOfCity(String city) {
+        // Used to convert city to latitude/longitude
+        RestoLocationManager restoLocationManager = new RestoLocationManager(mContext) {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Do nothing
+            }
+        };
+
+        Address address = null;
+
+        // Get latitude and longitude of given city.
+        if (city != null) {
+            // User wanted to search with a city
+            address = restoLocationManager.getLocationFromName(city);
+        }
+
+        return address;
     }
 }

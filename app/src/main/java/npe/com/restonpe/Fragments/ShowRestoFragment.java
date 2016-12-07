@@ -3,20 +3,22 @@ package npe.com.restonpe.Fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.Review;
 import npe.com.restonpe.R;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.Zomato.ZomatoRestos;
-import npe.com.restonpe.database.RestoDAO;
 import npe.com.restonpe.util.RestoAdapter;
 
 /**
@@ -65,39 +67,40 @@ public class ShowRestoFragment extends Fragment {
         Bundle bundle = activity.getIntent().getExtras();
 
         int id = bundle.getInt(RestoAdapter.ID);
-        boolean isZomatoId = bundle.getBoolean(RestoAdapter.IS_ZOMATO_ID);
 
         // Get nearby restaurants
-        getRestaurant(id, isZomatoId);
+        getRestaurant(id);
     }
 
     /**
      * Gets the information of the restaurant with the given id.
      *
-     * @param id         The id of the restaurant whose information is to be retrieved.
-     * @param isZomatoId {@code True} if the given id corresponds to one on the Zomato API, {@code
-     *                   False} if it corresponds to one on the local database.
+     * @param id The id of the restaurant whose information is to be retrieved.
      */
-    private void getRestaurant(int id, boolean isZomatoId) {
-        if (isZomatoId) {
-            ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
-                @Override
-                public void handleResults(List<?> list) {
-                    if (list.size() == 1) {
-                        displayInformation((Resto) list.get(0));
-                    }
+    private void getRestaurant(int id) {
+        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
+            @Override
+            public void onPostExecute(List<Resto> list) {
+                if (list.size() == 1) {
+                    displayInformation(list.get(0));
                 }
-            };
-
-            zomatoRestos.findRestoInformation(id);
-        } else {
-            RestoDAO restoDAO = RestoDAO.getDatabase(activity);
-            Resto resto = restoDAO.getSingleRestaurant(id);
-
-            if (resto != null) {
-                displayInformation(resto);
             }
-        }
+
+            @Override
+            protected List<Resto> readJson(JsonReader reader) {
+                Log.i(TAG, "Reading Json response...");
+
+                try {
+                    ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
+                    return zomatoRestos.readRestoInformation(reader);
+                } catch (IOException e) {
+                    Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                }
+                return null;
+            }
+        };
+
+        restoNetworkManager.findRestoInformation(id);
     }
 
     /**

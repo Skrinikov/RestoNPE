@@ -2,10 +2,12 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,10 +15,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.ShowRestoFragment;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.database.RestoDAO;
 
@@ -25,8 +29,8 @@ import npe.com.restonpe.database.RestoDAO;
  * view details of a restaurant.
  *
  * @author Jeegna Patel
- * @since 04/12/2016
  * @version 1.0
+ * @since 04/12/2016
  */
 public class ShowRestoActivity extends BaseActivity {
 
@@ -74,9 +78,9 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        if(getIntent().getExtras().get("submitter").toString().length() > 0){
+        if (getIntent().getExtras().get("submitter").toString().length() > 0) {
             menu.getItem(0).setIcon(R.drawable.ic_remove);
-        }else{
+        } else {
             menu.getItem(0).setIcon(R.drawable.ic_add);
         }
 
@@ -94,30 +98,47 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onOptionsItemSelected called");
         int id = item.getItemId();
 
-        if(getIntent().getExtras().get("submitter").toString().length() > 0){
-            Toast.makeText(this,R.string.removed,Toast.LENGTH_LONG).show();
-        }else{
-            ZomatoRestos zomato = new ZomatoRestos(this) {
+        final Context context = this;
+        Bundle extras = getIntent().getExtras();
+
+        if (extras.get("submitter").toString().length() > 0) {
+            Toast.makeText(this, R.string.removed, Toast.LENGTH_LONG).show();
+        } else {
+            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(this) {
                 @Override
-                public void handleResults(List<?> list) {
+                public void onPostExecute(List<Resto> list) {
                     if (list != null && list.size() == 1) {
                         RestoDAO dao = RestoDAO.getDatabase(ShowRestoActivity.this);
-                        Resto resto = (Resto) list.get(0);
+                        Resto resto = list.get(0);
                         resto.setSubmitterName("Zomato");
                         resto.setSubmitterEmail("ZomatoEmail");
                         dao.addRestaurant(resto);
                         Toast.makeText(ShowRestoActivity.this, R.string.added, Toast.LENGTH_LONG).show();
                     }
                 }
+
+                @Override
+                protected List<Resto> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Json response...");
+
+                    try {
+                        ZomatoRestos zomato = new ZomatoRestos(context);
+                        return zomato.readRestoInformation(reader);
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+                    return null;
+                }
             };
 
-            zomato.findRestoInformation(getIntent().getExtras().getInt("id"));
+            restoNetworkManager.findRestoInformation(extras.getInt("id"));
         }
 
         return super.onOptionsItemSelected(item);
     }
 
     // TODO Add this: android:onClick="searchGoogle" to the TextView that holds the name of the restaurant, for when the GUI is complete
+
     /**
      * Launches a web browser intent that searches google.com for the name of the restaurant this activity is displaying
      *

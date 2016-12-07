@@ -134,7 +134,7 @@ public class FavRestoFragment extends Fragment {
                 no_result.setVisibility(View.GONE);
 
                 RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos, prefs.getString("longitude", "0"),
-                        prefs.getString("latitude", "0"), false);
+                        prefs.getString("latitude", "0"));
                 resto_list.setAdapter(restoAdapter);
             } else {
                 no_result.setVisibility(View.VISIBLE);

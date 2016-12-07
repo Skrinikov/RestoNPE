@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.BaseActivity;
 import npe.com.restonpe.Beans.Cuisine;
 import npe.com.restonpe.R;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 
 /**
@@ -33,12 +36,12 @@ public class FindRestoFragment extends Fragment {
 
     /**
      * Inflates a layout to be the content layout of the FindRestoActivity.
-     *
+     * <p>
      * Used as reference
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater Layout inflater needed to inflate the xml file.
-     * @param container View where the xml file will be loaded into.
+     * @param inflater           Layout inflater needed to inflate the xml file.
+     * @param container          View where the xml file will be loaded into.
      * @param savedInstanceState bundle where values are stored.
      * @return The View inflated.
      */
@@ -48,6 +51,7 @@ public class FindRestoFragment extends Fragment {
         Log.d(TAG, "onCreateView called");
         return inflater.inflate(R.layout.activity_find_restos, container, false);
     }
+
     /**
      * Sets up the onclick events for the 6 clickable items which will
      * all start a different activity.
@@ -73,26 +77,35 @@ public class FindRestoFragment extends Fragment {
         String latitude = preferences.getString(BaseActivity.LATITUDE, null);
         String longitude = preferences.getString(BaseActivity.LONGITUDE, null);
 
-        ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
+        RestoNetworkManager<Cuisine> restoNetworkManager = new RestoNetworkManager<Cuisine>(activity) {
             @Override
-            public void handleResults(List<?> list) {
-                List<Cuisine> cuisines = (List<Cuisine>) list;
-                
+            public void onPostExecute(List<Cuisine> list) {
                 // Add empty cuisine, so that user may select nothing on the cuisine spinner
-                cuisines.add(0, new Cuisine(activity.getString(R.string.search_cuisines)));
+                list.add(0, new Cuisine(activity.getString(R.string.search_cuisines)));
 
                 Spinner genres = (Spinner) activity.findViewById(R.id.cuisines_spinner);
-                ArrayAdapter<Cuisine> adapter = new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item, cuisines);
+                ArrayAdapter<Cuisine> adapter = new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item, list);
 
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 if (genres != null) {
                     genres.setAdapter(adapter);
                 }
             }
+
+            @Override
+            protected List<Cuisine> readJson(JsonReader reader) {
+                Log.i(TAG, "Reading Json response...");
+
+                try {
+                    ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
+                    return zomatoRestos.readCuisines(reader);
+                } catch (IOException e) {
+                    Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                }
+                return null;
+            }
         };
 
-        if (latitude != null && longitude != null) {
-            zomatoRestos.findCuisines(latitude, longitude);
-        }
+        restoNetworkManager.findCuisines(latitude, longitude);
     }
 }

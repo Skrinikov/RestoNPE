@@ -65,7 +65,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      *
      * @param urls A list of URLs to hit. There should only be one url in the list. If there are
      *             others, they will be ignored.
-     * @return An {@code InputStream} which holds data in JSON format
+     * @return A {@code List} which holds the specified data bean, or {@code null} if no data was
+     * found from the request.
      */
     @Override
     protected List<T> doInBackground(URL... urls) {
@@ -73,27 +74,27 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
         try {
             if (isNetworkAccessible()) {
-                // Only use first URL, all others are ignored
-                URL url = urls[0];
+                for (URL url : urls) {
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                // Set headers for HTTP request.
-                conn.setRequestProperty(RESTO_ACCEPT_HEADER, RESTO_ACCEPT);
-                conn.setRequestProperty(RESTO_KEY_HEADER, RESTO_KEY);
+                    // Set headers for Zomato HTTP request.
+                    conn.setRequestProperty(RESTO_ACCEPT_HEADER, RESTO_ACCEPT);
+                    conn.setRequestProperty(RESTO_KEY_HEADER, RESTO_KEY);
 
-                conn.connect();
+                    conn.connect();
 
-                int response = conn.getResponseCode();
-                if (response == HttpURLConnection.HTTP_OK) {
-                    JsonReader reader = new JsonReader(new InputStreamReader(conn.getInputStream()));
+                    int response = conn.getResponseCode();
+                    if (response == HttpURLConnection.HTTP_OK) {
+                        JsonReader reader = new JsonReader(new InputStreamReader(conn.getInputStream()));
 
-                    // This method must be implemented in the calling class. It will take care of
-                    // how the JSON is parsed depending on what find... method is called
-                    list = readJson(reader);
+                        // This method must be implemented in the calling class. It will take care of
+                        // how the JSON is parsed depending on what find... method is called
+                        list = readJson(reader);
 
-                    conn.disconnect();
-                } else {
-                    Log.e(TAG, "Something went wrong. The URL was " +  url + " The HTTP response was " + response);
+                        conn.disconnect();
+                    } else {
+                        Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -112,26 +113,26 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      */
     public void findNearbyRestos(String latitude, String longitude) {
         // Add latitude and longitude to url
-        String updatedURL = String.format(RESTO_NEAR_URL, latitude, longitude);
+        String zomatoURL = String.format(RESTO_NEAR_URL, latitude, longitude);
+        String herokuURL = String.format(RESTO_NEAR_URL_HEROKU, latitude, longitude);
 
         try {
-            URL url = new URL(updatedURL);
+            URL zomato = new URL(zomatoURL);
+            URL heroku = new URL(herokuURL);
 
-            Log.i(TAG, "Hitting " + updatedURL);
-
-            execute(url);
+            execute(zomato, heroku);
         } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed URL: " + updatedURL);
+            Log.e(TAG, "Malformed URL: " + zomatoURL);
         }
     }
 
     /**
      * A convenience method for finding the restaurants that match the given search terms
      *
-     * @param name The name of the restaurant for which to search
-     * @param latitude The latitude of the area of which to search
+     * @param name      The name of the restaurant for which to search
+     * @param latitude  The latitude of the area of which to search
      * @param longitude The longitude of the area of which to search
-     * @param cuisine A {@code Cuisine} object with the id of the cuisine for which to search
+     * @param cuisine   A {@code Cuisine} object with the id of the cuisine for which to search
      */
     public void findRestos(String name, String latitude, String longitude, Cuisine cuisine) {
         String queryURL = "q=%1$s&";
@@ -140,7 +141,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
         // Update all GET urls with the appropriate value. If the given parameters are null, remove the GET completely
         if (name != null) {
-            // Make search term valid for URLs. I.e. replace spaces with %20
+            // Make search term valid for URLs. In other words, replace spaces with "%20".
             queryURL = String.format(queryURL, Uri.encode(name));
         } else {
             queryURL = "";
@@ -195,30 +196,9 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      *
      * @param id The id of the restaurant whose information is to be found
      */
-    public void findRestoReviewsFromHeroku(int id) {
+    public void findReviews(int id) {
         // Add id to url
         String updatedURL = String.format(RESTO_REVIEW_URL_HEROKU, id);
-
-        try {
-            URL url = new URL(updatedURL);
-
-            Log.i(TAG, "Hitting " + updatedURL);
-
-            execute(url);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed URL: " + updatedURL);
-        }
-    }
-
-    /**
-     * A convenience method for finding nearby restaurants from Heroku
-     *
-     * @param latitude The latitude of the area of which to search
-     * @param longitude The longitude of the area of which to search
-     */
-    public void findNearbyRestosFromHeroku(String latitude, String longitude) {
-        // Add id to url
-        String updatedURL = String.format(RESTO_NEAR_URL_HEROKU, latitude, longitude);
 
         try {
             URL url = new URL(updatedURL);
@@ -235,7 +215,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      * A convenience method that finds all cuisines in the city in which the given latitude and
      * longitude fall
      *
-     * @param latitude Any latitudinal point in a city
+     * @param latitude  Any latitudinal point in a city
      * @param longitude Any longitudinal point in the same city
      */
     public void findCuisines(String latitude, String longitude) {

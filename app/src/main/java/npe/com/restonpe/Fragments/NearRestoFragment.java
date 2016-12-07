@@ -5,6 +5,8 @@ import android.app.Fragment;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.JsonReader;
+import android.util.JsonToken;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.List;
 
 import npe.com.restonpe.BaseActivity;
 import npe.com.restonpe.Beans.RestoItem;
+import npe.com.restonpe.Heroku.HerokuRestos;
 import npe.com.restonpe.R;
+import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.util.RestoAdapter;
 
@@ -70,33 +75,56 @@ public class NearRestoFragment extends Fragment {
         displayLocationInformation(latitude, longitude);
 
         // Get nearby restaurants
-        getRestaurants(latitude, longitude);
+        getNearbyRestaurants(latitude, longitude);
     }
 
     /**
      * Gets a list of nearby restaurants to display on the ListView
      *
-     * @param latitude The latitude to search for the nearby restaurants
-     * @param longitude The longitude to search for the nearby restaurants
+     * @param latitude The user's latitude to use to search for the nearby restaurants
+     * @param longitude The user's longitude to use to search for the nearby restaurants
      */
-    private void getRestaurants(final String latitude, final String longitude) {
-        ZomatoRestos zomatoRestos = new ZomatoRestos(activity) {
-            @Override
-            public void handleResults(List<?> list) {
-                if (list != null && list.size() > 0) {
-                    List<RestoItem> restos = (List<RestoItem>) list;
-                    ListView listView = (ListView) activity.findViewById(R.id.near_list);
-
-                    RestoAdapter adapter = new RestoAdapter(activity, restos, longitude, latitude, true);
-                    listView.setAdapter(adapter);
-                }
-            }
-        };
-
+    private void getNearbyRestaurants(final String latitude, final String longitude) {
         if (latitude != null && longitude != null) {
-            zomatoRestos.findNearbyRestos(latitude, longitude);
+            RestoNetworkManager<RestoItem> networkManager = new RestoNetworkManager<RestoItem>(activity) {
+                @Override
+                public void onPostExecute(List<RestoItem> list) {
+                    // FIXME only shows results from heroku. I've tried making private fields in this abstract class, and in NearRestoFragment. Nothing works :C
+                    if (list != null && list.size() > 0) {
+                        ListView listView = (ListView) activity.findViewById(R.id.near_list);
+
+                        RestoAdapter adapter = new RestoAdapter(activity, list, longitude, latitude);
+                        listView.setAdapter(adapter);
+                    }
+                }
+
+                @Override
+                protected List<RestoItem> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Json response...");
+
+                    try {
+                        // Check first token. If it's an object, it was from Zomato, and if it's an
+                        // array, it's from Heroku
+                        if (reader.peek() == JsonToken.BEGIN_ARRAY) {
+                            Log.i(TAG, "Json response came from Heroku");
+                            HerokuRestos herokuRestos = new HerokuRestos(activity);
+                            return herokuRestos.readRestoJson(reader);
+                        } else if (reader.peek() == JsonToken.BEGIN_OBJECT) {
+                            Log.i(TAG, "Json response came from Zomato");
+                            ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
+                            return zomatoRestos.readResto(reader, "nearby_restaurants");
+                        }
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+
+                    return null;
+                }
+            };
+
+            networkManager.findNearbyRestos(latitude, longitude);
         } else {
-            // Tell user there were no results
+            // Tell user there were no results because there was no location
             new AlertDialog.Builder(activity)
                     .setMessage(getString(R.string.no_result))
                     .show();

@@ -10,19 +10,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import npe.com.restonpe.Beans.Address;
-import npe.com.restonpe.Beans.Resto;
+import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Beans.Review;
-import npe.com.restonpe.Services.RestoNetworkManager;
 
 /**
- * Manages calls to the Heroku app.
+ * Manages calls to the Heroku API.
  *
  * @author Jeegna Patel
  * @version 1.0
  * @since 06/12/2016
  */
-public abstract class HerokuRestos {
+public class HerokuRestos {
 
     private static final String TAG = HerokuRestos.class.getSimpleName();
 
@@ -57,87 +55,24 @@ public abstract class HerokuRestos {
 
     private Context mContext;
 
+    /**
+     * Creates a class that will handle calls to the Heroku API
+     *
+     * @param context The {@code Context} of the calling {@code Activity}
+     */
     public HerokuRestos(Context context) {
         this.mContext = context;
     }
 
     /**
-     * Finds the restaurants near the given latitude and longitude
-     *
-     * @param latitude  The latitude to use to find the restaurants
-     * @param longitude The longitude to use to find the restaurants
-     */
-    public void findNearbyRestos(String latitude, String longitude) {
-        Log.i(TAG, "Finding restaurants near: " + latitude + ", " + longitude);
-
-        RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(mContext) {
-            @Override
-            public void onPostExecute(List<Review> list) {
-                handleResults(list);
-            }
-
-            @Override
-            protected List<Review> readJson(JsonReader reader) {
-                List<Review> list = null;
-                try {
-                    list = readReviewJson(reader);
-                } catch (IOException e) {
-                    Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
-                }
-
-                return list;
-            }
-        };
-
-        restoNetworkManager.findNearbyRestosFromHeroku(latitude, longitude);
-    }
-
-    /**
-     * Finds the reviews of the restaurant with the given id
-     *
-     * @param id The id of the restaurant whose reviews are to be found
-     */
-    public void findRestoReviews(int id) {
-        Log.i(TAG, "Finding reviews of restaurant with id " + id);
-
-        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
-            @Override
-            public void onPostExecute(List<Resto> list) {
-                handleResults(list);
-            }
-
-            @Override
-            protected List<Resto> readJson(JsonReader reader) {
-                List<Resto> list = null;
-                try {
-                    list = readRestoJson(reader);
-                } catch (IOException e) {
-                    Log.e(TAG, "An IOException occurred while reading the JSON: " + e.getMessage());
-                }
-
-                return list;
-            }
-        };
-
-        restoNetworkManager.findRestoReviewsFromHeroku(id);
-    }
-
-    /**
-     * This method will be called to handle the list that is returned as a response from the HTTP request.
-     *
-     * @param list The response from the HTTP request.
-     */
-    public abstract void handleResults(List<?> list);
-
-    /**
      * Reads the given JSON text of restaurants and returns a List of Resto objects
      *
      * @param reader A {@code JsonReader} with the next object being the root
-     * @return A list of {@code Resto}s. May return an empty list if there are no results found.
+     * @return A list of {@code RestoItem}s. May return an empty list if there are no results found.
      * @throws IOException If an IOException occurs with the JSON text
      */
-    private List<Resto> readRestoJson(JsonReader reader) throws IOException {
-        List<Resto> list = new ArrayList<>();
+    public List<RestoItem> readRestoJson(JsonReader reader) throws IOException {
+        List<RestoItem> list = new ArrayList<>();
 
         // Start reading the text, by beginning the root object.
         reader.beginArray();
@@ -145,7 +80,7 @@ public abstract class HerokuRestos {
             // Begin restaurant object
             reader.beginObject();
 
-            HashMap<String, String> map = getResto(reader);
+            HashMap<String, String> map = getRestoMap(reader);
             list.add(getResto(map));
 
             // End restaurant object
@@ -160,13 +95,210 @@ public abstract class HerokuRestos {
     }
 
     /**
+     * Gets the restaurants information from the map and returns a data bean.
+     *
+     * @param map The map containing key-value pairs of fields found in a {@code Resto} object.
+     * @return A {@code RestoItem} object with the information retrieved from the map.
+     */
+    private RestoItem getResto(HashMap<String, String> map) {
+        RestoItem restoItem = new RestoItem();
+
+        String id = map.get(RESTO_ID);
+        String name = map.get(RESTO_NAME);
+        String phone = map.get(RESTO_PHONE);
+        String civicNum = map.get(RESTO_CIVIC_NUM);
+        String suite = map.get(RESTO_SUITE);
+        String street = map.get(RESTO_STREET);
+        String city = map.get(RESTO_CITY);
+        String postal = map.get(RESTO_POSTAL);
+        String province = map.get(RESTO_PROVINCE);
+        String country = map.get(RESTO_COUNTRY);
+        String priceRange = map.get(RESTO_PRICE);
+
+        if (id != null) {
+            restoItem.setId(Integer.parseInt(id));
+        }
+        restoItem.setName(name);
+        if (phone != null) {
+            restoItem.setPhone(Long.parseLong(phone));
+        }
+
+        // Address format string
+        // civic number suite Street Name, City, Province, Country, postal code
+        String address = "$s $s $s, $s, $s, $s, $s";
+        // Add address fields to string
+        address = String.format(address, civicNum);
+        address = String.format(address, suite);
+        address = String.format(address, street, city, province, country, postal);
+        restoItem.setAddress(address);
+
+        restoItem.setPriceRange(priceRange);
+
+        return restoItem;
+    }
+
+    /**
+     * Gets the information of a restaurant from the {@code JsonReader}
+     *
+     * @param reader A {@code JsonReader} with the next object being a restaurant
+     * @return A {@code HasMap} of key-value pairs with the keys being fields in the JSON that
+     * correspond to fields of a {@code Review}
+     * @throws IOException If an IOException occurs while reading the JSON
+     */
+    private HashMap<String, String> getRestoMap(JsonReader reader) throws IOException {
+        HashMap<String, String> map = new HashMap<>();
+        JsonToken jsonToken;
+
+        // Read all fields in "restaurant" object
+        while (reader.hasNext()) {
+            jsonToken = reader.peek();
+
+            if (jsonToken == JsonToken.NAME) {
+                // Get name of next token
+                String name = reader.nextName();
+                // Peek at next value and if it's not null, find out which of the following it is
+                jsonToken = reader.peek();
+                if (jsonToken != JsonToken.NULL) {
+                    switch (name) {
+                        case "id": // Zomato's id for the restaurant
+                            String id = reader.nextString();
+                            Log.i(TAG, "Found id: " + id);
+
+                            map.put(RESTO_ID, id);
+                            break;
+                        case "name": // Name of the restaurant
+                            String restoName = reader.nextString();
+                            Log.i(TAG, "Found name: " + restoName);
+
+                            map.put(RESTO_NAME, restoName);
+                            break;
+                        case "link":
+                            String url = reader.nextString();
+                            Log.i(TAG, "Found URL: " + url);
+
+                            map.put(RESTO_URL, url);
+                            break;
+                        case "civic_num":
+                            String civicNum = reader.nextString();
+                            Log.i(TAG, "Found civic number: " + civicNum);
+
+                            map.put(RESTO_CIVIC_NUM, civicNum);
+                            break;
+                        case "street":
+                            String street = reader.nextString();
+                            Log.i(TAG, "Found street: " + street);
+
+                            map.put(RESTO_STREET, street);
+                            break;
+                        case "suite":
+                            String suite = reader.nextString();
+                            Log.i(TAG, "Found suite: " + suite);
+
+                            map.put(RESTO_SUITE, suite);
+                            break;
+                        case "city":
+                            String city = reader.nextString();
+                            Log.i(TAG, "Found city: " + city);
+
+                            map.put(RESTO_CITY, city);
+                            break;
+                        case "province":
+                            String province = reader.nextString();
+                            Log.i(TAG, "Found province: " + province);
+
+                            map.put(RESTO_PROVINCE, province);
+                            break;
+                        case "country":
+                            String country = reader.nextString();
+                            Log.i(TAG, "Found country: " + country);
+
+                            map.put(RESTO_COUNTRY, country);
+                            break;
+                        case "postal_code":
+                            String postal = reader.nextString();
+                            Log.i(TAG, "Found postal code: " + postal);
+
+                            map.put(RESTO_POSTAL, postal);
+                            break;
+                        case "latitude":
+                            String latitude = reader.nextString();
+                            Log.i(TAG, "Found latitude: " + latitude);
+
+                            map.put(RESTO_LATITUDE, latitude);
+                            break;
+                        case "longitude":
+                            String longitude = reader.nextString();
+                            Log.i(TAG, "Found longitude: " + longitude);
+
+                            map.put(RESTO_LONGITUDE, longitude);
+                            break;
+                        case "price":
+                            String price = reader.nextString();
+                            Log.i(TAG, "Found price: " + price);
+
+                            map.put(RESTO_PRICE, price);
+                            break;
+                        case "phone":
+                            String phone = reader.nextString();
+                            Log.i(TAG, "Found phone number: " + phone);
+
+                            // Replace all parentheses, spaces and dashes with empty string
+                            phone = phone.replaceAll("\\(|\\)| |-", "");
+                            Log.i(TAG, "Changed phone number to: " + phone);
+
+                            map.put(RESTO_PHONE, phone);
+                            break;
+                        case "email":
+                            String email = reader.nextString();
+                            Log.i(TAG, "Found email: " + email);
+
+                            map.put(RESTO_EMAIL, email);
+                            break;
+                        case "user_id":
+                            String user = reader.nextString();
+                            Log.i(TAG, "Found user id: " + user);
+
+                            map.put(RESTO_USER_ID, user);
+                            break;
+                        case "genre_id":
+                            String genre = reader.nextString();
+                            Log.i(TAG, "Found genre id: " + genre);
+
+                            map.put(RESTO_GENRE_ID, genre);
+                            break;
+                        case "description":
+                            String description = reader.nextString();
+                            Log.i(TAG, "Found description: " + description);
+
+                            map.put(RESTO_DESCRIPTION, description);
+                            break;
+                        case "distance":
+                            String distance = reader.nextString();
+                            Log.i(TAG, "Found distance: " + distance);
+
+                            map.put(RESTO_DISTANCE, distance);
+                            break;
+                        default: // Information we don't need. Should not happen here
+                            Log.i(TAG, "The " + name + " was ignored.");
+                            reader.skipValue();
+                    }
+                }
+            } else {
+                Log.i(TAG, "Skipping " + jsonToken.name());
+                reader.skipValue();
+            }
+        }
+        return map;
+    }
+
+    /**
      * Reads the given JSON text of review and returns a List of Review objects
      *
      * @param reader A {@code JsonReader} with the next object being the root
      * @return A list of {@code Review}s. May return an empty list if there are no results found.
      * @throws IOException If an IOException occurs with the JSON text
      */
-    private List<Review> readReviewJson(JsonReader reader) throws IOException {
+    public List<Review> readReviewJson(JsonReader reader) throws IOException {
         List<Review> list = new ArrayList<>();
 
         // Start reading the text, by beginning the root object.
@@ -175,7 +307,7 @@ public abstract class HerokuRestos {
             // Begin restaurant object
             reader.beginObject();
 
-            HashMap<String, String> map = getReview(reader);
+            HashMap<String, String> map = getReviewMap(reader);
             list.add(getReview(map));
 
             // End restaurant object
@@ -190,220 +322,28 @@ public abstract class HerokuRestos {
     }
 
     /**
-     * Gets the information of a restaurant from the {@code JsonReader}
+     * Gets the review information from the map and returns a data bean.
      *
-     * @param reader A {@code JsonReader} with the next object being a restaurant
-     * @return A {@code HasMap} of key-value pairs with the keys being fields in the JSON that
-     * correspond to fields of a {@code Review}
-     * @throws IOException If an IOException occurs while reading the JSON
+     * @param map The map containing key-value pairs of fields found in a {@code Review} object.
+     * @return A {@code Review} object with the information retrieved from the map.
      */
-    private HashMap<String, String> getResto(JsonReader reader) throws IOException {
-        HashMap<String, String> map = new HashMap<>();
+    private Review getReview(HashMap<String, String> map) {
+        Review review = new Review();
 
-        // Read all fields in "restaurant" object
-        while (reader.hasNext()) {
-            JsonToken token = reader.peek();
-
-            if (token.name().equals(JsonToken.NAME.toString())) {
-
-                String name = reader.nextName();
-
-                switch (name) {
-                    case "id": // Zomato's id for the restaurant
-                        int id = reader.nextInt();
-                        Log.i(TAG, "Found id: " + id);
-
-                        map.put(RESTO_ID, id + "");
-                        break;
-                    case "name": // Name of the restaurant
-                        String restoName = reader.nextString();
-                        Log.i(TAG, "Found name: " + restoName);
-
-                        map.put(RESTO_NAME, restoName);
-                        break;
-                    case "link":
-                        String url = reader.nextString();
-                        Log.i(TAG, "Found URL: " + url);
-
-                        map.put(RESTO_URL, url);
-                        break;
-                    case "civic_num":
-                        int civicNum = reader.nextInt();
-                        Log.i(TAG, "Found civic number: " + civicNum);
-
-                        map.put(RESTO_CIVIC_NUM, civicNum + "");
-                        break;
-                    case "street":
-                        String street = reader.nextString();
-                        Log.i(TAG, "Found street: " + street);
-
-                        map.put(RESTO_STREET, street);
-                        break;
-                    case "suite":
-                        int suite = reader.nextInt();
-                        Log.i(TAG, "Found suite: " + suite);
-
-                        map.put(RESTO_SUITE, suite + "");
-                        break;
-                    case "city":
-                        String city = reader.nextString();
-                        Log.i(TAG, "Found city: " + city);
-
-                        map.put(RESTO_CITY, city);
-                        break;
-                    case "province":
-                        String province = reader.nextString();
-                        Log.i(TAG, "Found province: " + province);
-
-                        map.put(RESTO_PROVINCE, province);
-                        break;
-                    case "country":
-                        String country = reader.nextString();
-                        Log.i(TAG, "Found country: " + country);
-
-                        map.put(RESTO_COUNTRY, country);
-                        break;
-                    case "postal_code":
-                        String postal = reader.nextString();
-                        Log.i(TAG, "Found postal code: " + postal);
-
-                        map.put(RESTO_POSTAL, postal);
-                        break;
-                    case "latitude":
-                        double latitude = reader.nextDouble();
-                        Log.i(TAG, "Found latitude: " + latitude);
-
-                        map.put(RESTO_LATITUDE, latitude + "");
-                        break;
-                    case "longitude":
-                        double longitude = reader.nextDouble();
-                        Log.i(TAG, "Found longitude: " + longitude);
-
-                        map.put(RESTO_LONGITUDE, longitude + "");
-                        break;
-                    case "price":
-                        double price = reader.nextDouble();
-                        Log.i(TAG, "Found price: " + price);
-
-                        map.put(RESTO_PRICE, price + "");
-                        break;
-                    case "phone":
-                        String phone = reader.nextString();
-                        Log.i(TAG, "Found phone number: " + phone);
-
-                        // Replace all parentheses, spaces and dashes with empty string
-                        phone = phone.replaceAll("\\(|\\)| |-", "");
-                        Log.i(TAG, "Changed phone number to: " + phone);
-
-                        map.put(RESTO_PHONE, phone);
-                        break;
-                    case "email":
-                        String email = reader.nextString();
-                        Log.i(TAG, "Found email: " + email);
-
-                        map.put(RESTO_EMAIL, email);
-                        break;
-                    case "user_id":
-                        int user = reader.nextInt();
-                        Log.i(TAG, "Found user id: " + user);
-
-                        map.put(RESTO_USER_ID, user + "");
-                        break;
-                    case "genre_id":
-                        int genre = reader.nextInt();
-                        Log.i(TAG, "Found genre id: " + genre);
-
-                        map.put(RESTO_GENRE_ID, genre + "");
-                        break;
-                    case "description":
-                        String description = reader.nextString();
-                        Log.i(TAG, "Found description: " + description);
-
-                        map.put(RESTO_DESCRIPTION, description);
-                        break;
-                    case "distance":
-                        double distance = reader.nextDouble();
-                        Log.i(TAG, "Found distance: " + distance);
-
-                        map.put(RESTO_DISTANCE, distance + "");
-                        break;
-                    default: // Information we don't need. Should not happen here
-                        Log.i(TAG, "The " + name + " was ignored.");
-                        reader.skipValue();
-                }
-            } else {
-                Log.i(TAG, "Skipping " + token.name());
-                reader.skipValue();
-            }
-        }
-
-        return map;
-    }
-
-    /**
-     * Gets the restaurants information from the map and returns a data bean.
-     *
-     * @param map The map containing key-value pairs of fields found in a {@code Resto} object.
-     * @return A {@code Resto} object with the information retrieved from the map.
-     */
-    private Resto getResto(HashMap<String, String> map) {
-        Resto resto = new Resto();
-
-        String id = map.get(RESTO_ID);
-        String name = map.get(RESTO_NAME);
-        String phone = map.get(RESTO_PHONE);
-        String email = map.get(RESTO_EMAIL);
-        String civicNum = map.get(RESTO_CIVIC_NUM);
-        String suite = map.get(RESTO_SUITE);
-        String street = map.get(RESTO_STREET);
-        String city = map.get(RESTO_CITY);
-        String postal = map.get(RESTO_POSTAL);
-        String province = map.get(RESTO_PROVINCE);
-        String country = map.get(RESTO_COUNTRY);
-        String priceRange = map.get(RESTO_PRICE);
-        String url = map.get(RESTO_URL);
-        String cuisineId = map.get(RESTO_GENRE_ID);
-        String userId = map.get(RESTO_USER_ID);
-        String latitude = map.get(RESTO_LATITUDE);
-        String longitude = map.get(RESTO_LONGITUDE);
+        String id = map.get(REVIEW_ID);
+        String title = map.get(REVIEW_TITLE);
+        String content = map.get(REVIEW_CONTENT);
+        String rating = map.get(REVIEW_RATING);
+        String userId = map.get(REVIEW_USER_ID);
+        String restoId = map.get(REVIEW_RESTO_ID);
 
         if (id != null) {
-            resto.setId(Integer.parseInt(id));
+//            review.setId(Integer.parseInt(id));
         }
-        resto.setName(name);
-        if (phone != null) {
-            resto.setPhone(Long.parseLong(phone));
-        }
-        resto.setEmail(email);
+        review.setTitle(title);
 
-        // Get address fields
-        Address address = new Address();
-        if (civicNum != null) {
-//            address.setCivicNum(Integer.parseInt(civicNum));
-        }
-        if (suite != null) {
-            address.setSuite(Integer.parseInt(suite));
-        }
-//        address.setStreet(street);
-        address.setCity(city);
-        address.setPostal(postal);
-        address.setProvince(province);
-        address.setCountry(country);
-        if (latitude != null && longitude != null) {
-            address.setLatitude(Double.parseDouble(latitude));
-            address.setLongitude(Double.parseDouble(longitude));
-        }
-        resto.setAddress(address);
-
-        resto.setPriceRange(priceRange);
-        resto.setLink(url);
-        // TODO get genre from id
-//        resto.setGenre(cuisines);
-        // TODO get submitter from id
-
-        return resto;
+        return review;
     }
-
 
     /**
      * Gets the information of a review from the {@code JsonReader}
@@ -413,7 +353,7 @@ public abstract class HerokuRestos {
      * correspond to fields of a {@code Review}
      * @throws IOException If an IOException occurs while reading the JSON
      */
-    private HashMap<String, String> getReview(JsonReader reader) throws IOException {
+    private HashMap<String, String> getReviewMap(JsonReader reader) throws IOException {
         HashMap<String, String> map = new HashMap<>();
 
         // Read all fields in review object
@@ -472,29 +412,5 @@ public abstract class HerokuRestos {
         }
 
         return map;
-    }
-
-    /**
-     * Gets the review information from the map and returns a data bean.
-     *
-     * @param map The map containing key-value pairs of fields found in a {@code Review} object.
-     * @return A {@code Review} object with the information retrieved from the map.
-     */
-    private Review getReview(HashMap<String, String> map) {
-        Review review = new Review();
-
-        String id = map.get(REVIEW_ID);
-        String title = map.get(REVIEW_TITLE);
-        String content = map.get(REVIEW_CONTENT);
-        String rating = map.get(REVIEW_RATING);
-        String userId = map.get(REVIEW_USER_ID);
-        String restoId = map.get(REVIEW_RESTO_ID);
-
-        if (id != null) {
-//            review.setId(Integer.parseInt(id));
-        }
-        review.setTitle(title);
-
-        return review;
     }
 }
