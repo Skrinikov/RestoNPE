@@ -26,7 +26,7 @@ import npe.com.restonpe.database.RestoDAO;
  *
  * @author Jeegna Patel
  * @version 1.0
- * @since 04/12/2016
+ * @since 07/12/2016
  */
 public class ShowRestoActivity extends BaseActivity {
 
@@ -84,7 +84,8 @@ public class ShowRestoActivity extends BaseActivity {
     }
 
     /**
-     * Starts the add resto activity.
+     * Add or remove a resto to database based on if the resto object has
+     * a submitter or not.
      *
      * @param item The selected item.
      * @return boolean depicting that an item has been clicked.

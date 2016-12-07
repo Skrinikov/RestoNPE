@@ -12,11 +12,12 @@ import npe.com.restonpe.Fragments.FavRestoFragment;
  * display in a list format, all the restaurant which have
  * been favorited by the user.
  *
- * @author
- * @since 30/11/2016
+ * @author Uen Yi Cindy Hung
  * @version 1.0
+ * @since 30/11/2016
  */
 public class FavRestoActivity extends BaseActivity {
+    private FavRestoFragment fragment;
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -40,8 +41,12 @@ public class FavRestoActivity extends BaseActivity {
     private void createFragments() {
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        FavRestoFragment fragment = new FavRestoFragment();
+        fragment = new FavRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    public void updateDbList() {
+        fragment.getDbRestoList();
     }
 }
