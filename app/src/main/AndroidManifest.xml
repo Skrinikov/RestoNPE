@@ -15,8 +15,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Launcher.Splash"
-            android:noHistory="true">
+            android:theme="@style/Launcher.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

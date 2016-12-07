@@ -15,6 +15,7 @@ import npe.com.restonpe.Beans.Address;
 import npe.com.restonpe.Beans.Cuisine;
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.RestoItem;
+import npe.com.restonpe.R;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.Services.RestoNetworkManager;
 
@@ -501,7 +502,8 @@ public abstract class ZomatoRestos {
 
         // Default values for price range field
         int priceRange = 0;
-        String currency = "";
+        // Get user's currency by locale
+        String currency = mContext.getString(R.string.currency);
 
         // Read all fields in "restaurant" object
         while (reader.hasNext()) {
@@ -548,10 +550,6 @@ public abstract class ZomatoRestos {
                     case "price_range": // Price range of restaurant, as a number from 1-4, where 1 is pocket-friendly and 4 is expensive
                         priceRange = reader.nextInt();
                         Log.i(TAG, "Found price range: " + priceRange);
-                        break;
-                    case "currency": // The currency used in the restaurant, ex. $, ₯, etc.
-                        currency = reader.nextString();
-                        Log.i(TAG, "Found currency: " + currency);
                         break;
                     case "user_rating": // The reviews from the restaurant, as an array of objects
                         HashMap<String, String> reviews = handleReview(reader);
