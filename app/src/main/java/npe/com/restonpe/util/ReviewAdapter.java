@@ -16,9 +16,8 @@ import npe.com.restonpe.R;
 import npe.com.restonpe.ShowReviewActivity;
 
 /**
- * Custom adapter made to display information about restaurants
- * using a custom listing layout which contains a name, price range,
- * distance, cuisine type and rating.
+ * Custom adapter made to display information about reviews
+ * using a custom listing layout which contains a title and content
  * <p>
  * Used as reference
  * source: Cindy's RestoAdapter
