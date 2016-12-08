@@ -38,14 +38,15 @@ import npe.com.restonpe.database.RestoDAO;
  * @since 05/12/2016
  */
 public class RestoAdapter extends BaseAdapter {
+    public static final String ID = "id";
+    public static final String IS_ZOMATO_ID = "isZomatoId";
+    private static final String SUBMITTER = "submitter";
+    private static final String TAG = RestoAdapter.class.getSimpleName();
+    private static LayoutInflater inflater = null;
     private final Context context;
     private List<RestoItem> list;
     private double longitude, latitude;
-    private static LayoutInflater inflater = null;
-
-    public static final String ID = "id";
-    private static final String SUBMITTER = "submitter";
-    private static final String TAG = RestoAdapter.class.getSimpleName();
+    private boolean isZomatoId;
 
     /**
      * Constructor that will keep a reference to the given parameter and parse the
@@ -57,8 +58,10 @@ public class RestoAdapter extends BaseAdapter {
      *                   latitude will be set to -1.
      * @param latitude   The current latitude location. If {@code null} or empty string, the
      *                   longitude will be set to -1.
+     * @param isZomatoId {@code True} if the list of RestoItem's comes from the Zomato API, {@code
+     *                   False} if the list comes from the local database.
      */
-    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude, boolean isZomatoId) {
         this.context = context;
         this.list = list;
         if ((latitude != null && longitude != null) && (!latitude.isEmpty() && !longitude.isEmpty())) {
@@ -68,6 +71,7 @@ public class RestoAdapter extends BaseAdapter {
             this.longitude = -1;
             this.latitude = -1;
         }
+        this.isZomatoId = isZomatoId;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -168,10 +172,10 @@ public class RestoAdapter extends BaseAdapter {
 
                 if (FavRestoActivity.class == context.getClass()) {
                     View row = (View) v.getParent();
-                    Log.d(TAG,"id to remove is: " + row.getTag());
+                    Log.d(TAG, "id to remove is: " + row.getTag());
                     RestoDAO.getDatabase(context).deleteRestaurant(Long.valueOf(row.getTag().toString()));
                     Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
-                    ((FavRestoActivity)context).updateDbList();
+                    ((FavRestoActivity) context).updateDbList();
                 } else {
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
                     RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {
@@ -238,6 +242,7 @@ public class RestoAdapter extends BaseAdapter {
                 long id = (long) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
+                intent.putExtra(IS_ZOMATO_ID, isZomatoId);
 
                 Resto resto = RestoDAO.getDatabase(context).getSingleRestaurant(id);
                 if (resto.getSubmitterName() != null) {

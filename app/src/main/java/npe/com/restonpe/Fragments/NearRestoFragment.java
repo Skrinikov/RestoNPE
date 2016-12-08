@@ -94,7 +94,7 @@ public class NearRestoFragment extends Fragment {
                     if (list != null && list.size() > 0) {
                         ListView listView = (ListView) activity.findViewById(R.id.near_list);
 
-                        RestoAdapter adapter = new RestoAdapter(activity, list, longitude, latitude);
+                        RestoAdapter adapter = new RestoAdapter(activity, list, longitude, latitude, true);
                         listView.setAdapter(adapter);
                     }
                 }

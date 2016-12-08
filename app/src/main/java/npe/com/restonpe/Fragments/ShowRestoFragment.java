@@ -20,6 +20,7 @@ import npe.com.restonpe.R;
 import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.database.RestoDAO;
 import npe.com.restonpe.util.RestoAdapter;
 import npe.com.restonpe.util.ReviewAdapter;
 
@@ -69,9 +70,11 @@ public class ShowRestoFragment extends Fragment {
         Bundle bundle = activity.getIntent().getExtras();
 
         long id = bundle.getLong(RestoAdapter.ID);
+        boolean isZomatoId = bundle.getBoolean(RestoAdapter.IS_ZOMATO_ID);
+
 
         // Get nearby restaurants
-        getRestaurant(id);
+        getRestaurant(id, isZomatoId);
     }
 
     /**
@@ -80,30 +83,39 @@ public class ShowRestoFragment extends Fragment {
      * @param id The id of the restaurant whose information is to be retrieved.
      */
     // FIXME Does not get the correct restaurant if it is displaying one from the local db or heroku (probably)
-    private void getRestaurant(long id) {
-        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
-            @Override
-            public void onPostExecute(List<Resto> list) {
-                if (list.size() == 1) {
-                    displayInformation(list.get(0));
+    private void getRestaurant(long id, boolean isZomatoId) {
+        if (isZomatoId) {
+            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
+                @Override
+                public void onPostExecute(List<Resto> list) {
+                    if (list.size() == 1) {
+                        displayInformation(list.get(0));
+                    }
                 }
-            }
 
-            @Override
-            protected List<Resto> readJson(JsonReader reader) {
-                Log.i(TAG, "Reading Json response...");
+                @Override
+                protected List<Resto> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Json response...");
 
-                try {
-                    ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
-                    return zomatoRestos.readRestoInformation(reader);
-                } catch (IOException e) {
-                    Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    try {
+                        ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
+                        return zomatoRestos.readRestoInformation(reader);
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+                    return null;
                 }
-                return null;
-            }
-        };
+            };
 
-        restoNetworkManager.findRestoInformation(id);
+            restoNetworkManager.findRestoInformation(id);
+        } else {
+            RestoDAO restoDAO = RestoDAO.getDatabase(activity);
+            Resto resto = restoDAO.getSingleRestaurant(id);
+
+            if (resto != null) {
+                displayInformation(resto);
+            }
+        }
     }
 
     /**
