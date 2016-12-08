@@ -126,7 +126,7 @@ public class ShowRestoActivity extends BaseActivity {
                 }
             };
 
-            restoNetworkManager.findRestoInformation(extras.getInt("id"));
+            restoNetworkManager.findRestoInformation(extras.getLong("id"));
         }
         item.setVisible(false);
         return super.onOptionsItemSelected(item);
