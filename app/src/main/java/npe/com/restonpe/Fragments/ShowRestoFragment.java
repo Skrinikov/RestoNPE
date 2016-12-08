@@ -68,7 +68,7 @@ public class ShowRestoFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        int id = bundle.getInt(RestoAdapter.ID);
+        long id = bundle.getLong(RestoAdapter.ID);
 
         // Get nearby restaurants
         getRestaurant(id);
@@ -79,7 +79,8 @@ public class ShowRestoFragment extends Fragment {
      *
      * @param id The id of the restaurant whose information is to be retrieved.
      */
-    private void getRestaurant(int id) {
+    // FIXME Does not get the correct restaurant if it is displaying one from the local db or heroku (probably)
+    private void getRestaurant(long id) {
         RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
             @Override
             public void onPostExecute(List<Resto> list) {

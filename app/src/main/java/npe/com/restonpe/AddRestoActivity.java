@@ -2,6 +2,7 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
@@ -19,6 +20,7 @@ import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.database.RestoDAO;
+import npe.com.restonpe.util.RestoAdapter;
 
 /**
  * Creates an instance of the AddRestoActivity which will
@@ -79,9 +81,13 @@ public class AddRestoActivity extends BaseActivity {
         if(validateInputFields()){
             Resto resto = buildResto();
             RestoDAO db = RestoDAO.getDatabase(this);
-            db.addRestaurant(resto);
-            Log.i(TAG,"restaurant added");
-            //TODO open intent to display the new restaurant.
+            long addedRestoId = db.addRestaurant(resto);
+            Log.i(TAG,"Restaurant added with id " + addedRestoId);
+
+            Intent intent = new Intent(this, ShowRestoActivity.class);
+            intent.putExtra(RestoAdapter.ID, addedRestoId);
+
+            startActivity(intent);
         }
 
         Log.i(TAG,"addRestaurant()");
