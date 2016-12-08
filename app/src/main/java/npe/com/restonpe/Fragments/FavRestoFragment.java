@@ -27,7 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.1
- * @since 01/12/2016
+ * @since 07/12/2016
  */
 
 public class FavRestoFragment extends Fragment {
@@ -80,6 +80,20 @@ public class FavRestoFragment extends Fragment {
         }
     }
 
+    /**
+     * Overridden onResume so that when acticity is resumed, it reloads
+     * the list of resto that is the emvedded database to reflect any possible changes.
+     */
+    @Override
+    public void onResume(){
+        super.onResume();
+        getDbRestoList();
+    }
+
+    /**
+     * Method that will run an instance of the asynchTask to retrieve
+     * a new list of resto in the embedded database.
+     */
     public void getDbRestoList(){
         DataLoader loader = new DataLoader();
         loader.execute();
