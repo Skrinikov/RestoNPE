@@ -98,7 +98,7 @@ public class ShowReviewFragment extends Fragment {
             }
         };
 
-        restoNetworkManager.findRestoInformation(id);
+        restoNetworkManager.findReviews(id);
     }
 
     /**

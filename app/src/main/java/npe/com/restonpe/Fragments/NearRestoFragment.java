@@ -37,15 +37,16 @@ public class NearRestoFragment extends Fragment {
     private static final String TAG = NearRestoFragment.class.getSimpleName();
 
     private Activity activity;
+    private RestoNetworkManager<RestoItem> restoNetworkManager;
 
     /**
      * Inflates a layout to be the content layout of the NearRestoActivity.
-     *
+     * <p>
      * Used as reference
      * source: https://developer.android.com/guide/components/fragments.html
      *
-     * @param inflater Layout inflater needed to inflate the xml file.
-     * @param container View where the xml file will be loaded into.
+     * @param inflater           Layout inflater needed to inflate the xml file.
+     * @param container          View where the xml file will be loaded into.
      * @param savedInstanceState bundle where values are stored.
      * @return The View inflated.
      */
@@ -81,12 +82,12 @@ public class NearRestoFragment extends Fragment {
     /**
      * Gets a list of nearby restaurants to display on the ListView
      *
-     * @param latitude The user's latitude to use to search for the nearby restaurants
+     * @param latitude  The user's latitude to use to search for the nearby restaurants
      * @param longitude The user's longitude to use to search for the nearby restaurants
      */
     private void getNearbyRestaurants(final String latitude, final String longitude) {
         if (latitude != null && longitude != null) {
-            RestoNetworkManager<RestoItem> networkManager = new RestoNetworkManager<RestoItem>(activity) {
+            restoNetworkManager = new RestoNetworkManager<RestoItem>(activity) {
                 @Override
                 public void onPostExecute(List<RestoItem> list) {
                     // FIXME only shows results from heroku. I've tried making private fields in this abstract class, and in NearRestoFragment. Nothing works :C
@@ -122,7 +123,7 @@ public class NearRestoFragment extends Fragment {
                 }
             };
 
-            networkManager.findNearbyRestos(latitude, longitude);
+            restoNetworkManager.findNearbyRestos(latitude, longitude);
         } else {
             // Tell user there were no results because there was no location
             new AlertDialog.Builder(activity)
@@ -132,9 +133,19 @@ public class NearRestoFragment extends Fragment {
     }
 
     /**
+     * Cancels the network manager request.
+     *
+     * @param mayInterruptIfRunning {@code True} if the thread executing this task should be
+     *                              interrupted; otherwise, in-progress tasks are allowed to complete.
+     */
+    public boolean cancel(boolean mayInterruptIfRunning) {
+        return restoNetworkManager.cancel(mayInterruptIfRunning);
+    }
+
+    /**
      * Displays the latitude and longitude on the screen.
      *
-     * @param latitude The latitude to display on the screen
+     * @param latitude  The latitude to display on the screen
      * @param longitude The longitude to display on the screen
      */
     private void displayLocationInformation(String latitude, String longitude) {

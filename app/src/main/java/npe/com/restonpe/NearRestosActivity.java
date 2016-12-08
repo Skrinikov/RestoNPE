@@ -20,6 +20,7 @@ import npe.com.restonpe.Fragments.NearRestoFragment;
 public class NearRestosActivity extends BaseActivity {
 
     private static final String TAG = NearRestosActivity.class.getSimpleName();
+    private NearRestoFragment fragment;
 
     /**
      * Creates the {@code Activity}.
@@ -45,8 +46,17 @@ public class NearRestosActivity extends BaseActivity {
         Log.i(TAG, "createFragments called");
         FragmentManager manager = getFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        NearRestoFragment fragment = new NearRestoFragment();
+        fragment = new NearRestoFragment();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        // Cancel network request
+        Log.i(TAG, "Cancelling call to network");
+        fragment.cancel(true);
     }
 }
