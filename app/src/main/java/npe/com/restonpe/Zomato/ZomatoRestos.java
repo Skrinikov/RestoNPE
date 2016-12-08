@@ -480,6 +480,13 @@ public class ZomatoRestos {
             }
         }
 
+        // Change price range
+        for (int i = 1; i < priceRange; i++) {
+            currency += currency;
+        }
+        Log.i(TAG, "Changed price range to " + currency);
+        map.put(RESTO_PRICE, currency);
+
         return map;
     }
 
