@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
@@ -31,18 +29,8 @@ public class TipActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.tip_calculator);
         }
-        createFragments();
-    }
 
-    /**
-     * Inserts the tip fragment into the content view using the fragment
-     * manager.
-     */
-    private void createFragments() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         TipFragment fragment = new TipFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
+        createFragments(fragment);
     }
 }

@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.util.Log;
@@ -35,20 +33,9 @@ public class NearRestosActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_restos_near);
         }
-        createFragments();
-    }
 
-    /**
-     * Inserts the NearRestoFragment into the content view using
-     * the fragment manager.
-     */
-    private void createFragments() {
-        Log.i(TAG, "createFragments called");
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         fragment = new NearRestoFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
+        createFragments(fragment);
     }
 
     @Override

@@ -2,8 +2,6 @@ package npe.com.restonpe;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -43,7 +41,9 @@ public class SettingActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.action_settings);
         }
-        createFragments();
+
+        fragment = new SettingFragment();
+        createFragments(fragment);
     }
 
     /**
@@ -73,19 +73,6 @@ public class SettingActivity extends BaseActivity {
         }
 
         Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + password);
-    }
-
-    /**
-     * Inserts the setting fragment into the content view using the fragment
-     * manager.
-     */
-    private void createFragments() {
-        Log.d(TAG, "createFragments called");
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        fragment = new SettingFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
     }
 
     /**

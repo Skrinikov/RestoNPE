@@ -1,6 +1,9 @@
 package npe.com.restonpe;
 
 import android.Manifest;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -211,5 +214,16 @@ public class BaseActivity extends AppCompatActivity
             editor.putString(LONGITUDE, location.getLongitude() + "");
             editor.apply();
         }
+    }
+
+    /**
+     * Inserts the given fragment into the content view using
+     * the fragment manager.
+     */
+    public void createFragments(Fragment fragment) {
+        FragmentManager manager = getFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.content, fragment);
+        transaction.commit();
     }
 }

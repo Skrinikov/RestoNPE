@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,7 +30,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkForFirstLogin();
-	    createFragments();
+
+        IndexFragment fragment = new IndexFragment();
+        super.createFragments(fragment);
     }
 
     /**
@@ -50,17 +50,5 @@ public class MainActivity extends BaseActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
-    }
-
-    /**
-     * Inserts the index fragment into the content view using
-     * the fragment manager.
-     */
-    private void createFragments() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        IndexFragment fragment = new IndexFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
     }
 }

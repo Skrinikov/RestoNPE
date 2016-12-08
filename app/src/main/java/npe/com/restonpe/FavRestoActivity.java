@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
@@ -31,19 +29,9 @@ public class FavRestoActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_restos_fav);
         }
-        createFragments();
-    }
 
-    /**
-     * Inserts the FavRestoFragment into the content view using
-     * the fragment manager.
-     */
-    private void createFragments() {
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         fragment = new FavRestoFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
+        super.createFragments(fragment);
     }
 
     public void updateDbList() {

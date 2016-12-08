@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -67,21 +65,9 @@ public class FindRestoActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_search_restos);
         }
-        createFragments();
-    }
 
-    /**
-     * Inserts the FindResto fragment into the content view using the
-     * fragment manager.
-     */
-    private void createFragments() {
-        Log.i(TAG, "createFragments called");
-
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         FindRestoFragment fragment = new FindRestoFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
+        super.createFragments(fragment);
     }
 
     public void buttonSearchClick(View v) {

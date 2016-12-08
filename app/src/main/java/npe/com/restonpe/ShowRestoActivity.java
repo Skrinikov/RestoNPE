@@ -1,7 +1,5 @@
 package npe.com.restonpe;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -56,21 +54,9 @@ public class ShowRestoActivity extends BaseActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_show_restos);
         }
-        createFragments();
-    }
 
-    /**
-     * Inserts the ShowResto fragment into the content view using the
-     * fragment manager.
-     */
-    private void createFragments() {
-        Log.d(TAG, "createFragments called");
-
-        FragmentManager manager = getFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
         ShowRestoFragment fragment = new ShowRestoFragment();
-        transaction.add(R.id.content, fragment);
-        transaction.commit();
+        createFragments(fragment);
     }
 
     /**

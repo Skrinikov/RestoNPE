@@ -107,6 +107,6 @@ public class ShowReviewFragment extends Fragment {
      * @param review The {@code Review} whose information is to be displayed on the screen
      */
     private void displayInformation(Review review) {
-
+        //TODO
     }
 }
