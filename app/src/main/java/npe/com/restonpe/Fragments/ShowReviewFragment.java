@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.List;
@@ -107,6 +108,25 @@ public class ShowReviewFragment extends Fragment {
      * @param review The {@code Review} whose information is to be displayed on the screen
      */
     private void displayInformation(Review review) {
-        //TODO
+        String title = review.getTitle();
+        String content = review.getContent();
+        String submitter = review.getSubmitter();
+        String submitterEmail = review.getSubmitterEmail();
+        int likes = review.getLikes();
+        double rating = review.getRating();
+
+        TextView tvTitle = (TextView)activity.findViewById(R.id.textViewReviewTitle);
+        TextView tvContent = (TextView)activity.findViewById(R.id.textViewReviewContent);
+        TextView tvSubmitter = (TextView)activity.findViewById(R.id.textViewReviewSubmitter);
+        TextView tvSubmitterEmail = (TextView)activity.findViewById(R.id.textViewReviewSubmitterEmail);
+        TextView tvLikes = (TextView)activity.findViewById(R.id.textViewReviewLikes);
+        TextView tvRating = (TextView)activity.findViewById(R.id.textViewReviewRating);
+
+        tvTitle.setText(title);
+        tvContent.setText(content);
+        tvSubmitter.setText(String.format(activity.getString(R.string.review_submitter), submitter));
+        tvSubmitterEmail.setText(submitterEmail);
+        tvLikes.setText(String.format(activity.getString(R.string.review_likes), likes));
+        tvRating.setText(String.format(activity.getString(R.string.review_rating), rating));
     }
 }

@@ -146,8 +146,6 @@ public class ShowRestoFragment extends Fragment {
             phone.setText(getString(R.string.show_phone_error));
         }
 
-
-
         List<Review> reviewsList = resto.getReviews();
         if (reviewsList == null || reviewsList.size() == 0) {
             ReviewAdapter adapter = new ReviewAdapter(activity, reviewsList);
