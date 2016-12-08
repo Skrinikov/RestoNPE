@@ -78,7 +78,7 @@ public class RestoAdapter extends BaseAdapter {
     /**
      * Returns the size of the data list.
      *
-     * @return int The size of the list, or -1 if the list does not exist.
+     * @return int The size of the list.
      */
     @Override
     public int getCount() {

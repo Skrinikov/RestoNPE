@@ -9,7 +9,7 @@ package npe.com.restonpe.Beans;
  */
 public class Review {
 
-    private int id;
+    private long id;
     private String title;
     private String content;
     private double rating;
@@ -35,7 +35,7 @@ public class Review {
      *
      * @return The id of the Review.
      */
-    public int getId() {
+    public long getId() {
         return id;
     }
 
@@ -44,7 +44,7 @@ public class Review {
      *
      * @param id The new id of the Review.
      */
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

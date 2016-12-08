@@ -17,7 +17,7 @@ import npe.com.restonpe.ShowReviewActivity;
 
 /**
  * Custom adapter made to display information about reviews
- * using a custom listing layout which contains a title and content
+ * using a custom listing layout which contains a title and submitter name
  * <p>
  * Used as reference
  * source: Cindy's RestoAdapter
@@ -50,7 +50,7 @@ public class ReviewAdapter extends BaseAdapter {
     /**
      * Returns the size of the data list.
      *
-     * @return int The size of the list, or -1 if the list does not exist.
+     * @return The size of the list.
      */
     @Override
     public int getCount() {
@@ -58,21 +58,21 @@ public class ReviewAdapter extends BaseAdapter {
     }
 
     /**
-     * Returns the resto at the given position in the list.
+     * Returns the Review at the given position in the list.
      *
      * @param position The index of the object to retrieve.
-     * @return RestoItem The {@code RestoItem} at the given position
+     * @return The {@code Review} at the given position
      */
     @Override
-    public Object getItem(int position) {
+    public Review getItem(int position) {
         return list.get(position);
     }
 
     /**
-     * Returns the id of the restoItem at the position in the list.
+     * Returns the id of the Review at the position in the list.
      *
      * @param position The index of the object's id to retrieve.
-     * @return long The id of the item at the given position
+     * @return The id of the item at the given position
      */
     @Override
     public long getItemId(int position) {
@@ -83,22 +83,21 @@ public class ReviewAdapter extends BaseAdapter {
      * Inflates the list xml layout and insert the data into the
      * different views in the layout.
      * <p>
-     * Data being: the resto's name, price range, calculated distance from current
-     * location using the DistanceCalculator.
+     * Data being: the review's title and submitter name
      *
      * @param position    The position in the data list
      * @param convertView The old view to reuse, if possible.
      * @param parent      The parent view of this list item
-     * @return View The View of one single item/row.
+     * @return The View of one single item/row.
      */
     @Override
     public View getView(final int position, final View convertView, ViewGroup parent) {
         View rowView = inflater.inflate(R.layout.review_item, null);
-        TextView name = (TextView) rowView.findViewById(R.id.resto_name);
-        TextView price = (TextView) rowView.findViewById(R.id.resto_price);
+        TextView title = (TextView) rowView.findViewById(R.id.review_title);
+        TextView submitter = (TextView) rowView.findViewById(R.id.review_submitter);
 
-        name.setText(list.get(position).getTitle());
-        price.setText(list.get(position).getSubmitter());
+        title.setText(list.get(position).getTitle());
+        submitter.setText(list.get(position).getSubmitter());
 
         // Put id of Review into list item
         rowView.setTag(list.get(position).getId());
@@ -115,6 +114,7 @@ public class ReviewAdapter extends BaseAdapter {
      * @param position The item index.
      */
     private void setRowClickListener(View rowView, final int position) {
+        // TODO not yet completed
         Log.d(TAG, "setRowClickListener called");
 
         rowView.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +132,7 @@ public class ReviewAdapter extends BaseAdapter {
                 Log.d(TAG, "setRowClickListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowReviewActivity.class);
 
-                int id = (int) v.getTag();
+                long id = (long) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
 

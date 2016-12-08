@@ -82,7 +82,7 @@ public class ShowRestoFragment extends Fragment {
      *
      * @param id The id of the restaurant whose information is to be retrieved.
      */
-    // FIXME Does not get the correct restaurant if it is displaying one from the local db or heroku (probably)
+    // FIXME does not show correct info if showing from heroku.
     private void getRestaurant(long id, boolean isZomatoId) {
         if (isZomatoId) {
             RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
@@ -145,6 +145,8 @@ public class ShowRestoFragment extends Fragment {
         } else {
             phone.setText(getString(R.string.show_phone_error));
         }
+
+
 
         List<Review> reviewsList = resto.getReviews();
         if (reviewsList == null || reviewsList.size() == 0) {
