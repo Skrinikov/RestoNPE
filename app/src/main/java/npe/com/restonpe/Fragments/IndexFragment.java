@@ -14,6 +14,7 @@ import npe.com.restonpe.AboutActivity;
 import npe.com.restonpe.AddRestoActivity;
 import npe.com.restonpe.FavRestoActivity;
 import npe.com.restonpe.FindRestoActivity;
+import npe.com.restonpe.FindSomewhereRestoActivity;
 import npe.com.restonpe.NearRestosActivity;
 import npe.com.restonpe.R;
 import npe.com.restonpe.TipActivity;
@@ -23,11 +24,11 @@ import npe.com.restonpe.TipActivity;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.1
- * @since 01/12/2016
+ * @since 12/12/2016
  */
 public class IndexFragment extends Fragment {
     private ImageView logo;
-    private LinearLayout favResto, tipCalculator, findResto, nearResto, addResto;
+    private LinearLayout favResto, tipCalculator, findResto, nearResto, addResto,somewhereResto;
     private final String TAG = "IndexFragment";
 
     /**
@@ -48,7 +49,7 @@ public class IndexFragment extends Fragment {
     }
 
     /**
-     * Sets up the onclick events for the 6 clickable items which will
+     * Sets up the onclick events for the 7 clickable items which will
      * all start a different activity.
      *
      * @param savedInstanceState
@@ -63,6 +64,7 @@ public class IndexFragment extends Fragment {
         addResto = (LinearLayout) getActivity().findViewById(R.id.addResto);
         tipCalculator = (LinearLayout) getActivity().findViewById(R.id.tipCalculator);
         logo = (ImageView) getActivity().findViewById(R.id.logo);
+        somewhereResto = (LinearLayout)getActivity().findViewById(R.id.findFromSomewhere);
 
         View.OnClickListener listener = new View.OnClickListener() {
             /**
@@ -101,6 +103,10 @@ public class IndexFragment extends Fragment {
                         Log.d(TAG, "onActivityCreated - onClick: logo");
                         intent = new Intent(getActivity(), AboutActivity.class);
                         break;
+                    case R.id.findFromSomewhere:
+                        Log.d(TAG, "onActivityCreated - onClick: findFromSomewhere");
+                        intent = new Intent(getActivity(), FindSomewhereRestoActivity.class);
+                        break;
                 }
 
                 if (intent != null) {
@@ -114,6 +120,7 @@ public class IndexFragment extends Fragment {
         findResto.setOnClickListener(listener);
         addResto.setOnClickListener(listener);
         tipCalculator.setOnClickListener(listener);
+        somewhereResto.setOnClickListener(listener);
         logo.setOnClickListener(listener);
     }
 }

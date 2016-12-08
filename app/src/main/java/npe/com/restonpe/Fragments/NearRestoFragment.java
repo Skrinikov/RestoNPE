@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,10 +78,21 @@ public class NearRestoFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         activity = getActivity();
 
-        // Get location from shared prefs
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
-        String latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
-        String longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
+        Bundle extras = activity.getIntent().getExtras();
+        String latitude;
+        String longitude;
+
+        if (extras != null) {
+            // Get location from intent extras
+            latitude = String.valueOf(extras.getDouble("latitude"));
+            longitude = String.valueOf(extras.getDouble("longitude"));
+            Log.d(TAG, "lat : " + latitude + " long: " + longitude);
+        } else {
+            // Get location from shared prefs
+            SharedPreferences sharedPreferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
+            latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
+            longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
+        }
 
         displayLocationInformation(latitude, longitude);
 
@@ -178,7 +190,10 @@ public class NearRestoFragment extends Fragment {
      *                              interrupted; otherwise, in-progress tasks are allowed to complete.
      */
     public boolean cancel(boolean mayInterruptIfRunning) {
-        return restoNetworkManagerZomato.cancel(mayInterruptIfRunning) && restoNetworkManagerHeroku.cancel(mayInterruptIfRunning);
+        if (restoNetworkManagerZomato != null && restoNetworkManagerHeroku != null) {
+            return restoNetworkManagerZomato.cancel(mayInterruptIfRunning) && restoNetworkManagerHeroku.cancel(mayInterruptIfRunning);
+        }
+        return true;
     }
 
     /**

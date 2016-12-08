@@ -13,6 +13,11 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDhKDxt-0HBPgPgTaLiF9NgZTo9MEN1SEE"/>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/Launcher.Splash">
@@ -56,9 +61,9 @@
         <activity
             android:name=".LoginActivity"
             android:noHistory="true" />
-        <activity
-            android:name=".ShowRestoActivity" />
-        <activity android:name=".ShowReviewActivity"></activity>
+        <activity android:name=".ShowRestoActivity" />
+        <activity android:name=".ShowReviewActivity" />
+        <activity android:name=".FindSomewhereRestoActivity"></activity>
     </application>
 
 </manifest>

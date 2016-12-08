@@ -30,6 +30,7 @@ public class NearRestosActivity extends BaseActivity {
         Log.i(TAG, "onCreate called");
         super.onCreate(savedInstanceState);
         ActionBar actionBar = getSupportActionBar();
+
         if (actionBar != null) {
             actionBar.setTitle(R.string.title_activity_restos_near);
         }
