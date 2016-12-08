@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import npe.com.restonpe.BaseActivity;
@@ -81,7 +82,12 @@ public class FindRestoFragment extends Fragment {
             @Override
             public void onPostExecute(List<Cuisine> list) {
                 // Add empty cuisine, so that user may select nothing on the cuisine spinner
-                list.add(0, new Cuisine(activity.getString(R.string.search_cuisines)));
+                if (list != null) {
+                    list.add(0, new Cuisine(activity.getString(R.string.search_cuisines)));
+                } else {
+                    list = new ArrayList<>();
+                    list.add(0, new Cuisine(activity.getString(R.string.search_no_cuisines)));
+                }
 
                 Spinner genres = (Spinner) activity.findViewById(R.id.cuisines_spinner);
                 ArrayAdapter<Cuisine> adapter = new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item, list);

@@ -86,8 +86,8 @@ public class FindRestoActivity extends BaseActivity {
         if (city.isEmpty()) {
             city = null;
         }
-        if (cuisine != null && cuisine.getName().equals(getString(R.string.search_cuisines))) {
-            // The user selected default cuisine, and therefore does not want to search with cuisine
+        if (cuisine != null && cuisine.getName().equals(getString(R.string.search_cuisines)) && cuisine.getName().equals(getString(R.string.search_no_cuisines))) {
+            // The user selected default cuisine or no cuisines, and therefore does not want to search with cuisine
             cuisine = null;
         }
 

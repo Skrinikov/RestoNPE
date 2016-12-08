@@ -119,6 +119,7 @@
     <string name="search_name">Name</string>
     <string name="search_city">City</string>
     <string name="search_cuisines">Cuisine</string>
+    <string name="search_no_cuisines">No Cuisines Found</string>
     <string name="search_button">Search</string>
     <string name="currency">$</string>
 
