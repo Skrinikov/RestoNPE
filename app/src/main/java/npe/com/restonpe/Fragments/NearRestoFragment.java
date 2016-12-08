@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.JsonReader;
-import android.util.JsonToken;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import npe.com.restonpe.BaseActivity;
@@ -37,7 +37,11 @@ public class NearRestoFragment extends Fragment {
     private static final String TAG = NearRestoFragment.class.getSimpleName();
 
     private Activity activity;
-    private RestoNetworkManager<RestoItem> restoNetworkManager;
+    private RestoNetworkManager<RestoItem> restoNetworkManagerZomato;
+    private RestoNetworkManager<RestoItem> restoNetworkManagerHeroku;
+    private List<RestoItem> zomatoRestos;
+    private List<RestoItem> herokuRestos;
+    private List<RestoItem> allRestos;
 
     /**
      * Inflates a layout to be the content layout of the NearRestoActivity.
@@ -54,6 +58,11 @@ public class NearRestoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView called");
+
+        zomatoRestos = null;
+        herokuRestos = null;
+        allRestos = new ArrayList<>();
+
         return inflater.inflate(R.layout.activity_near_restos, container, false);
     }
 
@@ -87,15 +96,20 @@ public class NearRestoFragment extends Fragment {
      */
     private void getNearbyRestaurants(final String latitude, final String longitude) {
         if (latitude != null && longitude != null) {
-            restoNetworkManager = new RestoNetworkManager<RestoItem>(activity) {
+            restoNetworkManagerZomato = new RestoNetworkManager<RestoItem>(activity) {
                 @Override
                 public void onPostExecute(List<RestoItem> list) {
-                    // FIXME only shows results from heroku. I've tried making private fields in this abstract class, and in NearRestoFragment. Nothing works :C
                     if (list != null && list.size() > 0) {
-                        ListView listView = (ListView) activity.findViewById(R.id.near_list);
+                        zomatoRestos = list;
 
-                        RestoAdapter adapter = new RestoAdapter(activity, list, longitude, latitude, true);
-                        listView.setAdapter(adapter);
+                        if (herokuRestos != null) {
+                            allRestos.addAll(zomatoRestos);
+                            allRestos.addAll(herokuRestos);
+                            ListView listView = (ListView) activity.findViewById(R.id.near_list);
+
+                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude, true);
+                            listView.setAdapter(adapter);
+                        }
                     }
                 }
 
@@ -104,17 +118,41 @@ public class NearRestoFragment extends Fragment {
                     Log.i(TAG, "Reading Json response...");
 
                     try {
-                        // Check first token. If it's an object, it was from Zomato, and if it's an
-                        // array, it's from Heroku
-                        if (reader.peek() == JsonToken.BEGIN_ARRAY) {
-                            Log.i(TAG, "Json response came from Heroku");
-                            HerokuRestos herokuRestos = new HerokuRestos(activity);
-                            return herokuRestos.readRestoJson(reader);
-                        } else if (reader.peek() == JsonToken.BEGIN_OBJECT) {
-                            Log.i(TAG, "Json response came from Zomato");
-                            ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
-                            return zomatoRestos.readResto(reader, "nearby_restaurants");
+                        Log.i(TAG, "Json response came from Zomato");
+                        ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
+                        return zomatoRestos.readResto(reader, "nearby_restaurants");
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+
+                    return null;
+                }
+            };
+            restoNetworkManagerHeroku = new RestoNetworkManager<RestoItem>(activity) {
+                @Override
+                public void onPostExecute(List<RestoItem> list) {
+                    if (list != null && list.size() > 0) {
+                        herokuRestos = list;
+
+                        if (zomatoRestos != null) {
+                            allRestos.addAll(zomatoRestos);
+                            allRestos.addAll(herokuRestos);
+                            ListView listView = (ListView) activity.findViewById(R.id.near_list);
+
+                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude, true);
+                            listView.setAdapter(adapter);
                         }
+                    }
+                }
+
+                @Override
+                protected List<RestoItem> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Json response...");
+
+                    try {
+                        Log.i(TAG, "Json response came from Heroku");
+                        HerokuRestos herokuRestos = new HerokuRestos(activity);
+                        return herokuRestos.readRestoJson(reader);
                     } catch (IOException e) {
                         Log.i(TAG, "An IO exception occurred: " + e.getMessage());
                     }
@@ -123,7 +161,8 @@ public class NearRestoFragment extends Fragment {
                 }
             };
 
-            restoNetworkManager.findNearbyRestos(latitude, longitude);
+            restoNetworkManagerZomato.findNearbyRestos(latitude, longitude);
+            restoNetworkManagerHeroku.findNearbyRestosFromHeroku(latitude, longitude);
         } else {
             // Tell user there were no results because there was no location
             new AlertDialog.Builder(activity)
@@ -139,7 +178,7 @@ public class NearRestoFragment extends Fragment {
      *                              interrupted; otherwise, in-progress tasks are allowed to complete.
      */
     public boolean cancel(boolean mayInterruptIfRunning) {
-        return restoNetworkManager.cancel(mayInterruptIfRunning);
+        return restoNetworkManagerZomato.cancel(mayInterruptIfRunning) && restoNetworkManagerHeroku.cancel(mayInterruptIfRunning);
     }
 
     /**

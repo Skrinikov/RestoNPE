@@ -74,27 +74,26 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
         try {
             if (isNetworkAccessible()) {
-                for (URL url : urls) {
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                URL url = urls[0];
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                    // Set headers for Zomato HTTP request.
-                    conn.setRequestProperty(RESTO_ACCEPT_HEADER, RESTO_ACCEPT);
-                    conn.setRequestProperty(RESTO_KEY_HEADER, RESTO_KEY);
+                // Set headers for Zomato HTTP request.
+                conn.setRequestProperty(RESTO_ACCEPT_HEADER, RESTO_ACCEPT);
+                conn.setRequestProperty(RESTO_KEY_HEADER, RESTO_KEY);
 
-                    conn.connect();
+                conn.connect();
 
-                    int response = conn.getResponseCode();
-                    if (response == HttpURLConnection.HTTP_OK) {
-                        JsonReader reader = new JsonReader(new InputStreamReader(conn.getInputStream()));
+                int response = conn.getResponseCode();
+                if (response == HttpURLConnection.HTTP_OK) {
+                    JsonReader reader = new JsonReader(new InputStreamReader(conn.getInputStream()));
 
-                        // This method must be implemented in the calling class. It will take care of
-                        // how the JSON is parsed depending on what find... method is called
-                        list = readJson(reader);
+                    // This method must be implemented in the calling class. It will take care of
+                    // how the JSON is parsed depending on what find... method is called
+                    list = readJson(reader);
 
-                        conn.disconnect();
-                    } else {
-                        Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
-                    }
+                    conn.disconnect();
+                } else {
+                    Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
                 }
             }
         } catch (IOException e) {
@@ -114,15 +113,33 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     public void findNearbyRestos(String latitude, String longitude) {
         // Add latitude and longitude to url
         String zomatoURL = String.format(RESTO_NEAR_URL, latitude, longitude);
-        String herokuURL = String.format(RESTO_NEAR_URL_HEROKU, latitude, longitude);
 
         try {
             URL zomato = new URL(zomatoURL);
-            URL heroku = new URL(herokuURL);
 
-            execute(zomato, heroku);
+            execute(zomato);
         } catch (MalformedURLException e) {
             Log.e(TAG, "Malformed URL: " + zomatoURL);
+        }
+    }
+
+    /**
+     * A convenience method that gets the restaurants nearest the given latitude and longitude from
+     * the Heroku API
+     *
+     * @param latitude  The latitude from where to get the restaurants
+     * @param longitude The longitude from where to get the restaurants
+     */
+    public void findNearbyRestosFromHeroku(String latitude, String longitude) {
+        // Add latitude and longitude to url
+        String herokuURL = String.format(RESTO_NEAR_URL_HEROKU, latitude, longitude);
+
+        try {
+            URL heroku = new URL(herokuURL);
+
+            execute(heroku);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + herokuURL);
         }
     }
 
