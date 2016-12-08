@@ -146,6 +146,15 @@ public class AddRestoActivity extends BaseActivity {
 
         //Since address is civic + street need to do more extensive validation.
 
+        // Address
+        TextInputEditText address = (TextInputEditText) findViewById(R.id.restoAddress);
+        if(address.getText().toString().isEmpty()){
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoAddressLbl);
+            temp.setErrorEnabled(true);
+            temp.setError(getString(R.string.address_error));
+        }
+
         // Province
         TextInputEditText province = (TextInputEditText) findViewById(R.id.restoProvince);
         if(province.getText().toString().isEmpty()){

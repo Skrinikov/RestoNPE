@@ -40,7 +40,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/resto_name_hint"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:inputType="textCapWords" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -127,7 +128,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/resto_address_hint"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:inputType="textCapWords" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -149,7 +151,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/resto_city_hint"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -165,7 +168,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/resto_province_hint"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -188,7 +192,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/resto_postal_hint"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:inputType="textPostalAddress" />
 
                 </android.support.design.widget.TextInputLayout>
 
@@ -204,7 +209,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/resto_country_hint"
-                        android:maxLines="1"/>
+                        android:maxLines="1"
+                        android:inputType="textCapWords" />
 
                 </android.support.design.widget.TextInputLayout>
             </LinearLayout>
@@ -247,7 +253,8 @@
                     android:drawableLeft="@drawable/ic_add_email"
                     android:hint="@string/resto_email_hint"
                     android:id="@+id/restoEmail"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:inputType="textEmailAddress" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -262,7 +269,8 @@
                     android:drawableLeft="@drawable/ic_add_link"
                     android:hint="@string/resto_link_hint"
                     android:id="@+id/restoLink"
-                    android:maxLines="1"/>
+                    android:maxLines="1"
+                    android:inputType="textUri" />
 
             </android.support.design.widget.TextInputLayout>
 
