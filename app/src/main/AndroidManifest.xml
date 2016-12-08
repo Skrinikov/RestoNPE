@@ -57,8 +57,7 @@
             android:name=".LoginActivity"
             android:noHistory="true" />
         <activity
-            android:name=".ShowRestoActivity"
-            android:noHistory="true" />
+            android:name=".ShowRestoActivity" />
         <activity android:name=".ShowReviewActivity"></activity>
     </application>
 
