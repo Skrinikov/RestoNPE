@@ -208,7 +208,7 @@ public class RestoAdapter extends BaseAdapter {
 
                     Log.d(TAG, "view's id is " + ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: before Zomato find");
-                    restoNetworkManager.findRestoInformation((int) ((View) v.getParent()).getTag());
+                    restoNetworkManager.findRestoInformation((long) ((View) v.getParent()).getTag());
                     Log.d(TAG, "setAddRestoListener - onClick: after Zomato find");
                 }
             }
