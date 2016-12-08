@@ -138,6 +138,7 @@ public class RestoDAO extends SQLiteOpenHelper {
     // Query Strings
     private static final String GET_GENRE = COLUMN_GENRE + "=?";
     private static final String GET_USER = COLUMN_EMAIL + "=?";
+    private static final String GET_RESTO_NAME = COLUMN_RESTO_NAME + "=?";
 
 
     /**
@@ -234,6 +235,37 @@ public class RestoDAO extends SQLiteOpenHelper {
      */
     public List<RestoItem> getAllRestaurantsSmall() {
         Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, null, null, null, null, null);
+        List<RestoItem> restos = new ArrayList<>();
+        RestoItem temp;
+        while (c.moveToNext()) {
+            temp = new RestoItem();
+            temp.setId(c.getInt(c.getColumnIndex(COLUMN_ID)));
+            temp.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
+            temp.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
+            temp.setPhone(c.getLong(c.getColumnIndex(COLUMN_PHONE)));
+            getAddressForResto(temp);
+            getRatingForResto(temp);
+
+            restos.add(temp);
+        }
+        c.close();
+        Log.i(TAG, "getAllRestaurantsSmall(), Size: " + restos.size());
+
+        return restos;
+    }
+
+
+    /**
+     * Gets a list of RestoItems by name.
+     *
+     * @param name The name of the resto
+     */
+    public List<RestoItem> getRestoByName(String name) {
+        if (name == null || name.isEmpty()) {
+            return null;
+        }
+
+        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, COLUMN_RESTO_NAME + "=?", new String[]{ name }, null, null, null);
         List<RestoItem> restos = new ArrayList<>();
         RestoItem temp;
         while (c.moveToNext()) {

@@ -23,6 +23,7 @@ import npe.com.restonpe.Fragments.FindRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.Zomato.ZomatoRestos;
+import npe.com.restonpe.database.RestoDAO;
 import npe.com.restonpe.util.RestoAdapter;
 
 /**
@@ -90,11 +91,17 @@ public class FindRestoActivity extends BaseActivity {
             cuisine = null;
         }
 
+        RestoDAO restoDAO = RestoDAO.getDatabase(mContext);
+        final List<RestoItem> localDBRestos = restoDAO.getRestoByName(name);
+
         RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
             public void onPostExecute(List<RestoItem> list) {
                 if (list != null && list.size() > 0) {
                     ListView listView = (ListView) findViewById(R.id.find_list);
+
+                    // Add local db RestoItems to beginning of list
+                    list.addAll(0, localDBRestos);
 
                     RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
                     listView.setAdapter(adapter);
