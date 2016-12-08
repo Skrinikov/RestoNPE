@@ -1,6 +1,5 @@
 package npe.com.restonpe.Heroku;
 
-import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -10,6 +9,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import npe.com.restonpe.Beans.Address;
+import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.Beans.Review;
 
@@ -53,24 +54,6 @@ public class HerokuRestos {
     private static final String REVIEW_USER_ID = "review_user_id";
     private static final String REVIEW_RESTO_ID = "resto_id";
 
-    private Context mContext;
-
-    /**
-     * Creates a class that will handle calls to the Heroku API
-     *
-     * @param context The {@code Context} of the calling {@code Activity}
-     */
-    public HerokuRestos(Context context) {
-        this.mContext = context;
-    }
-
-    /**
-     * Reads the given JSON text of restaurants and returns a List of Resto objects
-     *
-     * @param reader A {@code JsonReader} with the next object being the root
-     * @return A list of {@code RestoItem}s. May return an empty list if there are no results found.
-     * @throws IOException If an IOException occurs with the JSON text
-     */
     public List<RestoItem> readRestoJson(JsonReader reader) throws IOException {
         List<RestoItem> list = new ArrayList<>();
 
@@ -81,7 +64,7 @@ public class HerokuRestos {
             reader.beginObject();
 
             HashMap<String, String> map = getRestoMap(reader);
-            list.add(getResto(map));
+            list.add(getRestoItem(map));
 
             // End restaurant object
             reader.endObject();
@@ -95,12 +78,35 @@ public class HerokuRestos {
     }
 
     /**
+     * Reads the given JSON text of restaurants and returns a List of Resto objects
+     *
+     * @param reader A {@code JsonReader} with the next object being the root
+     * @return A list of {@code RestoItem}s. May return an empty list if there are no results found.
+     * @throws IOException If an IOException occurs with the JSON text
+     */
+    public List<Resto> readRestoInformation(JsonReader reader) throws IOException {
+        List<Resto> list = new ArrayList<>();
+
+        // Start reading the text, by beginning the root object.
+        reader.beginObject();
+
+        HashMap<String, String> map = getRestoMap(reader);
+        list.add(getResto(map));
+
+        // End root object
+        reader.endObject();
+        reader.close();
+
+        return list;
+    }
+
+    /**
      * Gets the restaurants information from the map and returns a data bean.
      *
      * @param map The map containing key-value pairs of fields found in a {@code Resto} object.
      * @return A {@code RestoItem} object with the information retrieved from the map.
      */
-    private RestoItem getResto(HashMap<String, String> map) {
+    private RestoItem getRestoItem(HashMap<String, String> map) {
         RestoItem restoItem = new RestoItem();
 
         String id = map.get(RESTO_ID);
@@ -116,7 +122,7 @@ public class HerokuRestos {
         String priceRange = map.get(RESTO_PRICE);
 
         if (id != null) {
-            restoItem.setId(Integer.parseInt(id));
+            restoItem.setHerokuId(Integer.parseInt(id));
         }
         restoItem.setName(name);
         if (phone != null) {
@@ -138,10 +144,77 @@ public class HerokuRestos {
     }
 
     /**
+     * Gets the restaurants information from the map and returns a data bean. Does not get the
+     * Resto's reviews.
+     *
+     * @param map The map containing key-value pairs of fields found in a {@code Resto} object.
+     * @return A {@code Resto} object with the information retrieved from the map.
+     */
+    private Resto getResto(HashMap<String, String> map) {
+        Resto resto = new Resto();
+
+        String id = map.get(RESTO_ID);
+        String name = map.get(RESTO_NAME);
+        String phone = map.get(RESTO_PHONE);
+        String civicNum = map.get(RESTO_CIVIC_NUM);
+        String suite = map.get(RESTO_SUITE);
+        String street = map.get(RESTO_STREET);
+        String city = map.get(RESTO_CITY);
+        String postal = map.get(RESTO_POSTAL);
+        String province = map.get(RESTO_PROVINCE);
+        String country = map.get(RESTO_COUNTRY);
+        String priceRange = map.get(RESTO_PRICE);
+        String email = map.get(RESTO_EMAIL);
+        String latitude = map.get(RESTO_LATITUDE);
+        String longitude = map.get(RESTO_LONGITUDE);
+        String link = map.get(RESTO_URL);
+
+        if (id != null) {
+            resto.setHerokuId(Integer.parseInt(id));
+        }
+        resto.setName(name);
+        if (phone != null) {
+            resto.setPhone(Long.parseLong(phone));
+        }
+        resto.setPriceRange(priceRange);
+        resto.setEmail(email);
+        resto.setLink(link);
+
+        // TODO Get actual genre
+        resto.setGenre("");
+
+        // Address format string
+        // civic number suite Street Name
+        Address address = new Address();
+        String addressString = "$s $s $s";
+        // Add address fields to string
+        addressString = String.format(addressString, civicNum);
+        addressString = String.format(addressString, suite);
+        addressString = String.format(addressString, street);
+        address.setAddress(addressString);
+        address.setPostal(postal);
+        address.setCity(city);
+        address.setProvince(province);
+        address.setCountry(country);
+        if (suite != null) {
+            address.setSuite(Integer.parseInt(suite));
+        }
+        if (latitude != null) {
+            address.setLatitude(Double.parseDouble(latitude));
+        }
+        if (longitude != null) {
+            address.setLongitude(Double.parseDouble(longitude));
+        }
+        resto.setAddress(address);
+
+        return resto;
+    }
+
+    /**
      * Gets the information of a restaurant from the {@code JsonReader}
      *
      * @param reader A {@code JsonReader} with the next object being a restaurant
-     * @return A {@code HasMap} of key-value pairs with the keys being fields in the JSON that
+     * @return A {@code HashMap} of key-value pairs with the keys being fields in the JSON that
      * correspond to fields of a {@code Review}
      * @throws IOException If an IOException occurs while reading the JSON
      */
@@ -338,9 +411,13 @@ public class HerokuRestos {
         String restoId = map.get(REVIEW_RESTO_ID);
 
         if (id != null) {
-//            review.setId(Integer.parseInt(id));
+            review.setId(Integer.parseInt(id));
         }
         review.setTitle(title);
+        review.setContent(content);
+        if (rating != null) {
+            review.setRating(Double.parseDouble(rating));
+        }
 
         return review;
     }

@@ -55,6 +55,8 @@ public class RestoDAO extends SQLiteOpenHelper {
     private static final String COLUMN_GENRE = "genre_name";
 
     // Resto table
+    private static final String COLUMN_ZOMATO_ID = "zomato_id";
+    private static final String COLUMN_HEROKU_ID = "heroku_id";
     private static final String COLUMN_RESTO_NAME = "resto_name";
     private static final String COLUMN_PRICE_RANGE = "resto_price_range";
     private static final String COLUMN_LINK = "link";
@@ -92,6 +94,8 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     private static final String CREATE_RESTO = "create table " + TABLE_RESTO + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
+            COLUMN_ZOMATO_ID + " integer default -1, " +
+            COLUMN_HEROKU_ID + " integer default -1, " +
             COLUMN_RESTO_NAME + " text not null, " +
             COLUMN_PRICE_RANGE + " text, " +
             COLUMN_PHONE + " integer, " +
@@ -138,8 +142,6 @@ public class RestoDAO extends SQLiteOpenHelper {
     // Query Strings
     private static final String GET_GENRE = COLUMN_GENRE + "=?";
     private static final String GET_USER = COLUMN_EMAIL + "=?";
-    private static final String GET_RESTO_NAME = COLUMN_RESTO_NAME + "=?";
-
 
     /**
      * Constructor for the object. Private just to let the factory method to initialize the
@@ -223,7 +225,6 @@ public class RestoDAO extends SQLiteOpenHelper {
         long restoId = insertResto(resto);
         insertAddress(resto.getAddress(), restoId);
         insertReviews(resto.getReviews(), restoId);
-        resto.setId(restoId);
         return restoId;
     }
 
@@ -234,12 +235,14 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @return limited data for each restaurant in the database.
      */
     public List<RestoItem> getAllRestaurantsSmall() {
-        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, null, null, null, null, null);
+        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_ZOMATO_ID, COLUMN_HEROKU_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, null, null, null, null, null);
         List<RestoItem> restos = new ArrayList<>();
         RestoItem temp;
         while (c.moveToNext()) {
             temp = new RestoItem();
-            temp.setId(c.getInt(c.getColumnIndex(COLUMN_ID)));
+            temp.setId(c.getLong(c.getColumnIndex(COLUMN_ID)));
+            temp.setZomatoId(c.getLong(c.getColumnIndex(COLUMN_ZOMATO_ID)));
+            temp.setHerokuId(c.getLong(c.getColumnIndex(COLUMN_HEROKU_ID)));
             temp.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
             temp.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
             temp.setPhone(c.getLong(c.getColumnIndex(COLUMN_PHONE)));
@@ -265,12 +268,14 @@ public class RestoDAO extends SQLiteOpenHelper {
             return null;
         }
 
-        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, COLUMN_RESTO_NAME + "=?", new String[]{ name }, null, null, null);
+        Cursor c = getReadableDatabase().query(TABLE_RESTO, new String[]{COLUMN_ID, COLUMN_ZOMATO_ID, COLUMN_HEROKU_ID, COLUMN_RESTO_NAME, COLUMN_PRICE_RANGE, COLUMN_PHONE}, COLUMN_RESTO_NAME + "=?", new String[]{ name }, null, null, null);
         List<RestoItem> restos = new ArrayList<>();
         RestoItem temp;
         while (c.moveToNext()) {
             temp = new RestoItem();
-            temp.setId(c.getInt(c.getColumnIndex(COLUMN_ID)));
+            temp.setId(c.getLong(c.getColumnIndex(COLUMN_ID)));
+            temp.setZomatoId(c.getLong(c.getColumnIndex(COLUMN_ZOMATO_ID)));
+            temp.setHerokuId(c.getLong(c.getColumnIndex(COLUMN_HEROKU_ID)));
             temp.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
             temp.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
             temp.setPhone(c.getLong(c.getColumnIndex(COLUMN_PHONE)));
@@ -301,6 +306,8 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         if (c.moveToNext()) {
             r.setId(c.getLong(c.getColumnIndex(COLUMN_ID)));
+            r.setZomatoId(c.getLong(c.getColumnIndex(COLUMN_ZOMATO_ID)));
+            r.setHerokuId(c.getLong(c.getColumnIndex(COLUMN_HEROKU_ID)));
             r.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
             r.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
             r.setEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
@@ -426,7 +433,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param resto bean to which add the address.
      */
     private void getAddressList(Resto resto) {
-        long id = resto.getId();
+        long id = resto.getZomatoId();
 
         Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
 
@@ -453,7 +460,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param resto bean to which set the reviews
      */
     private void getReviewList(Resto resto) {
-        long id = resto.getId();
+        long id = resto.getZomatoId();
 
         Cursor c = getReadableDatabase().query(TABLE_REVIEW, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
         List<Review> reviews = new ArrayList<>();
@@ -593,6 +600,8 @@ public class RestoDAO extends SQLiteOpenHelper {
 
         Log.d(TAG, resto.getName() + " is the name");
 
+        cv.put(COLUMN_ZOMATO_ID, resto.getZomatoId());
+        cv.put(COLUMN_HEROKU_ID, resto.getHerokuId());
         cv.put(COLUMN_RESTO_NAME, resto.getName());
         cv.put(COLUMN_EMAIL, resto.getEmail());
         cv.put(COLUMN_PHONE, resto.getPhone());
@@ -635,7 +644,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      */
     private long getGenreID(String genre) throws IllegalArgumentException {
 
-        if (genre.length() < 1)
+        if (genre == null)
             throw new IllegalArgumentException("Cannot add empty genre.");
 
         long id = -1;
@@ -712,6 +721,4 @@ public class RestoDAO extends SQLiteOpenHelper {
         c.close();
         //I did overloaded methods because I was too lazy to make a common interface.
     }
-
-
 }

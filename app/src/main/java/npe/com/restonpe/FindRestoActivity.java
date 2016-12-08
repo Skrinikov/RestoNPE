@@ -99,16 +99,18 @@ public class FindRestoActivity extends BaseActivity {
             public void onPostExecute(List<RestoItem> list) {
                 ListView listView = (ListView) findViewById(R.id.find_list);
                 if (list != null && list.size() > 0) {
-                    // Add local db RestoItems to beginning of list
-                    list.addAll(0, localDBRestos);
+                    if (localDBRestos != null) {
+                        // Add local db RestoItems to beginning of list
+                        list.addAll(0, localDBRestos);
+                    }
 
-                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude);
                     listView.setAdapter(adapter);
                 } else if (localDBRestos != null && localDBRestos.size() > 0) {
                     // Only use local db results
                     list = localDBRestos;
 
-                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude);
                     listView.setAdapter(adapter);
                 } else {
                     // Tell user there were no results

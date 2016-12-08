@@ -69,9 +69,6 @@ public class FavRestoFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         prefs = getActivity().getSharedPreferences("Settings", MODE_PRIVATE);
-        /*
-        ListView resto_list = (ListView) getActivity().findViewById(R.id.resto_list);
-        TextView no_result = (TextView) getActivity().findViewById(R.id.no_result);*/
 
         if (prefs != null) {
             Log.d(TAG, "onActivityCreated: prefs is not null.");
@@ -108,8 +105,8 @@ public class FavRestoFragment extends Fragment {
         /**
          * Gets the restaurant data from SQLite database. All done in the bkg.
          *
-         * @param params
-         * @return
+         * @param params Any parameter provided will be ignored
+         * @return A list of RestoItems retrieved from the database
          */
         @Override
         protected List<RestoItem> doInBackground(Void... params) {
@@ -137,7 +134,7 @@ public class FavRestoFragment extends Fragment {
                 no_result.setVisibility(View.GONE);
 
                 RestoAdapter restoAdapter = new RestoAdapter(getActivity(), restos, prefs.getString("longitude", "0"),
-                        prefs.getString("latitude", "0"), false);
+                        prefs.getString("latitude", "0"));
                 resto_list.setAdapter(restoAdapter);
             } else {
                 no_result.setVisibility(View.VISIBLE);

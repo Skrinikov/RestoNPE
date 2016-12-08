@@ -8,7 +8,9 @@ package npe.com.restonpe.Beans;
  * @since 11-29-2016
  */
 public class RestoItem {
-    private long id;
+    private long localId;
+    private long zomatoId;
+    private long herokuId;
     private String name;
     private String priceRange;
     private String city;
@@ -19,8 +21,10 @@ public class RestoItem {
 
     private long phone;
 
-    public RestoItem(){
-        id = -1;
+    public RestoItem() {
+        localId = -1;
+        zomatoId = -1;
+        herokuId = -1;
         name = "";
         priceRange = "";
         city = "";
@@ -31,12 +35,55 @@ public class RestoItem {
         phone = -1;
     }
 
+    /**
+     * Gets the local database's id. This id could be -1 if this RestoItem does not belong to the local database
+     *
+     * @return The local database's id for this RestoItem, or -1 if it does not belong to the local database
+     */
     public long getId() {
-        return id;
+        return localId;
     }
 
+    /**
+     * Sets the local database's id for this RestoItem
+     * @param id The new local database id
+     */
     public void setId(long id) {
-        this.id = id;
+        this.localId = id;
+    }
+
+    /**
+     * Gets the Zomato id. This id could be -1 if this RestoItem does not belong to Zomato
+     *
+     * @return Zomato's id for this RestoItem, or -1 if it does not belong to Zomato
+     */
+    public long getZomatoId() {
+        return zomatoId;
+    }
+
+    /**
+     * Sets Zomato's id for this RestoItem
+     * @param id The new zomato id
+     */
+    public void setZomatoId(long id) {
+        this.zomatoId = id;
+    }
+
+    /**
+     * Gets the Heroku id. This id could be -1 if this RestoItem does not belong to Heroku
+     *
+     * @return Heroku's id for this RestoItem, or -1 if it does not belong to Heroku
+     */
+    public long getHerokuId() {
+        return herokuId;
+    }
+
+    /**
+     * Sets Heroku's id for this RestoItem
+     * @param id The new Heroku id
+     */
+    public void setHerokuId(long id) {
+        this.herokuId = id;
     }
 
     public String getName() {
@@ -100,12 +147,13 @@ public class RestoItem {
     /**
      * Sets the address. The format of the address should be: civic address Street name, City,
      * Province/State Postal/ZIP code
+     *
      * @param address
      */
     public void setAddress(String address) {
         this.address = address;
     }
-    
+
     public long getPhone() {
         return phone;
     }

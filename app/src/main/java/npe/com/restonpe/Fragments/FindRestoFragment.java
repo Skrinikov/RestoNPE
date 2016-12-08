@@ -73,7 +73,7 @@ public class FindRestoFragment extends Fragment {
      * not be found, the cuisines will not be found.
      */
     private void findCuisines() {
-        // This location is used to find cuisines from the Zomato API
+        // This location (the user's current location) is used to find cuisines from the Zomato API
         SharedPreferences preferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
         String latitude = preferences.getString(BaseActivity.LATITUDE, null);
         String longitude = preferences.getString(BaseActivity.LONGITUDE, null);
