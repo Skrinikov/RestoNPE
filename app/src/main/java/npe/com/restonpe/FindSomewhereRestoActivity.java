@@ -35,7 +35,7 @@ public class FindSomewhereRestoActivity extends FragmentActivity implements Goog
         PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
         try {
-            Log.d(TAG,"before startActivityForResult for Google Picker");
+            Log.d(TAG, "before startActivityForResult for Google Picker");
             startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
         } catch (GooglePlayServicesRepairableException e) {
             e.printStackTrace();
@@ -53,16 +53,21 @@ public class FindSomewhereRestoActivity extends FragmentActivity implements Goog
      */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.d(TAG,"onActivityResult called");
+        Log.d(TAG, "onActivityResult called");
         if (requestCode == PLACE_PICKER_REQUEST) {
-            Log.d(TAG,"Place Picker Request Returned");
+            Log.d(TAG, "Place Picker Request Returned");
             if (resultCode == RESULT_OK) {
-                Place place = PlacePicker.getPlace(this,data);
-                String toastMsg = String.format("Place: %s", place.getName());
-                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
-            }else{
-                finish();
+                Place place = PlacePicker.getPlace(this, data);
+
+                double latitude = place.getLatLng().latitude;
+                double longitude = place.getLatLng().longitude;
+
+                Intent intent = new Intent(this, NearRestosActivity.class);
+                intent.putExtra("latitude", latitude);
+                intent.putExtra("longitude", longitude);
+                startActivity(intent);
             }
+            finish();
         }
     }
 

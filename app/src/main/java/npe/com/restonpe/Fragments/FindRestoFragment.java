@@ -30,7 +30,7 @@ import npe.com.restonpe.Zomato.ZomatoRestos;
  */
 public class FindRestoFragment extends Fragment {
 
-    private static final String TAG = NearRestoFragment.class.getSimpleName();
+    private static final String TAG = FindRestoFragment.class.getSimpleName();
 
     private Activity activity;
 
