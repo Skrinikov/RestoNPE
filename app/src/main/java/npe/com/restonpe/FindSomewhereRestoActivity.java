@@ -16,6 +16,7 @@ import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
 public class FindSomewhereRestoActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener {
+
     private static final String TAG = FindSomewhereRestoActivity.class.getSimpleName();
     private int PLACE_PICKER_REQUEST = 1;
     private GoogleApiClient mGoogleApiClient;
@@ -59,6 +60,8 @@ public class FindSomewhereRestoActivity extends FragmentActivity implements Goog
                 Place place = PlacePicker.getPlace(this,data);
                 String toastMsg = String.format("Place: %s", place.getName());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }else{
+                finish();
             }
         }
     }
