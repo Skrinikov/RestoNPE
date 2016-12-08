@@ -18,6 +18,7 @@
             android:theme="@style/Launcher.Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -27,6 +28,7 @@
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -41,23 +43,23 @@
             android:noHistory="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".FindRestoActivity" />
-        <activity
-            android:name=".NearRestosActivity" />
+        <activity android:name=".FindRestoActivity" />
+        <activity android:name=".NearRestosActivity" />
         <activity
             android:name=".AddRestoActivity"
             android:noHistory="true" />
-        <activity
-            android:name=".FavRestoActivity" />
+        <activity android:name=".FavRestoActivity" />
         <activity
             android:name=".LoginActivity"
             android:noHistory="true" />
         <activity
             android:name=".ShowRestoActivity"
             android:noHistory="true" />
+        <activity android:name=".ShowReviewActivity"></activity>
     </application>
+
 </manifest>

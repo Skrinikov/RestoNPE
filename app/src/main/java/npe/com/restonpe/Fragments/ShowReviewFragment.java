@@ -8,29 +8,25 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.List;
 
-import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.Review;
+import npe.com.restonpe.Heroku.HerokuRestos;
 import npe.com.restonpe.R;
 import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
-import npe.com.restonpe.Zomato.ZomatoRestos;
-import npe.com.restonpe.util.RestoAdapter;
 import npe.com.restonpe.util.ReviewAdapter;
 
 /**
- * Fragment class that will load the content of the ShowRestoActivity.
+ * Fragment class that will load the content of the ShowReviewActivity.
  *
- * @author Uen Yi Cindy Hung, Jeegna Patel
+ * @author Jeegna Patel
  * @version 1.0
- * @since 01/12/2016
+ * @since 07/12/2016
  */
-public class ShowRestoFragment extends Fragment {
+public class ShowReviewFragment extends Fragment {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
@@ -52,7 +48,7 @@ public class ShowRestoFragment extends Fragment {
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView called");
 
-        return inflater.inflate(R.layout.activity_show_resto, container, false);
+        return inflater.inflate(R.layout.activity_show_review, container, false);
     }
 
     /**
@@ -68,10 +64,10 @@ public class ShowRestoFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        int id = bundle.getInt(RestoAdapter.ID);
+        int id = bundle.getInt(ReviewAdapter.ID);
 
         // Get nearby restaurants
-        getRestaurant(id);
+        getReview(id);
     }
 
     /**
@@ -79,22 +75,22 @@ public class ShowRestoFragment extends Fragment {
      *
      * @param id The id of the restaurant whose information is to be retrieved.
      */
-    private void getRestaurant(int id) {
-        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
+    private void getReview(int id) {
+        RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(activity) {
             @Override
-            public void onPostExecute(List<Resto> list) {
+            public void onPostExecute(List<Review> list) {
                 if (list.size() == 1) {
                     displayInformation(list.get(0));
                 }
             }
 
             @Override
-            protected List<Resto> readJson(JsonReader reader) {
+            protected List<Review> readJson(JsonReader reader) {
                 Log.i(TAG, "Reading Json response...");
 
                 try {
-                    ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
-                    return zomatoRestos.readRestoInformation(reader);
+                    HerokuRestos herokuRestos = new HerokuRestos(activity);
+                    return herokuRestos.readReviewJson(reader);
                 } catch (IOException e) {
                     Log.i(TAG, "An IO exception occurred: " + e.getMessage());
                 }
@@ -108,38 +104,9 @@ public class ShowRestoFragment extends Fragment {
     /**
      * Displays the restaurants information on the screen.
      *
-     * @param resto The {@code Resto} whose information is to be displayed on the screen
+     * @param review The {@code Review} whose information is to be displayed on the screen
      */
-    private void displayInformation(Resto resto) {
-        TextView name = (TextView) activity.findViewById(R.id.textViewShowName);
-        TextView address = (TextView) activity.findViewById(R.id.textViewShowAddress);
-        TextView cuisines = (TextView) activity.findViewById(R.id.textViewShowCuisines);
-        TextView priceRange = (TextView) activity.findViewById(R.id.textViewShowPriceRange);
-        TextView email = (TextView) activity.findViewById(R.id.textViewShowEmail);
-        TextView link = (TextView) activity.findViewById(R.id.textViewShowLink);
-        TextView phone = (TextView) activity.findViewById(R.id.textViewShowPhone);
+    private void displayInformation(Review review) {
 
-        name.setText(resto.getName());
-        address.setText(resto.getAddress().getAddress());
-        cuisines.setText(resto.getGenre());
-        priceRange.setText(resto.getPriceRange());
-        email.setText(resto.getEmail());
-        link.setText(resto.getLink());
-
-        long phoneNumber = resto.getPhone();
-        if (phoneNumber != 0) {
-            phone.setText(String.valueOf(resto.getPhone()));
-        } else {
-            phone.setText(getString(R.string.show_phone_error));
-        }
-
-        // TODO Display reviews in list
-        List<Review> reviewsList = resto.getReviews();
-        if (reviewsList == null || reviewsList.size() == 0) {
-            ReviewAdapter adapter = new ReviewAdapter(activity, reviewsList);
-
-            ListView listView = (ListView) activity.findViewById(R.id.review_list);
-            listView.setAdapter(adapter);
-        }
     }
 }

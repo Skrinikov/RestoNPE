@@ -37,6 +37,7 @@ public class ShowRestoActivity extends BaseActivity {
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
     private Context mContext;
+    private Bundle extras;
 
     /**
      * Creates the {@code Activity}.
@@ -49,6 +50,7 @@ public class ShowRestoActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
 
         this.mContext = this;
+        this.extras = getIntent().getExtras();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -82,7 +84,9 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        if (getIntent().getExtras().get("submitter").toString().length() > 0) {
+        Object submitter = extras.get("submitter");
+
+        if (submitter != null && submitter.toString().length() > 0) {
             menu.getItem(0).setIcon(R.drawable.ic_remove);
         } else {
             menu.getItem(0).setIcon(R.drawable.ic_add);
@@ -103,7 +107,6 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onOptionsItemSelected called");
         int id = item.getItemId();
 
-        Bundle extras = getIntent().getExtras();
         Object submitter = extras.get("submitter");
 
         if (submitter != null && submitter.toString().length() > 0) {
