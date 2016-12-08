@@ -97,11 +97,16 @@ public class FindRestoActivity extends BaseActivity {
         RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
             public void onPostExecute(List<RestoItem> list) {
+                ListView listView = (ListView) findViewById(R.id.find_list);
                 if (list != null && list.size() > 0) {
-                    ListView listView = (ListView) findViewById(R.id.find_list);
-
                     // Add local db RestoItems to beginning of list
                     list.addAll(0, localDBRestos);
+
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
+                    listView.setAdapter(adapter);
+                } else if (localDBRestos != null && localDBRestos.size() > 0) {
+                    // Only use local db results
+                    list = localDBRestos;
 
                     RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
                     listView.setAdapter(adapter);
