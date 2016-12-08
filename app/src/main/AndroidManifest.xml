@@ -56,9 +56,9 @@
         <activity
             android:name=".LoginActivity"
             android:noHistory="true" />
-        <activity
-            android:name=".ShowRestoActivity" />
-        <activity android:name=".ShowReviewActivity"></activity>
+        <activity android:name=".ShowRestoActivity" />
+        <activity android:name=".ShowReviewActivity" />
+        <activity android:name=".FindSomewhereRestoActivity"></activity>
     </application>
 
 </manifest>
