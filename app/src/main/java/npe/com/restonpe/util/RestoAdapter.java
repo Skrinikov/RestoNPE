@@ -235,7 +235,7 @@ public class RestoAdapter extends BaseAdapter {
                 Log.d(TAG, "setRowViewListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowRestoActivity.class);
 
-                int id = (int) v.getTag();
+                long id = (long) v.getTag();
                 Log.i(TAG, "Putting id of " + id + " in extras");
                 intent.putExtra(ID, id);
 

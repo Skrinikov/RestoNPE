@@ -144,7 +144,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * Constructor for the object. Private just to let the factory method to initialize the
      * object.
      *
-     * @param context
+     * @param context The activity that instantiate this object.
      */
     private RestoDAO(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -154,7 +154,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * Factory method to create a RestoDAO object. Only creates the database if there is
      * only one reference to it.
      *
-     * @param context
+     * @param context The activity that instantiated this object.
      * @return RestoDAO database object ready to use.
      */
     public static RestoDAO getDatabase(Context context) {
@@ -178,7 +178,7 @@ public class RestoDAO extends SQLiteOpenHelper {
     /**
      * Only used when the database is created for the first time.
      *
-     * @param database
+     * @param database The database to create.
      */
     @Override
     public void onCreate(SQLiteDatabase database) {
@@ -216,7 +216,7 @@ public class RestoDAO extends SQLiteOpenHelper {
     /**
      * Inserts the restaurant into the restaurant table.
      *
-     * @param resto
+     * @param resto The restaurant to add
      */
     public long addRestaurant(Resto resto) throws IllegalArgumentException {
         long restoId = insertResto(resto);
@@ -446,7 +446,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param temp bean to which add the average rating of the resto.
      */
     private void getRatingForResto(RestoItem temp) {
-        int id = temp.getId();
+        long id = temp.getId();
 
         Cursor c = getReadableDatabase().query(TABLE_REVIEW, new String[]{COLUMN_RATING}, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
         int reviews = 0;
@@ -472,7 +472,7 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param temp resto item for which look up the long and lat
      */
     private void getAddressForResto(RestoItem temp) {
-        int id = temp.getId();
+        long id = temp.getId();
 
         Cursor c = getReadableDatabase().query(TABLE_ADDRESS, new String[]{COLUMN_CITY, COLUMN_LONG, COLUMN_LAT}, COLUMN_ID + "=?", new String[]{id + ""}, null, null, null, "1");
 

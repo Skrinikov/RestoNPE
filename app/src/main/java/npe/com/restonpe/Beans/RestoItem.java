@@ -8,7 +8,7 @@ package npe.com.restonpe.Beans;
  * @since 11-29-2016
  */
 public class RestoItem {
-    private int id;
+    private long id;
     private String name;
     private String priceRange;
     private String city;
@@ -31,11 +31,11 @@ public class RestoItem {
         phone = -1;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
