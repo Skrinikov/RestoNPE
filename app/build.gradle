@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'RestoKey'
             keyPassword 'RestoNPE_F2016'
-            storeFile file('C:/Users/Hung/Desktop/Android/keystores/android.jks')
+            storeFile file('./../keystores/android.jks')
             storePassword 'Android_F2016'
         }
     }

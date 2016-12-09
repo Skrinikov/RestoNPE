@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
@@ -15,12 +14,22 @@ import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlacePicker;
 
+/**
+ * @author Uen Yi Cindy Hung
+ * @since 08/12/2016
+ * @version 1.0
+ */
 public class FindSomewhereRestoActivity extends FragmentActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = FindSomewhereRestoActivity.class.getSimpleName();
     private int PLACE_PICKER_REQUEST = 1;
     private GoogleApiClient mGoogleApiClient;
 
+    /**
+     * Code provided by Google.
+     *
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +54,7 @@ public class FindSomewhereRestoActivity extends FragmentActivity implements Goog
     }
 
     /**
-     * Code provided by Google.
+     * 50% code provided by Google.
      *
      * @param requestCode
      * @param resultCode

@@ -31,7 +31,7 @@ import npe.com.restonpe.util.RestoAdapter;
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
  * @version 1.0
- * @since 11/29/2016
+ * @since 08/12/2016
  */
 public class NearRestoFragment extends Fragment {
 
@@ -68,7 +68,9 @@ public class NearRestoFragment extends Fragment {
     }
 
     /**
-     * Gets the nearby restaurants and displays them on the RestoListFragment
+     * Gets the nearby restaurants and displays them on the RestoListFragment.
+     * Nearby to the longitude and latitude either in the shared preferences
+     * or the bundle, with the bundle having priority.
      *
      * @param savedInstanceState bundle where values are stored.
      */
