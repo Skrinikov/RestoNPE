@@ -2,6 +2,8 @@ package npe.com.restonpe;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
 import android.support.design.widget.TextInputEditText;
@@ -10,15 +12,18 @@ import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.Toast;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.database.RestoDAO;
+import npe.com.restonpe.util.RestoAdapter;
 
 public class EditRestoActivity extends BaseActivity {
     private final String TAG = "EditRestoActivity";
@@ -26,6 +31,7 @@ public class EditRestoActivity extends BaseActivity {
     private Spinner genre, price;
     private SpinnerAdapter genreAdapter, priceAdapter;
     private Button submitResto;
+    private SharedPreferences pref;
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -41,6 +47,7 @@ public class EditRestoActivity extends BaseActivity {
             actionBar.setTitle(R.string.title_activity_restos_add);
         }
 
+        pref = getSharedPreferences("Settings", MODE_PRIVATE);
         createFragments();
     }
 
@@ -83,6 +90,22 @@ public class EditRestoActivity extends BaseActivity {
 
         submitResto.setText(R.string.save);
         submitResto.setOnClickListener(null);
+        submitResto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(validateInputFields()){
+                    Resto resto = buildResto();
+
+                    RestoDAO db = RestoDAO.getDatabase(EditRestoActivity.this);
+                    db.updateRestaurant(resto);
+
+                    Intent intent = new Intent(EditRestoActivity.this, ShowRestoActivity.class);
+                    intent.putExtra(RestoAdapter.LOCAL_ID, resto.getId());
+
+                    startActivity(intent);
+                }
+            }
+        });
 
         genreAdapter = genre.getAdapter();
         priceAdapter = price.getAdapter();
@@ -91,15 +114,16 @@ public class EditRestoActivity extends BaseActivity {
         int priceSize = priceAdapter.getCount();
 
         for (int i = 0; i < genreSize; i++) {
-            Log.d(TAG,"genre: " + resto.getGenre().substring(0,resto.getGenre().indexOf(',')));
-            String cuisine = resto.getGenre().substring(0,resto.getGenre().indexOf(','));
-            if(genreAdapter.getItem(i).toString().contains(cuisine)){
+            Log.d(TAG, "genre: " + resto.getGenre().substring(0, resto.getGenre().indexOf(',')));
+            int comma = resto.getGenre().indexOf(',') > 0 ? resto.getGenre().indexOf(',') : resto.getGenre().length();
+            String cuisine = resto.getGenre().substring(0, comma);
+            if (genreAdapter.getItem(i).toString().contains(cuisine)) {
                 genre.setSelection(i);
             }
         }
 
         for (int i = 0; i < priceSize; i++) {
-            if(priceAdapter.getItem(i).equals(resto.getPriceRange())){
+            if (priceAdapter.getItem(i).equals(resto.getPriceRange())) {
                 price.setSelection(i);
             }
         }
@@ -113,6 +137,7 @@ public class EditRestoActivity extends BaseActivity {
     private Resto buildResto() {
         Resto resto = new Resto();
 
+        resto.setId(getIntent().getExtras().getLong("id"));
         resto.setName(name.getText().toString());
 
         if (!phone.getText().toString().isEmpty())
@@ -121,17 +146,18 @@ public class EditRestoActivity extends BaseActivity {
         resto.setEmail(email.getText().toString());
 
         resto.setLink(link.getText().toString());
-        // resto.setAddress(adr.getText().toString());
 
-        //Spinners
-        String genre = ((Spinner) findViewById(R.id.genresSpinner)).getSelectedItem().toString();
-        String pricing = ((Spinner) findViewById(R.id.priceRangeSpinner)).getSelectedItem().toString();
-        resto.setGenre(genre);
-        resto.setPriceRange(pricing);
+        npe.com.restonpe.Beans.Address address = new npe.com.restonpe.Beans.Address();
+        address.setAddress(adr.getText().toString());
+        resto.setAddress(address);
+
+        //Spinners;
+        resto.setGenre(genre.getSelectedItem().toString());
+        resto.setPriceRange(price.getSelectedItem().toString());
 
         // User
-        // resto.setSubmitterName(pref.getString("username", ""));
-        // resto.setSubmitterEmail(pref.getString("emailAdr", ""));
+        resto.setSubmitterName(pref.getString("username", ""));
+        resto.setSubmitterEmail(pref.getString("emailAdr", ""));
 
         return resto;
     }
@@ -146,7 +172,6 @@ public class EditRestoActivity extends BaseActivity {
         boolean isValid = true;
 
         //Name
-        TextInputEditText name = (TextInputEditText) findViewById(R.id.restoName);
         if (name.getText().toString().isEmpty()) {
             isValid = false;
             TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoNameLbl);
@@ -154,11 +179,8 @@ public class EditRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.name_error));
         }
 
-        //Since address is civic + street need to do more extensive validation.
-
         // Address
-        TextInputEditText address = (TextInputEditText) findViewById(R.id.restoAddress);
-        if (address.getText().toString().isEmpty()) {
+        if (adr.getText().toString().isEmpty()) {
             isValid = false;
             TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoAddressLbl);
             temp.setErrorEnabled(true);
@@ -167,42 +189,29 @@ public class EditRestoActivity extends BaseActivity {
 
         // Province
         TextInputEditText province = (TextInputEditText) findViewById(R.id.restoProvince);
-        if (province.getText().toString().isEmpty()) {
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoProvinceLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.province_error));
+        if (!province.getText().toString().isEmpty()) {
+            adr.setText(adr.getText() + ", " + province.getText());
         }
 
         //City
         TextInputEditText city = (TextInputEditText) findViewById(R.id.restoCity);
-        if (city.getText().toString().isEmpty()) {
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCityLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.city_error));
-        }
-
-        // Postal Code
-        TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoPostal);
-        if (postal.getText().toString().isEmpty()) {
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoPostalLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.postal_error));
+        if (!city.getText().toString().isEmpty()) {
+            adr.setText(adr.getText() + ", " + city.getText());
         }
 
         // Country
         TextInputEditText country = (TextInputEditText) findViewById(R.id.restoCountry);
-        if (country.getText().toString().isEmpty()) {
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCountryLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.name_error));
+        if (!country.getText().toString().isEmpty()) {
+            adr.setText(adr.getText() + ", " + country.getText());
+        }
+
+        // Postal Code
+        TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoPostal);
+        if (!postal.getText().toString().isEmpty()) {
+            adr.setText(adr.getText() + ", " + postal.getText());
         }
 
         // Checking if email is in correct format if it is not empty.
-        TextInputEditText email = (TextInputEditText) findViewById(R.id.restoEmail);
         if (!email.getText().toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             isValid = false;
             TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoEmailLbl);
@@ -210,8 +219,8 @@ public class EditRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.email_error));
         }
 
-        if (isValid && !validateAddress())
-            isValid = false;
+        //if (isValid && !validateAddress())
+          //  isValid = false;
 
         return isValid;
     }
