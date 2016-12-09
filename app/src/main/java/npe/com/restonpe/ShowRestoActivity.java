@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,13 +12,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.util.List;
-
-import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.ShowRestoFragment;
-import npe.com.restonpe.Services.RestoNetworkManager;
-import npe.com.restonpe.Zomato.ZomatoRestos;
 import npe.com.restonpe.database.RestoDAO;
 
 /**
@@ -35,6 +28,7 @@ public class ShowRestoActivity extends BaseActivity {
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
     private Context mContext;
+    private ShowRestoFragment fragment;
     private Bundle extras;
 
     /**
@@ -55,7 +49,7 @@ public class ShowRestoActivity extends BaseActivity {
             actionBar.setTitle(R.string.title_activity_show_restos);
         }
 
-        ShowRestoFragment fragment = new ShowRestoFragment();
+        fragment = new ShowRestoFragment();
         createFragments(fragment);
     }
 
@@ -94,38 +88,12 @@ public class ShowRestoActivity extends BaseActivity {
 
         Object submitter = extras.get("submitter");
 
+        // Delete if already added
         if (submitter != null && submitter.toString().length() > 0) {
             RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong("id"));
             Toast.makeText(mContext, R.string.removed, Toast.LENGTH_LONG).show();
         } else {
-            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(mContext) {
-                @Override
-                public void onPostExecute(List<Resto> list) {
-                    if (list != null && list.size() == 1) {
-                        RestoDAO dao = RestoDAO.getDatabase(mContext);
-                        Resto resto = list.get(0);
-                        resto.setSubmitterName("Zomato");
-                        resto.setSubmitterEmail("ZomatoEmail");
-                        dao.addRestaurant(resto);
-                        Toast.makeText(mContext, R.string.added, Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                protected List<Resto> readJson(JsonReader reader) {
-                    Log.i(TAG, "Reading Json response...");
-
-                    try {
-                        ZomatoRestos zomato = new ZomatoRestos(mContext);
-                        return zomato.readRestoInformation(reader);
-                    } catch (IOException e) {
-                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
-                    }
-                    return null;
-                }
-            };
-
-            restoNetworkManager.findRestoInformation(extras.getLong("id"));
+            fragment.addRestoToFavourites();
         }
         item.setVisible(false);
         return super.onOptionsItemSelected(item);

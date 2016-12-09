@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,6 +38,7 @@ public class ShowRestoFragment extends Fragment {
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
     private Activity activity;
+    private Resto resto;
 
     /**
      * Inflates a layout to be the content layout of the ShowRestoActivity.
@@ -97,7 +99,8 @@ public class ShowRestoFragment extends Fragment {
                 @Override
                 public void onPostExecute(List<Resto> list) {
                     if (list.size() > 0) {
-                        displayInformation(list.get(0));
+                        resto = list.get(0);
+                        displayInformation(resto);
                     }
                 }
 
@@ -122,7 +125,8 @@ public class ShowRestoFragment extends Fragment {
                 @Override
                 public void onPostExecute(List<Resto> list) {
                     if (list.size() > 0) {
-                        displayInformation(list.get(0));
+                        resto = list.get(0);
+                        displayInformation(resto);
                     }
                 }
 
@@ -145,11 +149,8 @@ public class ShowRestoFragment extends Fragment {
             // Get resto from local db
             Log.i(TAG, "Getting Resto with id " + local_id + " from local database");
             RestoDAO restoDAO = RestoDAO.getDatabase(activity);
-            Resto resto = restoDAO.getSingleRestaurant(local_id);
-
-            if (resto != null) {
-                displayInformation(resto);
-            }
+            resto = restoDAO.getSingleRestaurant(local_id);
+            displayInformation(resto);
         } else {
             Log.e(TAG, "An error occurred. The given id's are invalid");
         }
@@ -190,5 +191,15 @@ public class ShowRestoFragment extends Fragment {
             ListView listView = (ListView) activity.findViewById(R.id.review_list);
             listView.setAdapter(adapter);
         }
+    }
+
+    public void addRestoToFavourites() {
+        // Get form local db
+        Log.d(TAG, "Adding resto to local database");
+        RestoDAO dao = RestoDAO.getDatabase(activity);
+        resto.setSubmitterName("Zomato");
+        resto.setSubmitterEmail("ZomatoEmail");
+        dao.addRestaurant(resto);
+        Toast.makeText(activity, R.string.added, Toast.LENGTH_LONG).show();
     }
 }
