@@ -30,7 +30,7 @@ import npe.com.restonpe.util.ReviewAdapter;
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
  * @version 1.0
- * @since 01/12/2016
+ * @since 09/12/2016
  */
 public class ShowRestoFragment extends Fragment {
 
@@ -79,6 +79,9 @@ public class ShowRestoFragment extends Fragment {
         getRestaurant(local_id, zomato_id, heroku_id);
     }
 
+    /**
+     * Updates the views in case the resto object has been modified.
+     */
     @Override
     public void onResume() {
         super.onResume();

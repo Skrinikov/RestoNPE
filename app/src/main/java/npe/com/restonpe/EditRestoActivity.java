@@ -1,8 +1,10 @@
 package npe.com.restonpe;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.location.Address;
 import android.location.Location;
@@ -17,21 +19,26 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
-import android.widget.Toast;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.database.RestoDAO;
-import npe.com.restonpe.util.RestoAdapter;
 
+/**
+ * @author Uen yi Cindy Hung
+ * @version 1.0
+ * @Since 09/12/2016
+ */
 public class EditRestoActivity extends BaseActivity {
     private final String TAG = "EditRestoActivity";
-    private EditText name, phone, email, link, adr;
+    private EditText name, phone, email, link, adr, city, province, country, postal;
     private Spinner genre, price;
     private SpinnerAdapter genreAdapter, priceAdapter;
     private Button submitResto;
     private SharedPreferences pref;
+    private Resto resto;
+    private String[] restoGenre;
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -71,15 +78,21 @@ public class EditRestoActivity extends BaseActivity {
 
     private void setupData() {
         RestoDAO dao = RestoDAO.getDatabase(this);
-        Resto resto = dao.getSingleRestaurant(getIntent().getExtras().getLong("id"));
+        resto = dao.getSingleRestaurant(getIntent().getExtras().getLong("id"));
 
         name = (EditText) findViewById(R.id.restoName);
         phone = (EditText) findViewById(R.id.restoPhone);
         email = (EditText) findViewById(R.id.restoEmail);
         link = (EditText) findViewById(R.id.restoLink);
         adr = (EditText) findViewById(R.id.restoAddress);
+        city = (EditText) findViewById(R.id.restoCity);
+        province = (EditText) findViewById(R.id.restoProvince);
+        country = (EditText) findViewById(R.id.restoCountry);
+        postal = (EditText) findViewById(R.id.restoPostal);
+
         genre = (Spinner) findViewById(R.id.genresSpinner);
         price = (Spinner) findViewById(R.id.priceRangeSpinner);
+
         submitResto = (Button) findViewById(R.id.submitResto);
 
         name.setText(resto.getName());
@@ -93,7 +106,7 @@ public class EditRestoActivity extends BaseActivity {
         submitResto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(validateInputFields()){
+                if (validateInputFields()) {
                     Resto resto = buildResto();
 
                     RestoDAO db = RestoDAO.getDatabase(EditRestoActivity.this);
@@ -110,13 +123,24 @@ public class EditRestoActivity extends BaseActivity {
         int genreSize = genreAdapter.getCount();
         int priceSize = priceAdapter.getCount();
 
+        // Because Zomato resto may contain more than one cuisine
+        if (resto.getGenre().contains(",")) {
+            if (resto.getGenre().indexOf(',') > 0) {
+                restoGenre = resto.getGenre().split(",");
+            }
+        } else {
+            restoGenre = new String[]{resto.getGenre()};
+        }
+
         for (int i = 0; i < genreSize; i++) {
-            int comma = resto.getGenre().indexOf(',') > 0 ? resto.getGenre().indexOf(',') : resto.getGenre().length();
-            String cuisine = resto.getGenre().substring(0, comma);
-            if (genreAdapter.getItem(i).toString().contains(cuisine)) {
-                genre.setSelection(i);
+            for (String cuisine : restoGenre) {
+                if (genreAdapter.getItem(i).toString().contains(cuisine.trim())) {
+                    genre.setSelection(i);
+                    break;
+                }
             }
         }
+
 
         for (int i = 0; i < priceSize; i++) {
             if (priceAdapter.getItem(i).equals(resto.getPriceRange())) {
@@ -184,25 +208,21 @@ public class EditRestoActivity extends BaseActivity {
         }
 
         // Province
-        TextInputEditText province = (TextInputEditText) findViewById(R.id.restoProvince);
         if (!province.getText().toString().isEmpty()) {
             adr.setText(adr.getText() + ", " + province.getText());
         }
 
         //City
-        TextInputEditText city = (TextInputEditText) findViewById(R.id.restoCity);
         if (!city.getText().toString().isEmpty()) {
             adr.setText(adr.getText() + ", " + city.getText());
         }
 
         // Country
-        TextInputEditText country = (TextInputEditText) findViewById(R.id.restoCountry);
         if (!country.getText().toString().isEmpty()) {
             adr.setText(adr.getText() + ", " + country.getText());
         }
 
         // Postal Code
-        TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoPostal);
         if (!postal.getText().toString().isEmpty()) {
             adr.setText(adr.getText() + ", " + postal.getText());
         }
@@ -215,59 +235,91 @@ public class EditRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.email_error));
         }
 
-        //if (isValid && !validateAddress())
-          //  isValid = false;
-
         return isValid;
     }
 
     /**
-     * Validates only the address using the RestoLocationManager. If it is valid stores the Location
-     * in an instance variable.
-     *
-     * @return true if the address is valid and was found.
+     * Looks to see if the user has entered any data into any of the input fields of the activity.
+     * If the back button is pressed while there is still any information in the fields it will
+     * warn him that all data will be lost.
      */
-    private boolean validateAddress() {
-        Log.d(TAG, "ValidateAddress");
-        String address = ((EditText) findViewById(R.id.restoAddress)).getText().toString();
-        String city = ((EditText) findViewById(R.id.restoCity)).getText().toString();
-        String province = ((EditText) findViewById(R.id.restoProvince)).getText().toString();
-        String country = ((EditText) findViewById(R.id.restoCountry)).getText().toString();
-        String postal = ((EditText) findViewById(R.id.restoPostal)).getText().toString();
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed called");
+        boolean isEmpty = checkIfInputsAreEmpty();
 
+        // There is unsaved data.
+        if (!isEmpty) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.unsaved));
+            builder.setMessage(getString(R.string.not_saved));
 
-        RestoLocationManager lm = new RestoLocationManager(this) {
-            @Override
-            public void onLocationChanged(Location location) {
-                // Is not used.
-            }
-        };
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                /**
+                 * Call finish() on the activity where reside the dialog, which will also
+                 * discard unsaved data.
+                 *
+                 * @param dialog The dialog that is currently shown / the on pressed on.
+                 * @param which The button pressed.
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
 
-        Address addr = lm.getLocationFromName(postal.toUpperCase());
-        String addressString = address + ", " + city + ", " + province + ", " + country;
-        if (addr == null) {
-            Log.d(TAG, "Did not find address with Postal code");
-            addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
-            if (addr == null) {
-                Log.d(TAG, "Did not find address with all variables");
+            builder.setNegativeButton(R.string.no, null);
+
+            Dialog dialog = builder.create();
+            dialog.show();
+        } else {
+            //No unsaved data.
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * Checks if any of the input fields have a user defined value in them.
+     * If any of the input fields has a changed value, it will return false.
+     *
+     * @return boolean representing if the inputs are empty.
+     */
+    private boolean checkIfInputsAreEmpty() {
+        Log.d(TAG, "checkIfInputsAreEmpty called");
+
+        if (!name.getText().toString().equals(resto.getName()))
+            return false;
+        if (!adr.getText().toString().trim().equals(resto.getAddress().getAddress()))
+            return false;
+        if (!city.getText().toString().isEmpty())
+            return false;
+        if (!province.getText().toString().isEmpty())
+            return false;
+        if (!country.getText().toString().isEmpty())
+            return false;
+        if (!postal.getText().toString().isEmpty())
+            return false;
+        if(!(phone.getText().toString().isEmpty() && resto.getPhone() < 1)) {
+            if (!phone.getText().toString().equals(String.valueOf(resto.getPhone())))
                 return false;
+        }
+        if (!email.getText().toString().equals(resto.getEmail()))
+            return false;
+        if (!link.getText().toString().equals(resto.getLink()))
+            return false;
+        if (!price.getSelectedItem().toString().equals(resto.getPriceRange()))
+            return false;
+
+
+        boolean nochangeGenre = false;
+        for (String cuisine : restoGenre) {
+            if (genre.getSelectedItem().toString().contains(cuisine.trim())) {
+                Log.d(TAG, "In the cuisine check");
+                nochangeGenre = true;
+                break;
             }
         }
 
-        // Should have named the address bean something else :/
-       /* restoAddress = new npe.com.restonpe.Beans.Address();
-        restoAddress.setLatitude(addr.getLatitude());
-        restoAddress.setLongitude(addr.getLongitude());
-        restoAddress.setCity(city);
-        restoAddress.setAddress(addressString);
-        restoAddress.setPostal(postal);
-        restoAddress.setCountry(country);
-        restoAddress.setProvince(province);
-        Log.d(TAG, "latitude: " + addr.getLatitude());
-        Log.d(TAG, "longitude: " + addr.getLongitude());
-*/
-
-        return true;
-
+        return nochangeGenre;
     }
 }

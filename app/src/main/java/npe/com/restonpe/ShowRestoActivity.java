@@ -23,7 +23,7 @@ import npe.com.restonpe.database.RestoDAO;
  * Creates an instance of the ShowResto Activity. This {@code Activity} will allow the user to
  * view details of a restaurant.
  *
- * @author Jeegna Patel
+ * @author Jeegna Patel, Uen Yi Cindy Hung
  * @version 1.0
  * @since 07/12/2016
  */
@@ -99,7 +99,6 @@ public class ShowRestoActivity extends BaseActivity {
             Intent intent = new Intent(this, EditRestoActivity.class);
             intent.putExtra("id", fragment.getRestoID());
             startActivity(intent);
-            Toast.makeText(this, "mod", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
