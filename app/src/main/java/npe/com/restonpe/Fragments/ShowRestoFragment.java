@@ -35,7 +35,7 @@ import npe.com.restonpe.util.ReviewAdapter;
 public class ShowRestoFragment extends Fragment {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
-
+    private Bundle bundle;
     private ShowRestoActivity activity;
     private Resto resto;
 
@@ -69,7 +69,19 @@ public class ShowRestoFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         activity = (ShowRestoActivity) getActivity();
 
-        Bundle bundle = activity.getIntent().getExtras();
+        bundle = activity.getIntent().getExtras();
+
+        long local_id = bundle.getLong(RestoAdapter.LOCAL_ID);
+        long zomato_id = bundle.getLong(RestoAdapter.ZOMATO_ID);
+        long heroku_id = bundle.getLong(RestoAdapter.HEROKU_ID);
+
+        // Get nearby restaurants
+        getRestaurant(local_id, zomato_id, heroku_id);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         long local_id = bundle.getLong(RestoAdapter.LOCAL_ID);
         long zomato_id = bundle.getLong(RestoAdapter.ZOMATO_ID);
@@ -235,10 +247,9 @@ public class ShowRestoFragment extends Fragment {
     }
 
     /**
-     *
      * @return long the resto id.
      */
-    public long getRestoID(){
+    public long getRestoID() {
         return this.resto.getId();
     }
 }

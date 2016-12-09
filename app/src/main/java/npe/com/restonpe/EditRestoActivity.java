@@ -99,10 +99,7 @@ public class EditRestoActivity extends BaseActivity {
                     RestoDAO db = RestoDAO.getDatabase(EditRestoActivity.this);
                     db.updateRestaurant(resto);
 
-                    Intent intent = new Intent(EditRestoActivity.this, ShowRestoActivity.class);
-                    intent.putExtra(RestoAdapter.LOCAL_ID, resto.getId());
-
-                    startActivity(intent);
+                    finish();
                 }
             }
         });
