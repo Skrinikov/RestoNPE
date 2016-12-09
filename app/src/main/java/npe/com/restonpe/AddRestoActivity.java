@@ -28,9 +28,8 @@ import npe.com.restonpe.util.RestoAdapter;
  * the proper needed information.
  *
  * @author Danieil Skirnikov
- * @since 30/11/2016
  * @version 1.0
- *
+ * @since 30/11/2016
  */
 public class AddRestoActivity extends BaseActivity {
 
@@ -70,58 +69,60 @@ public class AddRestoActivity extends BaseActivity {
     /**
      * Method is invoked every time the user clicks the add resto button. Validates that all the required
      * fields are set, and if they are adds the restaurant to the local database.
-     *
+     * <p>
      * TODO use async task later to message the server to add the resto.
      *
      * @param view The view upon which the event was called
      */
-    public void addRestaurant(View view){
-        Log.d(TAG,"addRestaurant()");
+    public void addRestaurant(View view) {
+        Log.d(TAG, "addRestaurant()");
 
-        if(validateInputFields()){
+        if (validateInputFields()) {
             Resto resto = buildResto();
             RestoDAO db = RestoDAO.getDatabase(this);
             long addedRestoId = db.addRestaurant(resto);
-            Log.i(TAG,"Restaurant added with id " + addedRestoId);
+            resto.setId(addedRestoId);
+            Log.i(TAG, "Restaurant added with id " + addedRestoId);
 
             Intent intent = new Intent(this, ShowRestoActivity.class);
-            intent.putExtra(RestoAdapter.ID, addedRestoId);
+            intent.putExtra(RestoAdapter.LOCAL_ID, addedRestoId);
 
             startActivity(intent);
         }
 
-        Log.i(TAG,"addRestaurant()");
+        Log.i(TAG, "addRestaurant()");
     }
 
     /**
      * Creates a Resto bean using the information from the gui.
+     *
      * @return resto bean with all available information.
      */
     private Resto buildResto() {
         Resto resto = new Resto();
 
-        String name = ((EditText)findViewById(R.id.restoName)).getText().toString();
+        String name = ((EditText) findViewById(R.id.restoName)).getText().toString();
         Log.d(TAG, name);
         resto.setName(name);
-        Log.d(TAG, "Returned: "+resto.getName());
-        String phone = ((EditText)findViewById(R.id.restoPhone)).getText().toString();
-        if(!phone.isEmpty())
+        Log.d(TAG, "Returned: " + resto.getName());
+        String phone = ((EditText) findViewById(R.id.restoPhone)).getText().toString();
+        if (!phone.isEmpty())
             resto.setPhone(Long.parseLong(phone));
-        String email = ((EditText)findViewById(R.id.restoEmail)).getText().toString();
+        String email = ((EditText) findViewById(R.id.restoEmail)).getText().toString();
         resto.setEmail(email);
-        String link = ((EditText)findViewById(R.id.restoLink)).getText().toString();
+        String link = ((EditText) findViewById(R.id.restoLink)).getText().toString();
         resto.setLink(link);
         resto.setAddress(restoAddress);
 
         //Spinners
-        String genre = ((Spinner)findViewById(R.id.genresSpinner)).getSelectedItem().toString();
-        String pricing = ((Spinner)findViewById(R.id.priceRangeSpinner)).getSelectedItem().toString();
+        String genre = ((Spinner) findViewById(R.id.genresSpinner)).getSelectedItem().toString();
+        String pricing = ((Spinner) findViewById(R.id.priceRangeSpinner)).getSelectedItem().toString();
         resto.setGenre(genre);
         resto.setPriceRange(pricing);
 
         // User
-        resto.setSubmitterName(pref.getString("username",""));
-        resto.setSubmitterEmail(pref.getString("emailAdr",""));
+        resto.setSubmitterName(pref.getString("username", ""));
+        resto.setSubmitterEmail(pref.getString("emailAdr", ""));
 
         return resto;
     }
@@ -137,9 +138,9 @@ public class AddRestoActivity extends BaseActivity {
 
         //Name
         TextInputEditText name = (TextInputEditText) findViewById(R.id.restoName);
-        if(name.getText().toString().isEmpty()){
+        if (name.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoNameLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoNameLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.name_error));
         }
@@ -148,59 +149,59 @@ public class AddRestoActivity extends BaseActivity {
 
         // Address
         TextInputEditText address = (TextInputEditText) findViewById(R.id.restoAddress);
-        if(address.getText().toString().isEmpty()){
+        if (address.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoAddressLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoAddressLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.address_error));
         }
 
         // Province
         TextInputEditText province = (TextInputEditText) findViewById(R.id.restoProvince);
-        if(province.getText().toString().isEmpty()){
+        if (province.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoProvinceLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoProvinceLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.province_error));
         }
 
         //City
         TextInputEditText city = (TextInputEditText) findViewById(R.id.restoCity);
-        if(city.getText().toString().isEmpty()){
+        if (city.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoCityLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCityLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.city_error));
         }
 
         // Postal Code
         TextInputEditText postal = (TextInputEditText) findViewById(R.id.restoPostal);
-        if(postal.getText().toString().isEmpty()){
+        if (postal.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoPostalLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoPostalLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.postal_error));
         }
 
         // Country
         TextInputEditText country = (TextInputEditText) findViewById(R.id.restoCountry);
-        if(country.getText().toString().isEmpty()){
+        if (country.getText().toString().isEmpty()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoCountryLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCountryLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.name_error));
         }
 
         // Checking if email is in correct format if it is not empty.
         TextInputEditText email = (TextInputEditText) findViewById(R.id.restoEmail);
-        if(!email.getText().toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()){
+        if (!email.getText().toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             isValid = false;
-            TextInputLayout temp = (TextInputLayout)findViewById(R.id.restoEmailLbl);
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoEmailLbl);
             temp.setErrorEnabled(true);
             temp.setError(getString(R.string.email_error));
         }
 
-        if(isValid && !validateAddress())
+        if (isValid && !validateAddress())
             isValid = false;
 
         return isValid;
@@ -214,11 +215,11 @@ public class AddRestoActivity extends BaseActivity {
      */
     private boolean validateAddress() {
         Log.d(TAG, "ValidateAddress");
-        String address = ((EditText)findViewById(R.id.restoAddress)).getText().toString();
-        String city =((EditText)findViewById(R.id.restoCity)).getText().toString();
-        String province =((EditText)findViewById(R.id.restoProvince)).getText().toString();
-        String country = ((EditText)findViewById(R.id.restoCountry)).getText().toString();
-        String postal = ((EditText)findViewById(R.id.restoPostal)).getText().toString();
+        String address = ((EditText) findViewById(R.id.restoAddress)).getText().toString();
+        String city = ((EditText) findViewById(R.id.restoCity)).getText().toString();
+        String province = ((EditText) findViewById(R.id.restoProvince)).getText().toString();
+        String country = ((EditText) findViewById(R.id.restoCountry)).getText().toString();
+        String postal = ((EditText) findViewById(R.id.restoPostal)).getText().toString();
 
 
         RestoLocationManager lm = new RestoLocationManager(this) {
@@ -230,11 +231,11 @@ public class AddRestoActivity extends BaseActivity {
 
         Address addr = lm.getLocationFromName(postal.toUpperCase());
 
-        if(addr == null) {
-            Log.d(TAG,"Did not find address with Postal code");
-            addr = lm.getLocationFromName(address+", "+city+" "+province+", "+country);
-            if(addr == null){
-                Log.d(TAG,"Did not find address with all variables");
+        if (addr == null) {
+            Log.d(TAG, "Did not find address with Postal code");
+            addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
+            if (addr == null) {
+                Log.d(TAG, "Did not find address with all variables");
                 return false;
             }
         }
@@ -248,8 +249,8 @@ public class AddRestoActivity extends BaseActivity {
         restoAddress.setPostal(postal);
         restoAddress.setCountry(country);
         restoAddress.setProvince(province);
-        Log.d(TAG, "latitude: "+addr.getLatitude());
-        Log.d(TAG, "longitude: "+addr.getLongitude());
+        Log.d(TAG, "latitude: " + addr.getLatitude());
+        Log.d(TAG, "longitude: " + addr.getLongitude());
 
 
         return true;

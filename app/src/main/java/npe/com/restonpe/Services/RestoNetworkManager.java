@@ -42,6 +42,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_NEAR_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/restos?lat=%1$s&long=%2$s";
     // The URL to hit for finding reviews from Heroku with a placeholder for the restaurant id
     private static final String RESTO_REVIEW_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews?id=%1$s";
+    // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
+    private static final String RESTO_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/details?id=%1$s";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -97,7 +99,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
                 }
             }
         } catch (IOException e) {
-            Log.w(TAG, "An IOException occurred while reading the JSON file: " + e.getMessage());
+            Log.e(TAG, "An IOException occurred while reading the JSON file: " + e.getMessage());
         }
 
         return list;
@@ -136,6 +138,29 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
 
         try {
             URL heroku = new URL(herokuURL);
+
+            Log.i(TAG, "Hitting " + herokuURL);
+
+            execute(heroku);
+        } catch (MalformedURLException e) {
+            Log.e(TAG, "Malformed URL: " + herokuURL);
+        }
+    }
+
+    /**
+     * A convenience method for finding specific information on the restaurant with the given id
+     * from Heroku
+     *
+     * @param id The id of the restaurant whose information is to be found
+     */
+    public void findRestoInformationFromHeroku(long id) {
+        // Add latitude and longitude to url
+        String herokuURL = String.format(RESTO_URL_HEROKU, id);
+
+        try {
+            URL heroku = new URL(herokuURL);
+
+            Log.i(TAG, "Hitting " + herokuURL);
 
             execute(heroku);
         } catch (MalformedURLException e) {

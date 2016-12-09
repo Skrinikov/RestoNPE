@@ -119,6 +119,7 @@
     <string name="search_name">Name</string>
     <string name="search_city">City</string>
     <string name="search_cuisines">Cuisine</string>
+    <string name="search_no_cuisines">No Cuisines Found</string>
     <string name="search_button">Search</string>
     <string name="currency">$</string>
 
@@ -134,4 +135,8 @@
     <string name="review_likes">Likes: %1$f</string>
     <string name="review_rating">Rating: %1$f</string>
 
+    <!--RestoAdapter id codes-->
+    <string name="local_id_code">local id</string>
+    <string name="zomato_id_code">zomato id</string>
+    <string name="heroku_id_code">heroku id</string>
 </resources>

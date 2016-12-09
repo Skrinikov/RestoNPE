@@ -261,7 +261,7 @@ public class ZomatoRestos {
         String addressString = map.get(RESTO_LOCATION_ADDRESS);
 
         if (id != null) {
-            resto.setId(Integer.parseInt(id));
+            resto.setZomatoId(Integer.parseInt(id));
         }
         if (phone != null) {
             resto.setPhone(Long.parseLong(phone));
@@ -305,7 +305,7 @@ public class ZomatoRestos {
         String address = map.get(RESTO_LOCATION_ADDRESS);
 
         if (id != null) {
-            resto.setId(Integer.parseInt(id));
+            resto.setZomatoId(Integer.parseInt(id));
         }
         if (phone != null) {
             resto.setPhone(Long.parseLong(phone));

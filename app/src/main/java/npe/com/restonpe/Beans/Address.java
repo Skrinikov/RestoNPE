@@ -42,8 +42,7 @@ public class Address {
     }
 
     /**
-     * Sets the address. The format of the address should be: civic address Street name, City,
-     * Province/State Postal/ZIP code
+     * Sets the address. The format of the address should be: civic address suite Street name.
      * @param address
      */
     public void setAddress(String address) {

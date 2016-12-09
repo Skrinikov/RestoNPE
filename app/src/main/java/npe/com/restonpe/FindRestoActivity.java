@@ -86,8 +86,8 @@ public class FindRestoActivity extends BaseActivity {
         if (city.isEmpty()) {
             city = null;
         }
-        if (cuisine != null && cuisine.getName().equals(getString(R.string.search_cuisines))) {
-            // The user selected default cuisine, and therefore does not want to search with cuisine
+        if (cuisine != null && cuisine.getName().equals(getString(R.string.search_cuisines)) && cuisine.getName().equals(getString(R.string.search_no_cuisines))) {
+            // The user selected default cuisine or no cuisines, and therefore does not want to search with cuisine
             cuisine = null;
         }
 
@@ -97,13 +97,20 @@ public class FindRestoActivity extends BaseActivity {
         RestoNetworkManager<RestoItem> restoNetworkManager = new RestoNetworkManager<RestoItem>(mContext) {
             @Override
             public void onPostExecute(List<RestoItem> list) {
+                ListView listView = (ListView) findViewById(R.id.find_list);
                 if (list != null && list.size() > 0) {
-                    ListView listView = (ListView) findViewById(R.id.find_list);
+                    if (localDBRestos != null) {
+                        // Add local db RestoItems to beginning of list
+                        list.addAll(0, localDBRestos);
+                    }
 
-                    // Add local db RestoItems to beginning of list
-                    list.addAll(0, localDBRestos);
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude);
+                    listView.setAdapter(adapter);
+                } else if (localDBRestos != null && localDBRestos.size() > 0) {
+                    // Only use local db results
+                    list = localDBRestos;
 
-                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude, true);
+                    RestoAdapter adapter = new RestoAdapter(mContext, list, userLongitude, userLatitude);
                     listView.setAdapter(adapter);
                 } else {
                     // Tell user there were no results

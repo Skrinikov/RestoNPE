@@ -121,7 +121,7 @@ public class NearRestoFragment extends Fragment {
                             allRestos.addAll(herokuRestos);
                             ListView listView = (ListView) activity.findViewById(R.id.near_list);
 
-                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude, true);
+                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude);
                             listView.setAdapter(adapter);
                         }
                     }
@@ -153,7 +153,7 @@ public class NearRestoFragment extends Fragment {
                             allRestos.addAll(herokuRestos);
                             ListView listView = (ListView) activity.findViewById(R.id.near_list);
 
-                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude, true);
+                            RestoAdapter adapter = new RestoAdapter(activity, allRestos, longitude, latitude);
                             listView.setAdapter(adapter);
                         }
                     }
@@ -165,7 +165,7 @@ public class NearRestoFragment extends Fragment {
 
                     try {
                         Log.i(TAG, "Json response came from Heroku");
-                        HerokuRestos herokuRestos = new HerokuRestos(activity);
+                        HerokuRestos herokuRestos = new HerokuRestos();
                         return herokuRestos.readRestoJson(reader);
                     } catch (IOException e) {
                         Log.i(TAG, "An IO exception occurred: " + e.getMessage());

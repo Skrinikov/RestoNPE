@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import java.util.List;
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.RestoItem;
 import npe.com.restonpe.FavRestoActivity;
+import npe.com.restonpe.Heroku.HerokuRestos;
 import npe.com.restonpe.R;
 import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
@@ -38,15 +40,16 @@ import npe.com.restonpe.database.RestoDAO;
  * @since 05/12/2016
  */
 public class RestoAdapter extends BaseAdapter {
-    public static final String ID = "id";
-    public static final String IS_ZOMATO_ID = "isZomatoId";
+    public static final String LOCAL_ID = "local_id";
+    public static final String ZOMATO_ID = "zomato_id";
+    public static final String HEROKU_ID = "heroku_id";
+
     private static final String SUBMITTER = "submitter";
     private static final String TAG = RestoAdapter.class.getSimpleName();
     private static LayoutInflater inflater = null;
     private final Context context;
     private List<RestoItem> list;
     private double longitude, latitude;
-    private boolean isZomatoId;
 
     /**
      * Constructor that will keep a reference to the given parameter and parse the
@@ -58,10 +61,8 @@ public class RestoAdapter extends BaseAdapter {
      *                   latitude will be set to -1.
      * @param latitude   The current latitude location. If {@code null} or empty string, the
      *                   longitude will be set to -1.
-     * @param isZomatoId {@code True} if the list of RestoItem's comes from the Zomato API, {@code
-     *                   False} if the list comes from the local database.
      */
-    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude, boolean isZomatoId) {
+    public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
         this.context = context;
         this.list = list;
         if ((latitude != null && longitude != null) && (!latitude.isEmpty() && !longitude.isEmpty())) {
@@ -71,7 +72,6 @@ public class RestoAdapter extends BaseAdapter {
             this.longitude = -1;
             this.latitude = -1;
         }
-        this.isZomatoId = isZomatoId;
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
@@ -134,10 +134,15 @@ public class RestoAdapter extends BaseAdapter {
                     (list.get(position).getLatitude(), list.get(position).getLongitude(), latitude, longitude);
         }
 
-        // Put id of RestoItem into list item so that it may be retrieved later when ShowRestoActivity is created
-        rowView.setTag(list.get(position).getId());
-        name.setText(list.get(position).getName());
-        price.setText(list.get(position).getPriceRange());
+        RestoItem item = list.get(position);
+
+        // Put id's into list item so that it may be retrieved later when ShowRestoActivity is created
+        rowView.setTag(R.string.local_id_code, item.getId());
+        rowView.setTag(R.string.zomato_id_code, item.getZomatoId());
+        rowView.setTag(R.string.heroku_id_code, item.getHerokuId());
+
+        name.setText(item.getName());
+        price.setText(item.getPriceRange());
         distance.setText(String.format("%.1f km", calculated_distance));
 
         if (FavRestoActivity.class == context.getClass()) {
@@ -158,7 +163,13 @@ public class RestoAdapter extends BaseAdapter {
      * @param addResto the View to contain the handler.
      */
     private void setAddRestoListener(ImageView addResto) {
-        Log.d(TAG, "setAddRestoListener called");
+//        Log.d(TAG, "setAddRestoListener called");
+
+        LinearLayout parent = (LinearLayout) addResto.getParent();
+        final long localId = (long) parent.getTag(R.string.local_id_code);
+        final long zomatoId = (long) parent.getTag(R.string.zomato_id_code);
+        final long herokuId = (long) parent.getTag(R.string.heroku_id_code);
+
         addResto.setOnClickListener(new View.OnClickListener() {
             /**
              * Event handler that will add or remove the clicked item's row to the
@@ -170,46 +181,87 @@ public class RestoAdapter extends BaseAdapter {
             public void onClick(View v) {
                 Log.d(TAG, "setAddRestoListener - onClick called");
 
+                // Remove from favourites if the current Activity running is the Favourite's Activity
                 if (FavRestoActivity.class == context.getClass()) {
-                    View row = (View) v.getParent();
-                    Log.d(TAG, "id to remove is: " + row.getTag());
-                    RestoDAO.getDatabase(context).deleteRestaurant(Long.valueOf(row.getTag().toString()));
+                    Log.d(TAG, "ID to remove is: " + localId);
+                    RestoDAO.getDatabase(context).deleteRestaurant(localId);
                     Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
                     ((FavRestoActivity) context).updateDbList();
                 } else {
-                    Log.d(TAG, "setAddRestoListener - onClick: before Zomato");
-                    RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {
-                        @Override
-                        public void onPostExecute(List<Resto> list) {
-                            if (list.size() == 1) {
-                                RestoDAO dao = RestoDAO.getDatabase(context);
-                                Resto resto = list.get(0);
-                                resto.setSubmitterName("Zomato");
-                                resto.setSubmitterEmail("ZomatoEmail");
-                                dao.addRestaurant(resto);
-                                Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
+                    // Add to favourites list
+                    // Find Resto information
+                    if (zomatoId > 0) {
+                        // Get from Zomato
+                        Log.d(TAG, "Adding resto with id " + zomatoId + " from Zomato");
+                        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {
+                            @Override
+                            public void onPostExecute(List<Resto> list) {
+                                if (list.size() == 1) {
+                                    RestoDAO dao = RestoDAO.getDatabase(context);
+                                    Resto resto = list.get(0);
+                                    resto.setSubmitterName("Zomato");
+                                    resto.setSubmitterEmail("ZomatoEmail");
+                                    dao.addRestaurant(resto);
+                                    Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
+                                }
                             }
-                        }
 
-                        @Override
-                        protected List<Resto> readJson(JsonReader reader) {
-                            Log.i(TAG, "Reading Json response...");
+                            @Override
+                            protected List<Resto> readJson(JsonReader reader) {
+                                Log.i(TAG, "Reading Json response...");
 
-                            try {
-                                ZomatoRestos zomatoRestos = new ZomatoRestos(context);
-                                return zomatoRestos.readRestoInformation(reader);
-                            } catch (IOException e) {
-                                Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                                try {
+                                    ZomatoRestos zomatoRestos = new ZomatoRestos(context);
+                                    return zomatoRestos.readRestoInformation(reader);
+                                } catch (IOException e) {
+                                    Log.e(TAG, "An IO exception occurred: " + e.getMessage());
+                                }
+                                return null;
                             }
-                            return null;
-                        }
-                    };
+                        };
 
+                        restoNetworkManager.findRestoInformation(zomatoId);
+                    } else if (herokuId > 0) {
+                        // Get from Heroku
+                        Log.d(TAG, "Adding resto with id " + herokuId + " from Heroku");
+                        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(context) {
+                            @Override
+                            public void onPostExecute(List<Resto> list) {
+                                if (list.size() == 1) {
+                                    RestoDAO dao = RestoDAO.getDatabase(context);
+                                    Resto resto = list.get(0);
+                                    resto.setSubmitterName("Zomato");
+                                    resto.setSubmitterEmail("ZomatoEmail");
+                                    dao.addRestaurant(resto);
+                                    Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                    Log.d(TAG, "view's id is " + ((View) v.getParent()).getTag());
-                    Log.d(TAG, "setAddRestoListener - onClick: before Zomato find");
-                    restoNetworkManager.findRestoInformation((long) ((View) v.getParent()).getTag());
-                    Log.d(TAG, "setAddRestoListener - onClick: after Zomato find");
+                            @Override
+                            protected List<Resto> readJson(JsonReader reader) {
+                                Log.i(TAG, "Reading Json response...");
+
+                                try {
+                                    HerokuRestos herokuRestos = new HerokuRestos();
+                                    return herokuRestos.readRestoInformation(reader);
+                                } catch (IOException e) {
+                                    Log.e(TAG, "An IO exception occurred: " + e.getMessage());
+                                }
+                                return null;
+                            }
+                        };
+
+                        restoNetworkManager.findRestoInformationFromHeroku(herokuId);
+                    } else if (localId > 0) {
+                        // Get form local db
+                        Log.d(TAG, "Adding resto with id " + localId + " from local database");
+                        RestoDAO dao = RestoDAO.getDatabase(context);
+                        Resto resto = dao.getSingleRestaurant(localId);
+                        resto.setSubmitterName("Zomato");
+                        resto.setSubmitterEmail("ZomatoEmail");
+                        dao.addRestaurant(resto);
+                        Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
+                    }
                 }
             }
         });
@@ -222,7 +274,7 @@ public class RestoAdapter extends BaseAdapter {
      * @param position The item index
      */
     private void setRowViewListener(View rowView, final int position) {
-        Log.d(TAG, "setRowViewListener called");
+//        Log.d(TAG, "setRowViewListener called");
 
         rowView.setOnClickListener(new View.OnClickListener() {
             /**
@@ -239,10 +291,27 @@ public class RestoAdapter extends BaseAdapter {
                 Log.d(TAG, "setRowViewListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowRestoActivity.class);
 
-                long id = (long) v.getTag();
-                Log.i(TAG, "Putting id of " + id + " in extras");
-                intent.putExtra(ID, id);
-                intent.putExtra(IS_ZOMATO_ID, isZomatoId);
+                String key = "error";
+                long id = -1;
+                long localId = (long) v.getTag(R.string.local_id_code);
+                long zomatoId = (long) v.getTag(R.string.zomato_id_code);
+                long herokuId = (long) v.getTag(R.string.heroku_id_code);
+
+                if (zomatoId > 0) {
+                    Log.i(TAG, "Putting Zomato id " + zomatoId + " in extras");
+                    key = ZOMATO_ID;
+                    id = zomatoId;
+                } else if (herokuId > 0) {
+                    Log.i(TAG, "Putting Heroku id " + herokuId + " in extras");
+                    key = HEROKU_ID;
+                    id = herokuId;
+                } else if (localId > 0) {
+                    Log.i(TAG, "Putting local id " + localId + " in extras");
+                    key = LOCAL_ID;
+                    id = localId;
+                }
+
+                intent.putExtra(key, id);
 
                 Resto resto = RestoDAO.getDatabase(context).getSingleRestaurant(id);
                 if (resto.getSubmitterName() != null) {

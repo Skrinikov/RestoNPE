@@ -37,7 +37,7 @@ public class AddRestoFragment extends Fragment {
      * Is called whenever the add resto activity is created. Populates the spinners with data from
      * the string-arrays.
      *
-     * @param savedInstanceState
+     * @param savedInstanceState bundle where values are stored.
      */
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

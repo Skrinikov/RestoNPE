@@ -16,6 +16,7 @@ import java.util.List;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.Review;
+import npe.com.restonpe.Heroku.HerokuRestos;
 import npe.com.restonpe.R;
 import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
@@ -69,26 +70,33 @@ public class ShowRestoFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        long id = bundle.getLong(RestoAdapter.ID);
-        boolean isZomatoId = bundle.getBoolean(RestoAdapter.IS_ZOMATO_ID);
-
+        long local_id = bundle.getLong(RestoAdapter.LOCAL_ID);
+        long zomato_id = bundle.getLong(RestoAdapter.ZOMATO_ID);
+        long heroku_id = bundle.getLong(RestoAdapter.HEROKU_ID);
 
         // Get nearby restaurants
-        getRestaurant(id, isZomatoId);
+        getRestaurant(local_id, zomato_id, heroku_id);
     }
 
     /**
      * Gets the information of the restaurant with the given id.
      *
-     * @param id The id of the restaurant whose information is to be retrieved.
+     * @param local_id  The local database id of the restaurant whose information is to be retrieved.
+     * @param zomato_id The Zomato id of the restaurant whose information is to be retrieved.
+     * @param heroku_id The Heroku id of the restaurant whose information is to be retrieved.
      */
-    // FIXME does not show correct info if showing from heroku.
-    private void getRestaurant(long id, boolean isZomatoId) {
-        if (isZomatoId) {
-            RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(activity) {
+    private void getRestaurant(long local_id, long zomato_id, long heroku_id) {
+        Log.d(TAG, "Local id: " + local_id);
+        Log.d(TAG, "Zomato id: " + zomato_id);
+        Log.d(TAG, "Heroku id: " + heroku_id);
+
+        if (zomato_id > 0) {
+            // Get resto from Zomato
+            Log.i(TAG, "Getting Resto with id " + zomato_id + " from Zomato");
+            RestoNetworkManager<Resto> zomatoNetworkManager = new RestoNetworkManager<Resto>(activity) {
                 @Override
                 public void onPostExecute(List<Resto> list) {
-                    if (list.size() == 1) {
+                    if (list.size() > 0) {
                         displayInformation(list.get(0));
                     }
                 }
@@ -106,15 +114,44 @@ public class ShowRestoFragment extends Fragment {
                     return null;
                 }
             };
+            zomatoNetworkManager.findRestoInformation(zomato_id);
+        } else if (heroku_id > 0) {
+            // Get resto from heroku
+            Log.i(TAG, "Getting Resto with id " + heroku_id + " from Heroku");
+            RestoNetworkManager<Resto> herokuNetworkManager = new RestoNetworkManager<Resto>(activity) {
+                @Override
+                public void onPostExecute(List<Resto> list) {
+                    if (list.size() > 0) {
+                        displayInformation(list.get(0));
+                    }
+                }
 
-            restoNetworkManager.findRestoInformation(id);
-        } else {
+                @Override
+                protected List<Resto> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Json response...");
+
+                    try {
+                        HerokuRestos herokuRestos = new HerokuRestos();
+                        return herokuRestos.readRestoInformation(reader);
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+                    return null;
+                }
+            };
+
+            herokuNetworkManager.findRestoInformationFromHeroku(heroku_id);
+        } else if (local_id > 0) {
+            // Get resto from local db
+            Log.i(TAG, "Getting Resto with id " + local_id + " from local database");
             RestoDAO restoDAO = RestoDAO.getDatabase(activity);
-            Resto resto = restoDAO.getSingleRestaurant(id);
+            Resto resto = restoDAO.getSingleRestaurant(local_id);
 
             if (resto != null) {
                 displayInformation(resto);
             }
+        } else {
+            Log.e(TAG, "An error occurred. The given id's are invalid");
         }
     }
 

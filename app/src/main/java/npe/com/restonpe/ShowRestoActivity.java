@@ -91,7 +91,6 @@ public class ShowRestoActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected called");
-        int id = item.getItemId();
 
         Object submitter = extras.get("submitter");
 
