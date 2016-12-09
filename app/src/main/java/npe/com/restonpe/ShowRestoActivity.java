@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import npe.com.restonpe.Fragments.ShowRestoFragment;
+import npe.com.restonpe.Zomato.EditRestoActivity;
 import npe.com.restonpe.database.RestoDAO;
 
 /**
@@ -95,6 +96,8 @@ public class ShowRestoActivity extends BaseActivity {
         if(item.getItemId() == R.id.add_resto) {
             addRemoveResto(item);
         }else{
+            Intent intent = new Intent(this, EditRestoActivity.class);
+            startActivity(intent);
             Toast.makeText(this,"mod",Toast.LENGTH_LONG).show();
         }
 
