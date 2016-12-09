@@ -63,7 +63,7 @@
         <activity android:name=".ShowRestoActivity" />
         <activity android:name=".ShowReviewActivity" />
         <activity android:name=".FindSomewhereRestoActivity" />
-        <activity android:name=".Zomato.EditRestoActivity"></activity>
+        <activity android:name=".EditRestoActivity"></activity>
     </application>
 
 </manifest>

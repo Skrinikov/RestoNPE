@@ -231,4 +231,12 @@ public class ShowRestoFragment extends Fragment {
         dao.addRestaurant(resto);
         Toast.makeText(activity, R.string.added, Toast.LENGTH_LONG).show();
     }
+
+    /**
+     *
+     * @return long the resto id.
+     */
+    public long getRestoID(){
+        return this.resto.getId();
+    }
 }

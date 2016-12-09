@@ -16,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import npe.com.restonpe.Fragments.ShowRestoFragment;
-import npe.com.restonpe.Zomato.EditRestoActivity;
 import npe.com.restonpe.database.RestoDAO;
 
 /**
@@ -93,12 +92,13 @@ public class ShowRestoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected called");
 
-        if(item.getItemId() == R.id.add_resto) {
+        if (item.getItemId() == R.id.add_resto) {
             addRemoveResto(item);
-        }else{
+        } else {
             Intent intent = new Intent(this, EditRestoActivity.class);
+            intent.putExtra("id", fragment.getRestoID());
             startActivity(intent);
-            Toast.makeText(this,"mod",Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "mod", Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -133,7 +133,7 @@ public class ShowRestoActivity extends BaseActivity {
      *
      * @param item the menu item clicked.
      */
-    private void addRemoveResto(final MenuItem item){
+    private void addRemoveResto(final MenuItem item) {
         String submitter = extras.getString(SUBMITTER);
 
         // Delete if already added
