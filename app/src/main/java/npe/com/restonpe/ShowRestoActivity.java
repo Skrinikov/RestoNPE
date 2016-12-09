@@ -26,6 +26,10 @@ import npe.com.restonpe.database.RestoDAO;
 public class ShowRestoActivity extends BaseActivity {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
+    public static final String LOCAL_ID = "local_id";
+    public static final String ZOMATO_ID = "zomato_id";
+    public static final String HEROKU_ID = "heroku_id";
+    public static final String SUBMITTER = "submitter";
 
     private Context mContext;
     private ShowRestoFragment fragment;
@@ -64,7 +68,7 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        Object submitter = extras.get("submitter");
+        Object submitter = extras.get(SUBMITTER);
 
         if (submitter != null && submitter.toString().length() > 0) {
             menu.getItem(0).setIcon(R.drawable.ic_remove);
@@ -86,11 +90,11 @@ public class ShowRestoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected called");
 
-        Object submitter = extras.get("submitter");
+        Object submitter = extras.get(SUBMITTER);
 
         // Delete if already added
         if (submitter != null && submitter.toString().length() > 0) {
-            RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong("id"));
+            RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong(LOCAL_ID));
             Toast.makeText(mContext, R.string.removed, Toast.LENGTH_LONG).show();
         } else {
             fragment.addRestoToFavourites();
