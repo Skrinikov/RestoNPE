@@ -41,7 +41,7 @@ public class HerokuRestos {
     private static final String RESTO_DESCRIPTION = "description";
     private static final String RESTO_PRICE = "price";
     private static final String RESTO_URL = "url";
-    private static final String RESTO_GENRE_ID = "cuisine_id";
+    private static final String RESTO_GENRE = "cuisine_id";
     private static final String RESTO_USER_ID = "rating_user_id";
     private static final String RESTO_LATITUDE = "latitude";
     private static final String RESTO_LONGITUDE = "longitude";
@@ -170,6 +170,7 @@ public class HerokuRestos {
         String postal = map.get(RESTO_POSTAL);
         String province = map.get(RESTO_PROVINCE);
         String country = map.get(RESTO_COUNTRY);
+        String genre = map.get(RESTO_GENRE);
         String priceRange = map.get(RESTO_PRICE);
         String email = map.get(RESTO_EMAIL);
         String latitude = map.get(RESTO_LATITUDE);
@@ -186,9 +187,7 @@ public class HerokuRestos {
         resto.setPriceRange(priceRange);
         resto.setEmail(email);
         resto.setLink(link);
-
-        // TODO Get genre
-        resto.setGenre("");
+        resto.setGenre(genre);
 
         // Address format string
         // civic number suite Street Name
@@ -345,11 +344,11 @@ public class HerokuRestos {
 
                             map.put(RESTO_USER_ID, user);
                             break;
-                        case "genre_id":
+                        case "genre":
                             String genre = reader.nextString();
-                            Log.i(TAG, "Found genre id: " + genre);
+                            Log.i(TAG, "Found genre: " + genre);
 
-                            map.put(RESTO_GENRE_ID, genre);
+                            map.put(RESTO_GENRE, genre);
                             break;
                         case "description":
                             String description = reader.nextString();
@@ -429,6 +428,9 @@ public class HerokuRestos {
         review.setContent(content);
         if (rating != null) {
             review.setRating(Double.parseDouble(rating));
+        }
+        if (restoId != null) {
+            review.setRestoId(Long.parseLong(restoId));
         }
 
         return review;

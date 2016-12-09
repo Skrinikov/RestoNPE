@@ -256,6 +256,7 @@ public class RestoAdapter extends BaseAdapter {
                                     Resto resto = list.get(0);
                                     resto.setSubmitterName("Zomato");
                                     resto.setSubmitterEmail("ZomatoEmail");
+                                    Log.d(TAG, "ADDRESS: " + resto.getAddress().getAddress());
                                     dao.addRestaurant(resto);
                                     Toast.makeText(context, R.string.added, Toast.LENGTH_LONG).show();
                                 }
@@ -325,12 +326,12 @@ public class RestoAdapter extends BaseAdapter {
                     Log.i(TAG, "Putting local id " + localId + " in extras");
                     key = LOCAL_ID;
                     id = localId;
-                }
+                } else
                 if (zomatoId > 0) {
                     Log.i(TAG, "Putting Zomato id " + zomatoId + " in extras");
                     key = ZOMATO_ID;
                     id = zomatoId;
-                }
+                } else
                 if (herokuId > 0) {
                     Log.i(TAG, "Putting Heroku id " + herokuId + " in extras");
                     key = HEROKU_ID;

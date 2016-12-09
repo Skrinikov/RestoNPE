@@ -3,20 +3,14 @@ package npe.com.restonpe.Fragments;
 import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import java.io.IOException;
-import java.util.List;
-
 import npe.com.restonpe.Beans.Review;
-import npe.com.restonpe.Heroku.HerokuRestos;
 import npe.com.restonpe.R;
-import npe.com.restonpe.Services.RestoNetworkManager;
 import npe.com.restonpe.ShowRestoActivity;
 import npe.com.restonpe.util.ReviewAdapter;
 
@@ -65,42 +59,17 @@ public class ShowReviewFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        long id = bundle.getLong(ReviewAdapter.ID);
+        long id = bundle.getLong(ReviewAdapter.ID, -1);
+        String title = bundle.getString(ReviewAdapter.TITLE, "");
+        String content = bundle.getString(ReviewAdapter.CONTENT, "");
+        double rating = bundle.getDouble(ReviewAdapter.RATING, 0);
+        String submitter = bundle.getString(ReviewAdapter.SUBMITTER, "");
+        String submitterEmail = bundle.getString(ReviewAdapter.SUBMITTER_EMAIL, "");
+        int likes = bundle.getInt(ReviewAdapter.LIKES, 0);
+        long restoId = bundle.getLong(ReviewAdapter.RESTO_ID, -1);
 
-        // Get nearby restaurants
-        getReview(id);
-    }
-
-    /**
-     * Gets the information of the restaurant with the given id.
-     *
-     * @param id The id of the restaurant whose information is to be retrieved.
-     */
-    private void getReview(long id) {
-        RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(activity) {
-            @Override
-            public void onPostExecute(List<Review> list) {
-                if (list.size() == 1) {
-                    displayInformation(list.get(0));
-                }
-            }
-
-            @Override
-            protected List<Review> readJson(JsonReader reader) {
-                Log.i(TAG, "Reading Json response...");
-
-                try {
-                    HerokuRestos herokuRestos = new HerokuRestos(activity);
-                    return herokuRestos.readReviewJson(reader);
-                } catch (IOException e) {
-                    Log.i(TAG, "An IO exception occurred: " + e.getMessage());
-                }
-                return null;
-            }
-        };
-
-        // FIXME This doesnt find review information. just reviews of resto with given id
-        restoNetworkManager.findReviews(id);
+        Review review = new Review(id, title, content, rating, submitter, submitterEmail, likes, restoId);
+        displayInformation(review);
     }
 
     /**

@@ -175,6 +175,10 @@ public class ShowRestoFragment extends Fragment {
             RestoDAO restoDAO = RestoDAO.getDatabase(activity);
             resto = restoDAO.getSingleRestaurant(local_id);
             displayInformation(resto);
+
+            // Resto is in local db so hide Add (to favourites) button, and show Modify Resto and Delete Resto button
+            // TODO Hide Add (to favourites) button, and show Modify Resto and Delete Resto button
+
         } else {
             Log.e(TAG, "An error occurred. The given id's are invalid");
         }

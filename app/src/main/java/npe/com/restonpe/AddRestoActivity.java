@@ -230,7 +230,7 @@ public class AddRestoActivity extends BaseActivity {
         };
 
         Address addr = lm.getLocationFromName(postal.toUpperCase());
-
+        String addressString = address + ", " + city + ", " + province + ", " + country;
         if (addr == null) {
             Log.d(TAG, "Did not find address with Postal code");
             addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
@@ -245,7 +245,7 @@ public class AddRestoActivity extends BaseActivity {
         restoAddress.setLatitude(addr.getLatitude());
         restoAddress.setLongitude(addr.getLongitude());
         restoAddress.setCity(city);
-        restoAddress.setAddress(address);
+        restoAddress.setAddress(addressString);
         restoAddress.setPostal(postal);
         restoAddress.setCountry(country);
         restoAddress.setProvince(province);
