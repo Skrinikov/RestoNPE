@@ -42,6 +42,8 @@
     <string name="action_about">About</string>
     <string name="action_dawson">Dawson College</string>
     <string name="action_fav">Favorites</string>
+    <string name="action_heroku">Sync</string>
+    <string name="title_heroku">Heroku</string>
 
     <string name="course_id">420&#8211;518&#8211;DW Mobile</string>
 
@@ -92,9 +94,13 @@
     <string name="add_resto">Add Restaurant</string>
     <string name="resto_contact">Contact</string>
     <string name="required">* indicates required field</string>
+    <string name="info">Info</string>
+
+
     <string name="added">Favorited</string>
     <string name="removed">Unfavorited</string>
-    <string name="info">Info</string>
+    <string name="remove">Unfavorite</string>
+    <string name="confirm_remove">Remove restaurant from favorites?</string>
 
     <!-- Add Resto Errors -->
     <string name="name_error">Restaurant name is required</string>

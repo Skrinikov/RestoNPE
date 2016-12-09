@@ -1,6 +1,9 @@
 package npe.com.restonpe.util;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.util.JsonReader;
@@ -158,7 +161,7 @@ public class RestoAdapter extends BaseAdapter {
     }
 
     /**
-     * Code that creates and set the event handler for adding resto to db.
+     * Code that creates and set the event handler for adding/removing resto to db.
      *
      * @param addResto the View to contain the handler.
      */
@@ -184,9 +187,30 @@ public class RestoAdapter extends BaseAdapter {
                 // Remove from favourites if the current Activity running is the Favourite's Activity
                 if (FavRestoActivity.class == context.getClass()) {
                     Log.d(TAG, "ID to remove is: " + localId);
-                    RestoDAO.getDatabase(context).deleteRestaurant(localId);
-                    Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
-                    ((FavRestoActivity) context).updateDbList();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(R.string.remove);
+                    builder.setMessage(R.string.confirm_remove);
+
+                    builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        /**
+                         * Removes the resto from local database
+                         *
+                         * @param dialog The dialog that is currently shown / the on pressed on.
+                         * @param which The button pressed.
+                         */
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            RestoDAO.getDatabase(context).deleteRestaurant(localId);
+                            Toast.makeText(context, R.string.removed, Toast.LENGTH_LONG).show();
+                            ((FavRestoActivity) context).updateDbList();
+                        }
+                    });
+
+                    builder.setNegativeButton(R.string.no, null);
+
+                    Dialog dialog = builder.create();
+                    dialog.show();
                 } else {
                     // Add to favourites list
                     // Find Resto information
