@@ -6,9 +6,6 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.location.Address;
-import android.location.Location;
-import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -22,10 +19,15 @@ import android.widget.SpinnerAdapter;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
-import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.database.RestoDAO;
 
 /**
+ * Creates an instance of the AddRestoActivity which will
+ * allow the user to edit a resto that is in the database.
+ *
+ * Used as reference
+ * source: Danieil's AddRestoActivity
+ *
  * @author Uen yi Cindy Hung
  * @version 1.0
  * @Since 09/12/2016
@@ -58,6 +60,11 @@ public class EditRestoActivity extends BaseActivity {
         createFragments();
     }
 
+    /**
+     * Done in onResume else, the views aren't loaded yet.
+     * Calls a method that will get a handle on the views and set the
+     * resto data into them.
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -76,6 +83,11 @@ public class EditRestoActivity extends BaseActivity {
         transaction.commit();
     }
 
+    /**
+     * Get a handle on the views so we can set the resto data
+     * into them therefore visible on screen. Plus changes the event listener
+     * for the submit button.
+     */
     private void setupData() {
         RestoDAO dao = RestoDAO.getDatabase(this);
         resto = dao.getSingleRestaurant(getIntent().getExtras().getLong("id"));
