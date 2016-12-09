@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -94,8 +93,6 @@ public class NearRestoFragment extends Fragment {
             latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
             longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
         }
-
-        displayLocationInformation(latitude, longitude);
 
         // Get nearby restaurants
         getNearbyRestaurants(latitude, longitude);
@@ -194,24 +191,6 @@ public class NearRestoFragment extends Fragment {
         if (restoNetworkManagerZomato != null && restoNetworkManagerHeroku != null) {
             return restoNetworkManagerZomato.cancel(mayInterruptIfRunning) && restoNetworkManagerHeroku.cancel(mayInterruptIfRunning);
         }
-        return true;
-    }
-
-    /**
-     * Displays the latitude and longitude on the screen.
-     *
-     * @param latitude  The latitude to display on the screen
-     * @param longitude The longitude to display on the screen
-     */
-    private void displayLocationInformation(String latitude, String longitude) {
-        if (latitude != null && longitude != null) {
-            Log.i(TAG, "Location found: " + latitude + ", " + longitude);
-            ((TextView) activity.findViewById(R.id.textViewLatitude)).setText(String.format(getString(R.string.latitude), latitude));
-            ((TextView) activity.findViewById(R.id.textViewLongitude)).setText(String.format(getString(R.string.longitude), longitude));
-        } else {
-            Log.i(TAG, "Location not found");
-            ((TextView) activity.findViewById(R.id.textViewLatitude)).setText(activity.getString(R.string.location_not_found));
-            ((TextView) activity.findViewById(R.id.textViewLongitude)).setText("");
-        }
+        return false;
     }
 }

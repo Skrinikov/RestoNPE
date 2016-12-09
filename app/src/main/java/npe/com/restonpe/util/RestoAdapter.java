@@ -325,11 +325,13 @@ public class RestoAdapter extends BaseAdapter {
                     Log.i(TAG, "Putting local id " + localId + " in extras");
                     key = LOCAL_ID;
                     id = localId;
-                } else if (zomatoId > 0) {
+                }
+                if (zomatoId > 0) {
                     Log.i(TAG, "Putting Zomato id " + zomatoId + " in extras");
                     key = ZOMATO_ID;
                     id = zomatoId;
-                } else if (herokuId > 0) {
+                }
+                if (herokuId > 0) {
                     Log.i(TAG, "Putting Heroku id " + herokuId + " in extras");
                     key = HEROKU_ID;
                     id = herokuId;

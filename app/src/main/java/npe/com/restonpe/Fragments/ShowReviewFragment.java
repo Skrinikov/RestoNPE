@@ -65,7 +65,7 @@ public class ShowReviewFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        int id = bundle.getInt(ReviewAdapter.ID);
+        long id = bundle.getLong(ReviewAdapter.ID);
 
         // Get nearby restaurants
         getReview(id);
@@ -76,7 +76,7 @@ public class ShowReviewFragment extends Fragment {
      *
      * @param id The id of the restaurant whose information is to be retrieved.
      */
-    private void getReview(int id) {
+    private void getReview(long id) {
         RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(activity) {
             @Override
             public void onPostExecute(List<Review> list) {
@@ -99,6 +99,7 @@ public class ShowReviewFragment extends Fragment {
             }
         };
 
+        // FIXME This doesnt find review information. just reviews of resto with given id
         restoNetworkManager.findReviews(id);
     }
 
