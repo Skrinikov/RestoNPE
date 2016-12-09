@@ -187,7 +187,7 @@ public class RestoAdapter extends BaseAdapter {
                 // Remove from favourites if the current Activity running is the Favourite's Activity
                 if (FavRestoActivity.class == context.getClass()) {
                     Log.d(TAG, "ID to remove is: " + localId);
-                    
+
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle(R.string.remove);
                     builder.setMessage(R.string.confirm_remove);
