@@ -68,7 +68,7 @@ public class SettingActivity extends BaseActivity {
         username = (TextView) fragment.getView().findViewById(R.id.username_input);
         emailAdr = (TextView) fragment.getView().findViewById(R.id.email_adr_input);
         password = (TextView) fragment.getView().findViewById(R.id.password_input);
-        pref = getSharedPreferences("Settings", MODE_PRIVATE);
+        pref = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
 
         if (pref != null) {
             username.setText(pref.getString(USERNAME, null));

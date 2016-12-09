@@ -16,7 +16,6 @@ import java.net.URL;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Cuisine;
-import npe.com.restonpe.Beans.Review;
 
 /**
  * Manages network connections for the application. This class extends ASyncTask so that it may do
@@ -45,15 +44,11 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_REVIEW_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews?id=%1$s";
     // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
     private static final String RESTO_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/details?id=%1$s";
-    // The URL to hit to add a review to a restaurant
-    private static final String RESTO_URL_ADD_REVIEW_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews/create?id=%1$s&title=%2$s&content=%3$s&rating=%4$s";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
     private static final String RESTO_ACCEPT = "application/json; charset=UTF-8";
     private static final String RESTO_KEY_HEADER = "user-key";
-    private static final String RESTO_USER_HEADER = "email";
-    private static final String RESTO_PASSWORD_HEADER = "password";
     private static final String RESTO_KEY = "cbbc8e6762babbfaa8b3e4722ac97404";
 
     private final Context mContext;
@@ -87,10 +82,6 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
                 // Set headers for Zomato HTTP request.
                 conn.setRequestProperty(RESTO_ACCEPT_HEADER, RESTO_ACCEPT);
                 conn.setRequestProperty(RESTO_KEY_HEADER, RESTO_KEY);
-
-                // TODO Get user's email and password
-                conn.setRequestProperty(RESTO_USER_HEADER, "");
-                conn.setRequestProperty(RESTO_PASSWORD_HEADER, "");
 
                 conn.connect();
 
@@ -263,26 +254,6 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     }
 
     /**
-     * A convenience method for adding reviews to Heroku
-     *
-     * @param review The Review to add, with the id of the Resto to which it belongs.
-     */
-    public void addReview(Review review) {
-        // Add id to url
-        String updatedURL = String.format(RESTO_URL_ADD_REVIEW_HEROKU, review.getRestoId(), Uri.encode(review.getTitle()), Uri.encode(review.getContent()), review.getRating());
-
-        try {
-            URL url = new URL(updatedURL);
-
-            Log.i(TAG, "Hitting " + updatedURL);
-
-            execute(url);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed URL: " + updatedURL);
-        }
-    }
-
-    /**
      * A convenience method for finding reviews from Heroku of the restaurant with the given id
      *
      * @param id The id of the restaurant whose information is to be found
@@ -329,7 +300,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      *
      * @return {@code True} if the network is running and can be accessed, {@code False} otherwise.
      */
-    private boolean isNetworkAccessible() {
+    public boolean isNetworkAccessible() {
         ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();

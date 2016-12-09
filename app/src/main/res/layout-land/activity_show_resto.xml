@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_show_resto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="npe.com.restonpe.ShowRestoActivity">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewShowName"
+            style="@style/RestoNameTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="searchGoogle"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textViewShowAddress"
+            style="@style/RestoDetailTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewShowCuisines"
+            style="@style/RestoDetailTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewShowPriceRange"
+            style="@style/RestoDetailTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#ffcc00" />
+
+        <TextView
+            android:id="@+id/textViewShowPhone"
+            style="@style/RestoDetailTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewShowEmail"
+            style="@style/RestoDetailTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/textViewShowLink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:background="@drawable/detail_url_bg"
+            android:gravity="center"
+            android:textColorLink="@android:color/white" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <ListView
+            android:id="@+id/review_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/buttonAddReview"
+            android:text="@string/review_add"
+            android:layout_marginTop="16dp"
+            android:textColor="@color/white_text"
+            android:background="@color/colorAccent"
+            android:onClick="addReview"/>
+    </LinearLayout>
+</LinearLayout>

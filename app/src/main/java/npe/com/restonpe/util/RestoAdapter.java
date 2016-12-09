@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,6 +130,7 @@ public class RestoAdapter extends BaseAdapter {
         TextView name = (TextView) rowView.findViewById(R.id.resto_name);
         TextView price = (TextView) rowView.findViewById(R.id.resto_price);
         TextView distance = (TextView) rowView.findViewById(R.id.resto_distance);
+        RatingBar ratingBar = (RatingBar) rowView.findViewById(R.id.ratingBar);
         final ImageView addResto = (ImageView) rowView.findViewById(R.id.resto_add);
 
         double calculated_distance = -1;
@@ -147,6 +149,7 @@ public class RestoAdapter extends BaseAdapter {
         name.setText(item.getName());
         price.setText(item.getPriceRange());
         distance.setText(String.format("%.1f km", calculated_distance));
+        ratingBar.setRating((float)item.getRating());
 
         if (FavRestoActivity.class == context.getClass()) {
             addResto.setImageResource(R.drawable.ic_remove);
