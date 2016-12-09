@@ -164,4 +164,9 @@ public class Address {
     public void setProvince(String province) {
         this.province = province;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Address[address=%1$s, suite=%2$s, city=%3$s, province=%4$s, country=%5$s, postal=%6$s, latitude=%7$s, longitude=%8$s]", address, suite, city, province, country, postal, latitude, longitude);
+    }
 }

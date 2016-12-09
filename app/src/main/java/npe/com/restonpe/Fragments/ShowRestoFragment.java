@@ -162,6 +162,7 @@ public class ShowRestoFragment extends Fragment {
      * @param resto The {@code Resto} whose information is to be displayed on the screen
      */
     private void displayInformation(Resto resto) {
+        Log.i(TAG, "Resto: " + resto.getAddress());
         TextView name = (TextView) activity.findViewById(R.id.textViewShowName);
         TextView address = (TextView) activity.findViewById(R.id.textViewShowAddress);
         TextView cuisines = (TextView) activity.findViewById(R.id.textViewShowCuisines);
