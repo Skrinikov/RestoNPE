@@ -297,7 +297,11 @@ public class RestoAdapter extends BaseAdapter {
                 long zomatoId = (long) v.getTag(R.string.zomato_id_code);
                 long herokuId = (long) v.getTag(R.string.heroku_id_code);
 
-                if (zomatoId > 0) {
+                if (localId > 0) {
+                    Log.i(TAG, "Putting local id " + localId + " in extras");
+                    key = LOCAL_ID;
+                    id = localId;
+                } else if (zomatoId > 0) {
                     Log.i(TAG, "Putting Zomato id " + zomatoId + " in extras");
                     key = ZOMATO_ID;
                     id = zomatoId;
@@ -305,10 +309,6 @@ public class RestoAdapter extends BaseAdapter {
                     Log.i(TAG, "Putting Heroku id " + herokuId + " in extras");
                     key = HEROKU_ID;
                     id = herokuId;
-                } else if (localId > 0) {
-                    Log.i(TAG, "Putting local id " + localId + " in extras");
-                    key = LOCAL_ID;
-                    id = localId;
                 }
 
                 intent.putExtra(key, id);
