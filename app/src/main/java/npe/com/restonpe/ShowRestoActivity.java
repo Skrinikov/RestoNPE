@@ -72,9 +72,10 @@ public class ShowRestoActivity extends BaseActivity {
         Object submitter = extras.get(SUBMITTER);
 
         if (submitter != null && submitter.toString().length() > 0) {
-            menu.getItem(0).setIcon(R.drawable.ic_remove);
+            menu.getItem(1).setIcon(R.drawable.ic_remove);
+            menu.getItem(0).setIcon(R.drawable.ic_edit);
         } else {
-            menu.getItem(0).setIcon(R.drawable.ic_add);
+            menu.getItem(1).setIcon(R.drawable.ic_add);
         }
 
         return true;
@@ -88,40 +89,13 @@ public class ShowRestoActivity extends BaseActivity {
      * @return boolean depicting that an item has been clicked.
      */
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected called");
 
-        String submitter = extras.getString(SUBMITTER);
-
-        // Delete if already added
-        if (submitter != null && submitter.toString().length() > 0) {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle(getString(R.string.remove));
-            builder.setMessage(getString(R.string.confirm_remove));
-
-            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-                /**
-                 * Removes the resto from local database
-                 *
-                 * @param dialog The dialog that is currently shown / the on pressed on.
-                 * @param which The button pressed.
-                 */
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong(LOCAL_ID));
-                    Toast.makeText(mContext, R.string.removed, Toast.LENGTH_LONG).show();
-                    item.setVisible(false);
-                }
-            });
-
-            builder.setNegativeButton(R.string.no, null);
-
-            Dialog dialog = builder.create();
-            dialog.show();
-        } else {
-            fragment.addRestoToFavourites();
-            item.setVisible(false);
+        if(item.getItemId() == R.id.add_resto) {
+            addRemoveResto(item);
+        }else{
+            Toast.makeText(this,"mod",Toast.LENGTH_LONG).show();
         }
 
         return super.onOptionsItemSelected(item);
@@ -147,6 +121,41 @@ public class ShowRestoActivity extends BaseActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW, search);
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
+        }
+    }
+
+    private void addRemoveResto(final MenuItem item){
+        String submitter = extras.getString(SUBMITTER);
+
+        // Delete if already added
+        if (submitter != null && submitter.toString().length() > 0) {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.remove));
+            builder.setMessage(getString(R.string.confirm_remove));
+
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                /**
+                 * Removes the resto from local database
+                 *
+                 * @param dialog The dialog that is currently shown / the on pressed on.
+                 * @param which  The button pressed.
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    RestoDAO.getDatabase(mContext).deleteRestaurant(extras.getLong(LOCAL_ID));
+                    Toast.makeText(mContext, R.string.removed, Toast.LENGTH_LONG).show();
+                    item.setVisible(false);
+                }
+            });
+
+            builder.setNegativeButton(R.string.no, null);
+
+            Dialog dialog = builder.create();
+            dialog.show();
+        } else {
+            fragment.addRestoToFavourites();
+            item.setVisible(false);
         }
     }
 }
