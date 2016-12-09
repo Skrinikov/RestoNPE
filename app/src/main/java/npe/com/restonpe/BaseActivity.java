@@ -86,7 +86,7 @@ public class BaseActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
         View header = navigationView.getHeaderView(0);
-        TextView hello = (TextView)header.findViewById(R.id.hello_user);
+        TextView hello = (TextView) header.findViewById(R.id.hello_user);
         hello.setText(getString(R.string.welcome) + " " + prefs.getString("username", "User"));
 
         navigationView.setNavigationItemSelectedListener(this);
@@ -140,6 +140,34 @@ public class BaseActivity extends AppCompatActivity
         int id = item.getItemId();
         Intent intent = null;
 
+        switch (id) {
+            case R.id.home:
+                Log.d(TAG, "onNavigationItemSelected - home");
+                intent = new Intent(this, MainActivity.class);
+                break;
+            case R.id.about:
+                Log.d(TAG, "onNavigationItemSelected - about");
+                intent = new Intent(this, AboutActivity.class);
+                break;
+            case R.id.dawson:
+                Log.d(TAG, "onNavigationItemSelected - dawson");
+                intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dawsoncollege.qc.ca/computer-science-technology/"));
+                break;
+            case R.id.setting:
+                Log.d(TAG, "onNavigationItemSelected - setting");
+                intent = new Intent(this, SettingActivity.class);
+                break;
+            case R.id.tip:
+                Log.d(TAG, "onNavigationItemSelected - tip");
+                intent = new Intent(this, TipActivity.class);
+                break;
+            case R.id.heroku:
+                Log.d(TAG, "onNavigationItemSelected - heroku");
+                // TO DO
+                break;
+        }
+
+        /*
         if (id == R.id.home) {
             Log.d(TAG, "onNavigationItemSelected - home");
             intent = new Intent(this, MainActivity.class);
@@ -155,7 +183,10 @@ public class BaseActivity extends AppCompatActivity
         } else if (id == R.id.tip) {
             Log.d(TAG, "onNavigationItemSelected - tip");
             intent = new Intent(this, TipActivity.class);
-        }
+        }else if(id == R.id.heroku){
+            Log.d(TAG, "onNavigationItemSelected - heroku");
+            // TO DO
+        }*/
 
         if (intent != null)
             startActivity(intent);
