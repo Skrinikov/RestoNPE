@@ -138,11 +138,20 @@
 
     <!--Show Review-->
     <string name="review_submitter">Submitted by: %1$s</string>
-    <string name="review_likes">Likes: %1$f</string>
+    <string name="review_likes">Likes: %1$d</string>
     <string name="review_rating">Rating: %1$f</string>
 
     <!--RestoAdapter id codes-->
     <string name="local_id_code">local id</string>
     <string name="zomato_id_code">zomato id</string>
     <string name="heroku_id_code">heroku id</string>
+
+    <!--ReviewAdapter id codes-->
+    <string name="review_id_code">review id</string>
+    <string name="review_title_code">review title</string>
+    <string name="review_content_code">review content</string>
+    <string name="review_rating_code">review rating</string>
+    <string name="review_submitter_code">review submitter</string>
+    <string name="review_submitter_email_code">review submitter email</string>
+    <string name="review_likes_code">review likes</string>
 </resources>

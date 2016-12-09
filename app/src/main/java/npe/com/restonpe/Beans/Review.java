@@ -18,6 +18,19 @@ public class Review {
     private int likes;
 
     /**
+     * Creates a Review bean with the given fields.
+     */
+    public Review(long id, String title, String content, double rating, String submitter, String submitterEmail, int likes) {
+        this.id = id;
+        this.title = title;
+        this.content = content;
+        this.rating = rating;
+        this.submitter = submitter;
+        this.submitterEmail = submitterEmail;
+        this.likes = likes;
+    }
+
+    /**
      * Creates a Review bean.
      */
     public Review() {

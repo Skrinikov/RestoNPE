@@ -27,18 +27,23 @@ import npe.com.restonpe.ShowReviewActivity;
  * @since 07/12/2016
  */
 public class ReviewAdapter extends BaseAdapter {
+    public static final String ID = "id";
+    public static final String TITLE = "title";
+    public static final String CONTENT = "content";
+    public static final String RATING = "rating";
+    public static final String SUBMITTER = "submitter";
+    public static final String SUBMITTER_EMAIL = "submitter_email";
+    public static final String LIKES = "likes";
+    private static final String TAG = ReviewAdapter.class.getSimpleName();
+    private static LayoutInflater inflater = null;
     private final Context context;
     private List<Review> list;
-    private static LayoutInflater inflater = null;
-
-    public static final String ID = "id";
-    private static final String TAG = ReviewAdapter.class.getSimpleName();
 
     /**
      * Constructor that will keep a reference to the given parameter and create a layoutInflater.
      *
-     * @param context    The activity that instantiate this object.
-     * @param list       The data in List form.
+     * @param context The activity that instantiate this object.
+     * @param list    The data in List form.
      */
     public ReviewAdapter(Context context, List<Review> list) {
         this.context = context;
@@ -101,8 +106,14 @@ public class ReviewAdapter extends BaseAdapter {
         title.setText(item.getTitle());
         submitter.setText(item.getSubmitter());
 
-        // Put id of Review into list item
-        rowView.setTag(list.get(position).getId());
+        // Put review into list item
+        rowView.setTag(R.string.review_id_code, item.getId());
+        rowView.setTag(R.string.review_title_code, item.getTitle());
+        rowView.setTag(R.string.review_content_code, item.getContent());
+        rowView.setTag(R.string.review_rating_code, item.getRating());
+        rowView.setTag(R.string.review_submitter_code, item.getSubmitter());
+        rowView.setTag(R.string.review_submitter_email_code, item.getSubmitterEmail());
+        rowView.setTag(R.string.review_likes_code, item.getLikes());
 
         setRowClickListener(rowView, position);
 
@@ -133,9 +144,29 @@ public class ReviewAdapter extends BaseAdapter {
                 Log.d(TAG, "setRowClickListener - setOnClickListener called");
                 Intent intent = new Intent(context, ShowReviewActivity.class);
 
-                long id = (long) v.getTag();
-                Log.i(TAG, "Putting id of " + id + " in extras");
+                long id = (long) v.getTag(R.string.review_id_code);
+                String title = (String) v.getTag(R.string.review_title_code);
+                String content = (String) v.getTag(R.string.review_content_code);
+                double rating = (double) v.getTag(R.string.review_rating_code);
+                String submitter = (String) v.getTag(R.string.review_submitter_code);
+                String submitterEmail = (String) v.getTag(R.string.review_submitter_email_code);
+                int likes = (int) v.getTag(R.string.review_likes_code);
+
+                Log.i(TAG, "Putting " + id + " in extras");
+                Log.i(TAG, "Putting " + title + " in extras");
+                Log.i(TAG, "Putting " + content + " in extras");
+                Log.i(TAG, "Putting " + rating + " in extras");
+                Log.i(TAG, "Putting " + submitter + " in extras");
+                Log.i(TAG, "Putting " + submitterEmail + " in extras");
+                Log.i(TAG, "Putting " + likes + " in extras");
+
                 intent.putExtra(ID, id);
+                intent.putExtra(TITLE, title);
+                intent.putExtra(CONTENT, content);
+                intent.putExtra(RATING, rating);
+                intent.putExtra(SUBMITTER, submitter);
+                intent.putExtra(SUBMITTER_EMAIL, submitterEmail);
+                intent.putExtra(LIKES, likes);
 
                 context.startActivity(intent);
             }
