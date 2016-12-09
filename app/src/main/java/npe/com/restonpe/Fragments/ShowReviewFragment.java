@@ -59,15 +59,16 @@ public class ShowReviewFragment extends Fragment {
 
         Bundle bundle = activity.getIntent().getExtras();
 
-        long id = bundle.getLong(ReviewAdapter.ID);
-        String title = bundle.getString(ReviewAdapter.TITLE);
-        String content = bundle.getString(ReviewAdapter.CONTENT);
-        double rating = bundle.getDouble(ReviewAdapter.RATING);
-        String submitter = bundle.getString(ReviewAdapter.SUBMITTER);
-        String submitterEmail = bundle.getString(ReviewAdapter.SUBMITTER_EMAIL);
-        int likes = bundle.getInt(ReviewAdapter.LIKES);
+        long id = bundle.getLong(ReviewAdapter.ID, -1);
+        String title = bundle.getString(ReviewAdapter.TITLE, "");
+        String content = bundle.getString(ReviewAdapter.CONTENT, "");
+        double rating = bundle.getDouble(ReviewAdapter.RATING, 0);
+        String submitter = bundle.getString(ReviewAdapter.SUBMITTER, "");
+        String submitterEmail = bundle.getString(ReviewAdapter.SUBMITTER_EMAIL, "");
+        int likes = bundle.getInt(ReviewAdapter.LIKES, 0);
+        long restoId = bundle.getLong(ReviewAdapter.RESTO_ID, -1);
 
-        Review review = new Review(id, title, content, rating, submitter, submitterEmail, likes);
+        Review review = new Review(id, title, content, rating, submitter, submitterEmail, likes, restoId);
         displayInformation(review);
     }
 

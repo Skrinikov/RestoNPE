@@ -33,7 +33,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     // Database related information.
     private static final String DATABASE_NAME = "resto.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Table names
     private static final String TABLE_GENRE = "genre";
@@ -80,7 +80,7 @@ public class RestoDAO extends SQLiteOpenHelper {
     private static final String COLUMN_TITLE = "title";
     private static final String COLUMN_CONTENT = "content";
     private static final String COLUMN_RATING = "rating";
-    private static final String COLUMN_lIKES = "likes";
+    private static final String COLUMN_LIKES = "likes";
 
     // Create Tables Strings
     private static final String CREATE_USERS = "create table " + TABLE_USERS + "( " +
@@ -110,14 +110,14 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     private static final String CREATE_ADDRESS = "create table " + TABLE_ADDRESS + "( " +
             COLUMN_ID + " integer primary key autoincrement, " +
-            COLUMN_STREET_ADDRESS + " text not null, " +
-            COLUMN_COUNTRY + " text not null, " +
-            COLUMN_CITY + " text not null, " +
-            COLUMN_PROVINCE + " text not null, " +
-            COLUMN_LONG + " real not null, " +
-            COLUMN_LAT + " real not null, " +
-            COLUMN_POSTAL + " text not null, " +
-            COLUMN_SUITE + " integer, " +
+            COLUMN_STREET_ADDRESS + " text null, " +
+            COLUMN_COUNTRY + " text null, " +
+            COLUMN_CITY + " text null, " +
+            COLUMN_PROVINCE + " text null, " +
+            COLUMN_LONG + " real null, " +
+            COLUMN_LAT + " real null, " +
+            COLUMN_POSTAL + " text null, " +
+            COLUMN_SUITE + " text, " +
             COLUMN_RESTO_FK + " integer, " +
             "FOREIGN KEY (" + COLUMN_RESTO_FK + ") REFERENCES " + TABLE_RESTO + "(" + COLUMN_ID + ") ON DELETE CASCADE);";
 
@@ -126,7 +126,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             COLUMN_TITLE + " text, " +
             COLUMN_CONTENT + " text not null, " +
             COLUMN_RATING + " real not null, " +
-            COLUMN_lIKES + " integer not null, " +
+            COLUMN_LIKES + " integer not null, " +
             COLUMN_USER_FK + " integer, " +
             COLUMN_RESTO_FK + " integer, " +
             "FOREIGN KEY (" + COLUMN_USER_FK + ") REFERENCES " + TABLE_USERS + "(" + COLUMN_ID + ") ON DELETE CASCADE, " +
@@ -433,10 +433,9 @@ public class RestoDAO extends SQLiteOpenHelper {
      * @param resto bean to which add the address.
      */
     private void getAddressList(Resto resto) {
-        long id = resto.getZomatoId();
+        long localId = resto.getId();
 
-        Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{id + ""}, null, null, null);
-
+        Cursor c = getReadableDatabase().query(TABLE_ADDRESS, null, COLUMN_RESTO_FK + "=?", new String[]{localId + ""}, null, null, null);
         if (c.moveToNext()) {
             Address address = new Address();
             address.setCity(c.getString(c.getColumnIndex(COLUMN_CITY)));
@@ -466,9 +465,11 @@ public class RestoDAO extends SQLiteOpenHelper {
         List<Review> reviews = new ArrayList<>();
         while (c.moveToNext()) {
             Review rev = new Review();
+            rev.setTitle(c.getString(c.getColumnIndex(COLUMN_TITLE)));
             rev.setContent(c.getString(c.getColumnIndex(COLUMN_CONTENT)));
-            rev.setLikes(c.getInt(c.getColumnIndex(COLUMN_lIKES)));
+            rev.setLikes(c.getInt(c.getColumnIndex(COLUMN_LIKES)));
             rev.setRating(c.getDouble(c.getColumnIndex(COLUMN_RATING)));
+            rev.setRestoId(resto.getId());
             getUser(rev, c.getLong(c.getColumnIndex(COLUMN_USER_FK)));
             reviews.add(rev);
         }
@@ -548,7 +549,7 @@ public class RestoDAO extends SQLiteOpenHelper {
         cv.put(COLUMN_TITLE, review.getTitle());
         cv.put(COLUMN_CONTENT, review.getContent());
         cv.put(COLUMN_RATING, review.getRating());
-        cv.put(COLUMN_lIKES, review.getLikes());
+        cv.put(COLUMN_LIKES, review.getLikes());
         long userId = getUserId(review.getSubmitterEmail(), review.getSubmitter());
         cv.put(COLUMN_USER_FK, userId);
         cv.put(COLUMN_RESTO_FK, restoId);

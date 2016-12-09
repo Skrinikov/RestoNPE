@@ -429,6 +429,9 @@ public class HerokuRestos {
         if (rating != null) {
             review.setRating(Double.parseDouble(rating));
         }
+        if (restoId != null) {
+            review.setRestoId(Long.parseLong(restoId));
+        }
 
         return review;
     }

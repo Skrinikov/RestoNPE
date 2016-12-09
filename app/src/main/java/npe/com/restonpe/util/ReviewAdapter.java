@@ -34,6 +34,7 @@ public class ReviewAdapter extends BaseAdapter {
     public static final String SUBMITTER = "submitter";
     public static final String SUBMITTER_EMAIL = "submitter_email";
     public static final String LIKES = "likes";
+    public static final String RESTO_ID = "resto_id";
     private static final String TAG = ReviewAdapter.class.getSimpleName();
     private static LayoutInflater inflater = null;
     private final Context context;
@@ -114,8 +115,9 @@ public class ReviewAdapter extends BaseAdapter {
         rowView.setTag(R.string.review_submitter_code, item.getSubmitter());
         rowView.setTag(R.string.review_submitter_email_code, item.getSubmitterEmail());
         rowView.setTag(R.string.review_likes_code, item.getLikes());
+        rowView.setTag(R.string.review_resto_id_code, item.getRestoId());
 
-        setRowClickListener(rowView, position);
+        setRowClickListener(rowView);
 
         return rowView;
     }
@@ -124,9 +126,8 @@ public class ReviewAdapter extends BaseAdapter {
      * Add a listener for when the a row is clicked.
      *
      * @param rowView  the row to which the handler should be applied.
-     * @param position The item index.
      */
-    private void setRowClickListener(View rowView, final int position) {
+    private void setRowClickListener(View rowView) {
         Log.d(TAG, "setRowClickListener called");
 
         rowView.setOnClickListener(new View.OnClickListener() {
@@ -151,6 +152,7 @@ public class ReviewAdapter extends BaseAdapter {
                 String submitter = (String) v.getTag(R.string.review_submitter_code);
                 String submitterEmail = (String) v.getTag(R.string.review_submitter_email_code);
                 int likes = (int) v.getTag(R.string.review_likes_code);
+                long restoId = (long) v.getTag(R.string.review_resto_id_code);
 
                 Log.i(TAG, "Putting " + id + " in extras");
                 Log.i(TAG, "Putting " + title + " in extras");
@@ -159,6 +161,7 @@ public class ReviewAdapter extends BaseAdapter {
                 Log.i(TAG, "Putting " + submitter + " in extras");
                 Log.i(TAG, "Putting " + submitterEmail + " in extras");
                 Log.i(TAG, "Putting " + likes + " in extras");
+                Log.i(TAG, "Putting " + restoId + " in extras");
 
                 intent.putExtra(ID, id);
                 intent.putExtra(TITLE, title);
@@ -167,6 +170,7 @@ public class ReviewAdapter extends BaseAdapter {
                 intent.putExtra(SUBMITTER, submitter);
                 intent.putExtra(SUBMITTER_EMAIL, submitterEmail);
                 intent.putExtra(LIKES, likes);
+                intent.putExtra(RESTO_ID, restoId);
 
                 context.startActivity(intent);
             }

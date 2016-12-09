@@ -154,4 +154,5 @@
     <string name="review_submitter_code">review submitter</string>
     <string name="review_submitter_email_code">review submitter email</string>
     <string name="review_likes_code">review likes</string>
+    <string name="review_resto_id_code">resto id</string>
 </resources>

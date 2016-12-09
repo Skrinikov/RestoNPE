@@ -17,10 +17,12 @@ public class Review {
     private String submitterEmail;
     private int likes;
 
+    private long restoId;
+
     /**
      * Creates a Review bean with the given fields.
      */
-    public Review(long id, String title, String content, double rating, String submitter, String submitterEmail, int likes) {
+    public Review(long id, String title, String content, double rating, String submitter, String submitterEmail, int likes, long restoId) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -28,6 +30,8 @@ public class Review {
         this.submitter = submitter;
         this.submitterEmail = submitterEmail;
         this.likes = likes;
+
+        this.restoId = restoId;
     }
 
     /**
@@ -41,6 +45,8 @@ public class Review {
         submitter = "";
         submitterEmail = "";
         likes = 0;
+
+        restoId = 0;
     }
 
     /**
@@ -168,4 +174,23 @@ public class Review {
     public void setLikes(int likes) {
         this.likes = likes;
     }
+
+    /**
+     * Gets the id of the Resto this Review belongs to..
+     *
+     * @return The id of the Resto.
+     */
+    public long getRestoId() {
+        return restoId;
+    }
+
+    /**
+     * Sets the id of the Resto to which this Review belongs.
+     *
+     * @param id The new id of the Resto.
+     */
+    public void setRestoId(long id) {
+        this.restoId = id;
+    }
+
 }
