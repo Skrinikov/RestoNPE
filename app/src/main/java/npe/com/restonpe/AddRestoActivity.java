@@ -260,13 +260,18 @@ public class AddRestoActivity extends BaseActivity {
 
     }
 
+    /**
+     * Looks to see if the user has entered any data into any of the input fields of the activity.
+     * If the back button is pressed while there is still any information in the fields it will
+     * warn him that all data will be lost.
+     */
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed called" + pref.toString());
         boolean isEmpty = checkIfInputsAreEmpty();
 
         // There is unsaved data.
-        if (isEmpty) {
+        if (!isEmpty) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.unsaved));
             builder.setMessage(getString(R.string.not_saved));
