@@ -144,6 +144,7 @@ public class ShowRestoFragment extends Fragment {
                 }
             };
 
+            // Get reviews from heroku
             RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(activity) {
                 @Override
                 public void onPostExecute(List<Review> list) {
@@ -209,7 +210,7 @@ public class ShowRestoFragment extends Fragment {
     }
 
     private void displayReviews(List<Review> reviews) {
-        if (reviews == null || reviews.size() == 0) {
+        if (reviews != null && reviews.size() > 0) {
             ReviewAdapter adapter = new ReviewAdapter(activity, reviews);
 
             ListView listView = (ListView) activity.findViewById(R.id.review_list);

@@ -7,12 +7,14 @@
     <TextView
         android:id="@+id/review_title"
         style="@style/ListTextViewTheme"
+        android:padding="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <TextView
         android:id="@+id/review_submitter"
         style="@style/ListSubTextTheme"
+        android:padding="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
