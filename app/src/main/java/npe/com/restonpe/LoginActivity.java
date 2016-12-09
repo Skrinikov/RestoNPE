@@ -44,10 +44,10 @@ public class LoginActivity extends AppCompatActivity {
     public void attemptLogin(View view) {
         if (validateInputs()) {
             Log.d(TAG, "input valid, attempting to login");
-            SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+            SharedPreferences prefs = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
             prefs.edit()
-                    .putString("username", name.getText().toString().trim())
-                    .putString("emailAdr", email.getText().toString().trim())
+                    .putString(SettingActivity.USERNAME, name.getText().toString().trim())
+                    .putString(SettingActivity.EMAIL, email.getText().toString().trim())
                     .apply();
 
             Intent intent = new Intent(this, MainActivity.class);

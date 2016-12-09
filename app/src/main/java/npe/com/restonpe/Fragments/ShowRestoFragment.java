@@ -1,6 +1,5 @@
 package npe.com.restonpe.Fragments;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.JsonReader;
@@ -37,7 +36,7 @@ public class ShowRestoFragment extends Fragment {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
 
-    private Activity activity;
+    private ShowRestoActivity activity;
     private Resto resto;
 
     /**
@@ -68,7 +67,7 @@ public class ShowRestoFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated called");
-        activity = getActivity();
+        activity = (ShowRestoActivity) getActivity();
 
         Bundle bundle = activity.getIntent().getExtras();
 
@@ -93,6 +92,9 @@ public class ShowRestoFragment extends Fragment {
         Log.d(TAG, "Heroku id: " + heroku_id);
 
         if (zomato_id > 0) {
+            // Resto is not from Heroku remove add comment button
+            activity.removeReviewButton();
+
             // Get resto from Zomato
             Log.i(TAG, "Getting Resto with id " + zomato_id + " from Zomato");
             RestoNetworkManager<Resto> zomatoNetworkManager = new RestoNetworkManager<Resto>(activity) {
@@ -169,16 +171,16 @@ public class ShowRestoFragment extends Fragment {
 
             herokuNetworkManager.findRestoInformationFromHeroku(heroku_id);
             restoNetworkManager.findReviews(heroku_id);
+
         } else if (local_id > 0) {
+            // Resto is not from Heroku remove add comment button
+            activity.removeReviewButton();
+
             // Get resto from local db
             Log.i(TAG, "Getting Resto with id " + local_id + " from local database");
             RestoDAO restoDAO = RestoDAO.getDatabase(activity);
             resto = restoDAO.getSingleRestaurant(local_id);
             displayInformation(resto);
-
-            // Resto is in local db so hide Add (to favourites) button, and show Modify Resto and Delete Resto button
-            // TODO Hide Add (to favourites) button, and show Modify Resto and Delete Resto button
-
         } else {
             Log.e(TAG, "An error occurred. The given id's are invalid");
         }

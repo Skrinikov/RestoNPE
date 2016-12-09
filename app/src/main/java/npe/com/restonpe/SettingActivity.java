@@ -28,6 +28,10 @@ public class SettingActivity extends BaseActivity {
     private final String TAG = "SettingActivity";
     private SharedPreferences pref;
 
+    public static final String USERNAME = "username";
+    public static final String EMAIL = "emailAdr";
+    public static final String PASSWORD = "password";
+
     /**
      * Loads the fragment and changes the action bar's title.
      *
@@ -67,9 +71,9 @@ public class SettingActivity extends BaseActivity {
         pref = getSharedPreferences("Settings", MODE_PRIVATE);
 
         if (pref != null) {
-            username.setText(pref.getString("username", null));
-            emailAdr.setText(pref.getString("emailAdr", null));
-            password.setText(pref.getString("password", null));
+            username.setText(pref.getString(USERNAME, null));
+            emailAdr.setText(pref.getString(EMAIL, null));
+            password.setText(pref.getString(PASSWORD, null));
         }
 
         Log.d(TAG, "TextViews are: " + username + "\t" + emailAdr + "\t" + password);
@@ -119,9 +123,9 @@ public class SettingActivity extends BaseActivity {
             Log.d(TAG, "Fields contain: " + username.getText().toString() + "\t" + emailAdr.getText().toString() + "\t" + password.getText().toString());
 
             if (username.getText().toString().trim().length() > 0 && emailAdr.getText().toString().trim().length() > 0 && password.getText().toString().trim().length() > 0) {
-                editor.putString("username", username.getText().toString().trim());
-                editor.putString("emailAdr", emailAdr.getText().toString().trim());
-                editor.putString("password", password.getText().toString().trim());
+                editor.putString(USERNAME, username.getText().toString().trim());
+                editor.putString(EMAIL, emailAdr.getText().toString().trim());
+                editor.putString(PASSWORD, password.getText().toString().trim());
 
                 editor.apply();
                 Toast.makeText(this, R.string.setting_saved, Toast.LENGTH_LONG).show();
@@ -152,11 +156,11 @@ public class SettingActivity extends BaseActivity {
         // Check if there the text fields are the same as in the prefs in there is one.
         if (pref != null) {
             Log.d(TAG, "onBackPressed: prefs is not null");
-            if (!username.getText().toString().trim().equals(pref.getString("username", ""))) {
+            if (!username.getText().toString().trim().equals(pref.getString(USERNAME, ""))) {
                 dataSaved = false;
-            } else if (!emailAdr.getText().toString().trim().equals(pref.getString("emailAdr", ""))) {
+            } else if (!emailAdr.getText().toString().trim().equals(pref.getString(EMAIL, ""))) {
                 dataSaved = false;
-            } else if (!password.getText().toString().trim().equals(pref.getString("password", ""))) {
+            } else if (!password.getText().toString().trim().equals(pref.getString(PASSWORD, ""))) {
                 dataSaved = false;
             }
         } else if (username.getText().length() < 1 && emailAdr.getText().length() < 1 && password.getText().length() < 1) {

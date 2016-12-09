@@ -58,12 +58,12 @@ public class RestoAdapter extends BaseAdapter {
      * Constructor that will keep a reference to the given parameter and parse the
      * String longitude and latitude to double and create a layoutInflater.
      *
-     * @param context    The activity that instantiate this object.
-     * @param list       The data in List form.
-     * @param longitude  The current longitude location. If {@code null} or empty string, the
-     *                   latitude will be set to -1.
-     * @param latitude   The current latitude location. If {@code null} or empty string, the
-     *                   longitude will be set to -1.
+     * @param context   The activity that instantiate this object.
+     * @param list      The data in List form.
+     * @param longitude The current longitude location. If {@code null} or empty string, the
+     *                  latitude will be set to -1.
+     * @param latitude  The current latitude location. If {@code null} or empty string, the
+     *                  longitude will be set to -1.
      */
     public RestoAdapter(Context context, List<RestoItem> list, String longitude, String latitude) {
         this.context = context;
@@ -326,13 +326,11 @@ public class RestoAdapter extends BaseAdapter {
                     Log.i(TAG, "Putting local id " + localId + " in extras");
                     key = LOCAL_ID;
                     id = localId;
-                } else
-                if (zomatoId > 0) {
+                } else if (zomatoId > 0) {
                     Log.i(TAG, "Putting Zomato id " + zomatoId + " in extras");
                     key = ZOMATO_ID;
                     id = zomatoId;
-                } else
-                if (herokuId > 0) {
+                } else if (herokuId > 0) {
                     Log.i(TAG, "Putting Heroku id " + herokuId + " in extras");
                     key = HEROKU_ID;
                     id = herokuId;
