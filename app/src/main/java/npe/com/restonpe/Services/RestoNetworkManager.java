@@ -238,7 +238,7 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      *
      * @param id The id of the restaurant whose information is to be found
      */
-    public void findReviews(int id) {
+    public void findReviews(long id) {
         // Add id to url
         String updatedURL = String.format(RESTO_REVIEW_URL_HEROKU, id);
 

@@ -1,5 +1,6 @@
 package npe.com.restonpe.Heroku;
 
+import android.content.Context;
 import android.util.JsonReader;
 import android.util.JsonToken;
 import android.util.Log;
@@ -53,6 +54,12 @@ public class HerokuRestos {
     private static final String REVIEW_RATING = "rating";
     private static final String REVIEW_USER_ID = "review_user_id";
     private static final String REVIEW_RESTO_ID = "resto_id";
+
+    private Context mContext;
+
+    public HerokuRestos (Context context) {
+        this.mContext = context;
+    }
 
     public List<RestoItem> readRestoJson(JsonReader reader) throws IOException {
         List<RestoItem> list = new ArrayList<>();
@@ -151,7 +158,7 @@ public class HerokuRestos {
      * @return A {@code Resto} object with the information retrieved from the map.
      */
     private Resto getResto(HashMap<String, String> map) {
-        Resto resto = new Resto();
+        final Resto resto = new Resto();
 
         String id = map.get(RESTO_ID);
         String name = map.get(RESTO_NAME);
@@ -180,7 +187,7 @@ public class HerokuRestos {
         resto.setEmail(email);
         resto.setLink(link);
 
-        // TODO Get actual genre
+        // TODO Get genre
         resto.setGenre("");
 
         // Address format string

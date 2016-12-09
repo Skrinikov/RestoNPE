@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -165,7 +164,7 @@ public class NearRestoFragment extends Fragment {
 
                     try {
                         Log.i(TAG, "Json response came from Heroku");
-                        HerokuRestos herokuRestos = new HerokuRestos();
+                        HerokuRestos herokuRestos = new HerokuRestos(activity);
                         return herokuRestos.readRestoJson(reader);
                     } catch (IOException e) {
                         Log.i(TAG, "An IO exception occurred: " + e.getMessage());

@@ -266,7 +266,7 @@ public class RestoAdapter extends BaseAdapter {
                                 Log.i(TAG, "Reading Json response...");
 
                                 try {
-                                    HerokuRestos herokuRestos = new HerokuRestos();
+                                    HerokuRestos herokuRestos = new HerokuRestos(context);
                                     return herokuRestos.readRestoInformation(reader);
                                 } catch (IOException e) {
                                     Log.e(TAG, "An IO exception occurred: " + e.getMessage());
