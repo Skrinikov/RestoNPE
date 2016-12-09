@@ -69,7 +69,7 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        Object submitter = extras.get(SUBMITTER);
+        String submitter = extras.getString(SUBMITTER);
 
         if (submitter != null && submitter.toString().length() > 0) {
             menu.getItem(1).setIcon(R.drawable.ic_remove);
@@ -124,12 +124,17 @@ public class ShowRestoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Determine if it is a add or remove resto from the local database
+     * with confirmation dialog if removing.
+     *
+     * @param item the menu item clicked.
+     */
     private void addRemoveResto(final MenuItem item){
         String submitter = extras.getString(SUBMITTER);
 
         // Delete if already added
         if (submitter != null && submitter.toString().length() > 0) {
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.remove));
             builder.setMessage(getString(R.string.confirm_remove));

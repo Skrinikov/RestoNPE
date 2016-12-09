@@ -13,10 +13,9 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDhKDxt-0HBPgPgTaLiF9NgZTo9MEN1SEE"/>
+            android:value="AIzaSyDhKDxt-0HBPgPgTaLiF9NgZTo9MEN1SEE" />
 
         <activity
             android:name=".MainActivity"
@@ -63,7 +62,8 @@
             android:noHistory="true" />
         <activity android:name=".ShowRestoActivity" />
         <activity android:name=".ShowReviewActivity" />
-        <activity android:name=".FindSomewhereRestoActivity"></activity>
+        <activity android:name=".FindSomewhereRestoActivity" />
+        <activity android:name=".Zomato.EditRestoActivity"></activity>
     </application>
 
 </manifest>
