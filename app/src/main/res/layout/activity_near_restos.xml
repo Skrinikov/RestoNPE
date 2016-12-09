@@ -11,18 +11,6 @@
     android:orientation="vertical"
     tools:context="npe.com.restonpe.NearRestosActivity">
 
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewLongitude" />
-
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textViewLatitude" />
-
     <ListView
         android:id="@+id/near_list"
         android:layout_weight="1"

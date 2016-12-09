@@ -104,7 +104,7 @@ public class ReviewAdapter extends BaseAdapter {
         // Put id of Review into list item
         rowView.setTag(list.get(position).getId());
 
-//        setRowClickListener(rowView, position);
+        setRowClickListener(rowView, position);
 
         return rowView;
     }
@@ -116,7 +116,6 @@ public class ReviewAdapter extends BaseAdapter {
      * @param position The item index.
      */
     private void setRowClickListener(View rowView, final int position) {
-        // TODO not yet completed
         Log.d(TAG, "setRowClickListener called");
 
         rowView.setOnClickListener(new View.OnClickListener() {
