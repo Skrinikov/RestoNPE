@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -128,7 +129,7 @@ public class ShowRestoActivity extends BaseActivity {
         String submitter = extras.getString(SUBMITTER);
 
         // Delete if already added
-        if (submitter != null && submitter.toString().length() > 0) {
+        if (submitter != null && submitter.length() > 0) {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.remove));
@@ -157,5 +158,10 @@ public class ShowRestoActivity extends BaseActivity {
             fragment.addRestoToFavourites();
             item.setVisible(false);
         }
+    }
+
+    public void removeReviewButton() {
+        Button addReview = (Button) findViewById(R.id.buttonAddReview);
+        addReview.setVisibility(View.GONE);
     }
 }

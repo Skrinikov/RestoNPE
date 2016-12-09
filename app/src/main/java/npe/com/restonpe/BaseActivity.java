@@ -87,7 +87,7 @@ public class BaseActivity extends AppCompatActivity
 
         View header = navigationView.getHeaderView(0);
         TextView hello = (TextView) header.findViewById(R.id.hello_user);
-        hello.setText(getString(R.string.welcome) + " " + prefs.getString("username", "User"));
+        hello.setText(getString(R.string.welcome) + " " + prefs.getString(SettingActivity.USERNAME, "User"));
 
         navigationView.setNavigationItemSelectedListener(this);
     }

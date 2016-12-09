@@ -135,11 +135,13 @@
     <!--Show resto errors-->
     <string name="show_phone_error">No phone number was found</string>
     <string name="show_review_error">No reviews were found</string>
+    <string name="show_resto_invalid_creds">Invalid credentials</string>
 
     <!--Show Review-->
     <string name="review_submitter">Submitted by: %1$s</string>
     <string name="review_likes">Likes: %1$d</string>
     <string name="review_rating">Rating: %1$f</string>
+    <string name="review_add">Add Review</string>
 
     <!--RestoAdapter id codes-->
     <string name="local_id_code">local id</string>

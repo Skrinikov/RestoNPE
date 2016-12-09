@@ -89,9 +89,9 @@ public class NearRestoFragment extends Fragment {
             Log.d(TAG, "lat : " + latitude + " long: " + longitude);
         } else {
             // Get location from shared prefs
-            SharedPreferences sharedPreferences = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
-            latitude = sharedPreferences.getString(BaseActivity.LATITUDE, null);
-            longitude = sharedPreferences.getString(BaseActivity.LONGITUDE, null);
+            SharedPreferences prefs = activity.getSharedPreferences(BaseActivity.SHARED_PREFS, Activity.MODE_PRIVATE);
+            latitude = prefs.getString(BaseActivity.LATITUDE, null);
+            longitude = prefs.getString(BaseActivity.LONGITUDE, null);
         }
 
         // Get nearby restaurants
@@ -132,7 +132,7 @@ public class NearRestoFragment extends Fragment {
                         ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
                         return zomatoRestos.readResto(reader, "nearby_restaurants");
                     } catch (IOException e) {
-                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                        Log.e(TAG, "An IO exception occurred: " + e.getMessage());
                     }
 
                     return null;
@@ -164,7 +164,7 @@ public class NearRestoFragment extends Fragment {
                         HerokuRestos herokuRestos = new HerokuRestos(activity);
                         return herokuRestos.readRestoJson(reader);
                     } catch (IOException e) {
-                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                        Log.e(TAG, "An IO exception occurred: " + e.getMessage());
                     }
 
                     return null;
