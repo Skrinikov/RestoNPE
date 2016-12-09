@@ -186,11 +186,16 @@ public class HerokuRestos {
         // Address format string
         // civic number suite Street Name
         Address address = new Address();
-        String addressString = "$s $s $s";
+        String addressString = "";
         // Add address fields to string
-        addressString = String.format(addressString, civicNum);
-        addressString = String.format(addressString, suite);
-        addressString = String.format(addressString, street);
+        if (civicNum != null) {
+            addressString += Integer.parseInt(civicNum) + " ";
+        }
+        if (suite != null) {
+            addressString += Integer.parseInt(suite) + " ";
+        }
+        addressString += street + ", " + city + ", " + province + " " + postal + "\n" + country;
+
         address.setAddress(addressString);
         address.setPostal(postal);
         address.setCity(city);
