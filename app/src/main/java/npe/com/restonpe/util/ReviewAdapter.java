@@ -96,13 +96,15 @@ public class ReviewAdapter extends BaseAdapter {
         TextView title = (TextView) rowView.findViewById(R.id.review_title);
         TextView submitter = (TextView) rowView.findViewById(R.id.review_submitter);
 
-        title.setText(list.get(position).getTitle());
-        submitter.setText(list.get(position).getSubmitter());
+        Review item = list.get(position);
+
+        title.setText(item.getTitle());
+        submitter.setText(item.getSubmitter());
 
         // Put id of Review into list item
         rowView.setTag(list.get(position).getId());
 
-        setRowClickListener(rowView, position);
+//        setRowClickListener(rowView, position);
 
         return rowView;
     }

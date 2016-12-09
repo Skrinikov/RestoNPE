@@ -90,7 +90,7 @@ public class ShowReviewFragment extends Fragment {
                 Log.i(TAG, "Reading Json response...");
 
                 try {
-                    HerokuRestos herokuRestos = new HerokuRestos();
+                    HerokuRestos herokuRestos = new HerokuRestos(activity);
                     return herokuRestos.readReviewJson(reader);
                 } catch (IOException e) {
                     Log.i(TAG, "An IO exception occurred: " + e.getMessage());

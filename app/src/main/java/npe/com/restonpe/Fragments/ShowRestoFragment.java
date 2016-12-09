@@ -87,7 +87,7 @@ public class ShowRestoFragment extends Fragment {
      * @param zomato_id The Zomato id of the restaurant whose information is to be retrieved.
      * @param heroku_id The Heroku id of the restaurant whose information is to be retrieved.
      */
-    private void getRestaurant(long local_id, long zomato_id, long heroku_id) {
+    private void getRestaurant(long local_id, long zomato_id, final long heroku_id) {
         Log.d(TAG, "Local id: " + local_id);
         Log.d(TAG, "Zomato id: " + zomato_id);
         Log.d(TAG, "Heroku id: " + heroku_id);
@@ -106,7 +106,7 @@ public class ShowRestoFragment extends Fragment {
 
                 @Override
                 protected List<Resto> readJson(JsonReader reader) {
-                    Log.i(TAG, "Reading Json response...");
+                    Log.i(TAG, "Reading Zomato Resto information Json response...");
 
                     try {
                         ZomatoRestos zomatoRestos = new ZomatoRestos(activity);
@@ -124,7 +124,7 @@ public class ShowRestoFragment extends Fragment {
             RestoNetworkManager<Resto> herokuNetworkManager = new RestoNetworkManager<Resto>(activity) {
                 @Override
                 public void onPostExecute(List<Resto> list) {
-                    if (list.size() > 0) {
+                    if (list != null && list.size() > 0) {
                         resto = list.get(0);
                         displayInformation(resto);
                     }
@@ -132,10 +132,10 @@ public class ShowRestoFragment extends Fragment {
 
                 @Override
                 protected List<Resto> readJson(JsonReader reader) {
-                    Log.i(TAG, "Reading Json response...");
+                    Log.i(TAG, "Reading Heroku Resto information Json response...");
 
                     try {
-                        HerokuRestos herokuRestos = new HerokuRestos();
+                        HerokuRestos herokuRestos = new HerokuRestos(activity);
                         return herokuRestos.readRestoInformation(reader);
                     } catch (IOException e) {
                         Log.i(TAG, "An IO exception occurred: " + e.getMessage());
@@ -144,7 +144,30 @@ public class ShowRestoFragment extends Fragment {
                 }
             };
 
+            RestoNetworkManager<Review> restoNetworkManager = new RestoNetworkManager<Review>(activity) {
+                @Override
+                public void onPostExecute(List<Review> list) {
+                    if (list != null && list.size() > 0) {
+                        displayReviews(list);
+                    }
+                }
+
+                @Override
+                protected List<Review> readJson(JsonReader reader) {
+                    Log.i(TAG, "Reading Heroku Reviews Json response...");
+
+                    try {
+                        HerokuRestos herokuRestos = new HerokuRestos(activity);
+                        return herokuRestos.readReviewJson(reader);
+                    } catch (IOException e) {
+                        Log.i(TAG, "An IO exception occurred: " + e.getMessage());
+                    }
+                    return null;
+                }
+            };
+
             herokuNetworkManager.findRestoInformationFromHeroku(heroku_id);
+            restoNetworkManager.findReviews(heroku_id);
         } else if (local_id > 0) {
             // Get resto from local db
             Log.i(TAG, "Getting Resto with id " + local_id + " from local database");
@@ -162,7 +185,6 @@ public class ShowRestoFragment extends Fragment {
      * @param resto The {@code Resto} whose information is to be displayed on the screen
      */
     private void displayInformation(Resto resto) {
-        Log.i(TAG, "Resto: " + resto.getAddress());
         TextView name = (TextView) activity.findViewById(R.id.textViewShowName);
         TextView address = (TextView) activity.findViewById(R.id.textViewShowAddress);
         TextView cuisines = (TextView) activity.findViewById(R.id.textViewShowCuisines);
@@ -184,10 +206,11 @@ public class ShowRestoFragment extends Fragment {
         } else {
             phone.setText(getString(R.string.show_phone_error));
         }
+    }
 
-        List<Review> reviewsList = resto.getReviews();
-        if (reviewsList == null || reviewsList.size() == 0) {
-            ReviewAdapter adapter = new ReviewAdapter(activity, reviewsList);
+    private void displayReviews(List<Review> reviews) {
+        if (reviews == null || reviews.size() == 0) {
+            ReviewAdapter adapter = new ReviewAdapter(activity, reviews);
 
             ListView listView = (ListView) activity.findViewById(R.id.review_list);
             listView.setAdapter(adapter);
