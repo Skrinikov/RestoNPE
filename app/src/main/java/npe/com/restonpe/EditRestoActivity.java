@@ -114,7 +114,6 @@ public class EditRestoActivity extends BaseActivity {
         int priceSize = priceAdapter.getCount();
 
         for (int i = 0; i < genreSize; i++) {
-            Log.d(TAG, "genre: " + resto.getGenre().substring(0, resto.getGenre().indexOf(',')));
             int comma = resto.getGenre().indexOf(',') > 0 ? resto.getGenre().indexOf(',') : resto.getGenre().length();
             String cuisine = resto.getGenre().substring(0, comma);
             if (genreAdapter.getItem(i).toString().contains(cuisine)) {
