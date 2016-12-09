@@ -1,6 +1,7 @@
 package npe.com.restonpe.Fragments;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonReader;
 import android.util.Log;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.List;
 
+import npe.com.restonpe.AddReviewActivity;
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Beans.Review;
 import npe.com.restonpe.Heroku.HerokuRestos;
@@ -35,6 +37,8 @@ import npe.com.restonpe.util.ReviewAdapter;
 public class ShowRestoFragment extends Fragment {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
+
+    public static final String RESTO_ID = "resto_id";
 
     private ShowRestoActivity activity;
     private Resto resto;
@@ -232,5 +236,12 @@ public class ShowRestoFragment extends Fragment {
         resto.setSubmitterEmail("ZomatoEmail");
         dao.addRestaurant(resto);
         Toast.makeText(activity, R.string.added, Toast.LENGTH_LONG).show();
+    }
+
+    public void addReview() {
+        Intent intent = new Intent(activity, AddReviewActivity.class);
+        intent.putExtra(RESTO_ID, resto.getHerokuId());
+
+        startActivity(intent);
     }
 }

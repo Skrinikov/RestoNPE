@@ -143,6 +143,10 @@
     <string name="review_rating">Rating: %1$f</string>
     <string name="review_add">Add Review</string>
 
+    <!--Add review-->
+    <string name="add_review_title">Title</string>
+    <string name="add_review_content">Content</string>
+
     <!--RestoAdapter id codes-->
     <string name="local_id_code">local id</string>
     <string name="zomato_id_code">zomato id</string>

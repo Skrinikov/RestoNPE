@@ -164,4 +164,8 @@ public class ShowRestoActivity extends BaseActivity {
         Button addReview = (Button) findViewById(R.id.buttonAddReview);
         addReview.setVisibility(View.GONE);
     }
+
+    public void addReview(View view) {
+        fragment.addReview();
+    }
 }
