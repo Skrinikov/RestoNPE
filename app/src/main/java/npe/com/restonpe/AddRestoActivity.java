@@ -1,7 +1,10 @@
 package npe.com.restonpe;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Address;
@@ -255,5 +258,69 @@ public class AddRestoActivity extends BaseActivity {
 
         return true;
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Log.d(TAG, "onBackPressed called" + pref.toString());
+        boolean isEmpty = checkIfInputsAreEmpty();
+
+        // There is unsaved data.
+        if (isEmpty) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(getString(R.string.unsaved));
+            builder.setMessage(getString(R.string.not_saved));
+
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                /**
+                 * Call finish() on the activity where reside the dialog, which will also
+                 * discard unsaved data.
+                 *
+                 * @param dialog The dialog that is currently shown / the on pressed on.
+                 * @param which The button pressed.
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    finish();
+                }
+            });
+
+            builder.setNegativeButton(R.string.no, null);
+
+            Dialog dialog = builder.create();
+            dialog.show();
+        } else {
+            //No unsaved data.
+            super.onBackPressed();
+        }
+    }
+
+    /**
+     * Checks if any of the input fields have a user defined value in them.
+     * If any of the input fields has a changed value, it will return false.
+     *
+     * @return boolean representing if the inputs are empty.
+     */
+    private boolean checkIfInputsAreEmpty() {
+        if(!((EditText)findViewById(R.id.restoName)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoAddress)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoCity)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoProvince)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoCountry)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoPostal)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoPhone)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoEmail)).getText().toString().isEmpty())
+            return false;
+        if(!((EditText)findViewById(R.id.restoLink)).getText().toString().isEmpty())
+            return false;
+
+        return true;
     }
 }
