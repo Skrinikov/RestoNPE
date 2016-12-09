@@ -32,14 +32,14 @@ import npe.com.restonpe.util.ReviewAdapter;
  *
  * @author Uen Yi Cindy Hung, Jeegna Patel
  * @version 1.0
- * @since 01/12/2016
+ * @since 09/12/2016
  */
 public class ShowRestoFragment extends Fragment {
 
     private static final String TAG = ShowRestoActivity.class.getSimpleName();
-
     public static final String RESTO_ID = "resto_id";
 
+    private Bundle bundle;
     private ShowRestoActivity activity;
     private Resto resto;
 
@@ -73,7 +73,22 @@ public class ShowRestoFragment extends Fragment {
         Log.d(TAG, "onActivityCreated called");
         activity = (ShowRestoActivity) getActivity();
 
-        Bundle bundle = activity.getIntent().getExtras();
+        bundle = activity.getIntent().getExtras();
+
+        long local_id = bundle.getLong(RestoAdapter.LOCAL_ID);
+        long zomato_id = bundle.getLong(RestoAdapter.ZOMATO_ID);
+        long heroku_id = bundle.getLong(RestoAdapter.HEROKU_ID);
+
+        // Get nearby restaurants
+        getRestaurant(local_id, zomato_id, heroku_id);
+    }
+
+    /**
+     * Updates the views in case the resto object has been modified.
+     */
+    @Override
+    public void onResume() {
+        super.onResume();
 
         long local_id = bundle.getLong(RestoAdapter.LOCAL_ID);
         long zomato_id = bundle.getLong(RestoAdapter.ZOMATO_ID);
@@ -243,5 +258,12 @@ public class ShowRestoFragment extends Fragment {
         intent.putExtra(RESTO_ID, resto.getHerokuId());
 
         startActivity(intent);
+    }
+
+    /**
+     * @return long the resto id.
+     */
+    public long getRestoID() {
+        return this.resto.getId();
     }
 }

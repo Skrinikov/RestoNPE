@@ -23,7 +23,7 @@ import npe.com.restonpe.database.RestoDAO;
  * Creates an instance of the ShowResto Activity. This {@code Activity} will allow the user to
  * view details of a restaurant.
  *
- * @author Jeegna Patel
+ * @author Jeegna Patel, Uen Yi Cindy Hung
  * @version 1.0
  * @since 07/12/2016
  */
@@ -70,7 +70,7 @@ public class ShowRestoActivity extends BaseActivity {
         Log.d(TAG, "onCreateOptionsMenu called");
         getMenuInflater().inflate(R.menu.resto_detail_menu, menu);
 
-        Object submitter = extras.get(SUBMITTER);
+        String submitter = extras.getString(SUBMITTER);
 
         if (submitter != null && submitter.toString().length() > 0) {
             menu.getItem(1).setIcon(R.drawable.ic_remove);
@@ -93,10 +93,12 @@ public class ShowRestoActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Log.d(TAG, "onOptionsItemSelected called");
 
-        if(item.getItemId() == R.id.add_resto) {
+        if (item.getItemId() == R.id.add_resto) {
             addRemoveResto(item);
-        }else{
-            Toast.makeText(this,"mod",Toast.LENGTH_LONG).show();
+        } else {
+            Intent intent = new Intent(this, EditRestoActivity.class);
+            intent.putExtra("id", fragment.getRestoID());
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -125,12 +127,17 @@ public class ShowRestoActivity extends BaseActivity {
         }
     }
 
-    private void addRemoveResto(final MenuItem item){
+    /**
+     * Determine if it is a add or remove resto from the local database
+     * with confirmation dialog if removing.
+     *
+     * @param item the menu item clicked.
+     */
+    private void addRemoveResto(final MenuItem item) {
         String submitter = extras.getString(SUBMITTER);
 
         // Delete if already added
-        if (submitter != null && submitter.length() > 0) {
-
+        if (submitter != null && submitter.toString().length() > 0) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(getString(R.string.remove));
             builder.setMessage(getString(R.string.confirm_remove));

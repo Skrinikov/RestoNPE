@@ -387,7 +387,9 @@ public class RestoDAO extends SQLiteOpenHelper {
         cv.put(COLUMN_SUITE, address.getSuite());
         cv.put(COLUMN_PROVINCE, address.getProvince());
 
-        getWritableDatabase().update(TABLE_ADDRESS, cv, COLUMN_RESTO_FK, new String[]{restoId + ""});
+        Log.d(TAG,"cv contains: " + cv.toString());
+
+        getWritableDatabase().update(TABLE_ADDRESS, cv, COLUMN_RESTO_FK + "=?", new String[]{String.valueOf(restoId)});
     }
 
     /**
