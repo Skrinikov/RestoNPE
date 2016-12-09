@@ -84,6 +84,6 @@
             android:layout_marginTop="16dp"
             android:textColor="@color/white_text"
             android:background="@color/colorAccent"
-            android:onClick="addReview"/>
+            android:onClick="showAddReviewActivity"/>
     </LinearLayout>
 </LinearLayout>

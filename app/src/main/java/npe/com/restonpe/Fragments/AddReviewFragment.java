@@ -151,6 +151,11 @@ public class AddReviewFragment extends Fragment {
         }
     }
 
+    /**
+     * Checks if the network is up and usable.
+     *
+     * @return {@code True} if the network is up and can be used, {@code False} otherwise
+     */
     public boolean isNetworkAccessible() {
         ConnectivityManager connMgr = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
 

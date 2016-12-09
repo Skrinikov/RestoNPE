@@ -234,6 +234,11 @@ public class ShowRestoFragment extends Fragment {
         }
     }
 
+    /**
+     * Displays the given list of Reviews on the screen
+     *
+     * @param reviews A list of {@code Review}s
+     */
     private void displayReviews(List<Review> reviews) {
         if (reviews != null && reviews.size() > 0) {
             ReviewAdapter adapter = new ReviewAdapter(activity, reviews);
@@ -243,6 +248,9 @@ public class ShowRestoFragment extends Fragment {
         }
     }
 
+    /**
+     * Adds the Resto this fragment is currently showing to the Favourites
+     */
     public void addRestoToFavourites() {
         // Get form local db
         Log.d(TAG, "Adding resto to local database");
@@ -253,6 +261,9 @@ public class ShowRestoFragment extends Fragment {
         Toast.makeText(activity, R.string.added, Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Launches the AddReview activity.
+     */
     public void addReview() {
         Intent intent = new Intent(activity, AddReviewActivity.class);
         intent.putExtra(RESTO_ID, resto.getHerokuId());
@@ -261,7 +272,9 @@ public class ShowRestoFragment extends Fragment {
     }
 
     /**
-     * @return long the resto id.
+     * Gets the id of the Resto this Fragment is currently displaying.
+     *
+     * @return The resto id.
      */
     public long getRestoID() {
         return this.resto.getId();

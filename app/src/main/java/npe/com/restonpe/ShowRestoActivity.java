@@ -167,12 +167,20 @@ public class ShowRestoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Removes the Add Review button
+     */
     public void removeReviewButton() {
         Button addReview = (Button) findViewById(R.id.buttonAddReview);
-        addReview.setVisibility(View.GONE);
+        addReview.setVisibility(View.INVISIBLE);
     }
 
-    public void addReview(View view) {
+    /**
+     * Starts the AddReview activity.
+     *
+     * @param view The view upon which the on click was called.
+     */
+    public void showAddReviewActivity(View view) {
         fragment.addReview();
     }
 }
