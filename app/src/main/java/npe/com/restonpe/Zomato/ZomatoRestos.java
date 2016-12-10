@@ -40,6 +40,7 @@ public class ZomatoRestos {
     private static final String RESTO_LOCATION_LATITUDE = "latitude";
     private static final String RESTO_LOCATION_LONGITUDE = "longitude";
     private static final String RESTO_LOCATION_POSTAL = "postal";
+    private static final String RESTO_LOCATION_COUNTRY = "country";
 
     private static final String RESTO_REVIEW_AVG = "aggregate_rating";
 
@@ -261,6 +262,7 @@ public class ZomatoRestos {
         String province = map.get(RESTO_LOCATION_PROVINCE);
         String postal = map.get(RESTO_LOCATION_POSTAL);
         String addressString = map.get(RESTO_LOCATION_ADDRESS);
+        String country = map.get(RESTO_LOCATION_COUNTRY);
 
         if (id != null) {
             resto.setZomatoId(Integer.parseInt(id));
@@ -277,6 +279,7 @@ public class ZomatoRestos {
         address.setCity(city);
         address.setPostal(postal);
         address.setProvince(province);
+        address.setCountry(country);
         if (latitude != null && longitude != null) {
             address.setLatitude(Double.parseDouble(latitude));
             address.setLongitude(Double.parseDouble(longitude));
@@ -356,13 +359,13 @@ public class ZomatoRestos {
                     Log.i(TAG, "Found address: " + address);
 
                     values.put(RESTO_LOCATION_ADDRESS, address);
-                    values.put(RESTO_LOCATION_PROVINCE, province);
+                    values.put(RESTO_LOCATION_PROVINCE, province.isEmpty()?"QC":province);
                     break;
                 case "city":
                     String city = reader.nextString();
                     Log.i(TAG, "Found city: " + city);
 
-                    values.put(RESTO_LOCATION_CITY, city);
+                    values.put(RESTO_LOCATION_CITY, city.isEmpty()?"QC":city);
                     break;
                 case "latitude":
                     double latitude = reader.nextDouble();
@@ -386,6 +389,8 @@ public class ZomatoRestos {
                     Log.i(TAG, "The " + name + " was ignored.");
                     reader.skipValue();
             }
+
+            values.put(RESTO_LOCATION_COUNTRY, "Unavailable");
         }
         reader.endObject();
 
