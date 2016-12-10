@@ -45,8 +45,6 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_REVIEW_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews?id=%1$s";
     // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
     private static final String RESTO_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/details?id=%1$s";
-    // The URL to hit to add a resto to the Heroku database
-    private static final String RESTO_ADD_URL_HEROKU = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -263,17 +261,6 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
      * @param resto The restaurant object to add to Heroku.
      */
     public void addResto(Resto resto) {
-        String updatedURL = String.format(RESTO_ADD_URL_HEROKU);
-
-        try {
-            URL url = new URL(updatedURL);
-
-            Log.i(TAG, "Hitting " + updatedURL);
-
-            execute(url);
-        } catch (MalformedURLException e) {
-            Log.e(TAG, "Malformed URL: " + updatedURL);
-        }
     }
 
     /**

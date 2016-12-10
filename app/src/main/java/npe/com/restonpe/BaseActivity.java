@@ -4,9 +4,12 @@ import android.Manifest;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -25,7 +28,17 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Services.RestoLocationManager;
@@ -252,33 +265,84 @@ public class BaseActivity extends AppCompatActivity
      */
     private void syncHeroku(List<Resto> list) {
         // url is https://shrouded-thicket-29911.herokuapp.com/api/resto/create
-        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(this) {
-            @Override
-            public void onPostExecute(List<Resto> list) {
-            }
+    }
 
-            @Override
-            protected List<Resto> readJson(JsonReader reader) {
-                return null;
-            }
-        };
+    public class RetrieveData extends AsyncTask<Void, Void, String> {
 
-        for(Resto resto : list){
-            restoNetworkManager.addResto(resto);
+        @Override
+        protected String doInBackground(Void... params) {
+            RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
+            List<Resto> restos = db.getAllRestaurants();
+            String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
+
+            try {
+                for(Resto resto: restos) {
+                    if (isNetworkAccessible()) {
+                        URL url = new URL(herokuURL);
+                        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+
+                        // Set headers
+                        conn.setRequestMethod("POST");
+                        conn.setDoOutput(true);
+                        conn.setDoInput(true);
+                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+                        conn.connect();
+
+                        JSONObject obj = new JSONObject();
+                        obj.put("name", resto.getName());
+                        obj.put("phone", resto.getPhone());
+                        obj.put("resto_email", resto.getEmail());
+                        obj.put("link",resto.getLink());
+                        obj.put("price",resto.getPriceRange().length());
+                        obj.put("genre",resto.getGenre());
+                        obj.put("civic_num",resto.getAddress().getAddress());
+                        obj.put("street",resto.getAddress().getAddress());
+                        obj.put("suite",resto.getAddress().getSuite());
+                        obj.put("city",resto.getAddress().getCity());
+                        obj.put("country",resto.getAddress().getCountry());
+                        obj.put("postal_code",resto.getAddress().getPostal());
+                        obj.put("province",resto.getAddress().getProvince());
+                        obj.put("submitterName",resto.getSubmitterName());
+                        obj.put("submitterEmail", resto.getSubmitterEmail());
+
+                        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+                        out.write(obj.toString());
+                        out.close();
+
+                        int httpResult = conn.getResponseCode();
+
+                        if (httpResult != HttpURLConnection.HTTP_OK) {
+                            Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
+                        }
+                    }
+                }
+            } catch (MalformedURLException mue) {
+                Log.e(TAG, "Malformed URL: " + herokuURL);
+            } catch (IOException ioe) {
+                Log.e(TAG, "An IOException occurred while reading the JSON file: " + ioe.getMessage());
+            } catch (JSONException e) {
+                Log.e(TAG, "JSONException: " + e.getMessage());
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String str) {
+            Toast.makeText(BaseActivity.this, R.string.sync, Toast.LENGTH_LONG).show();
         }
     }
 
-    public class RetrieveData extends AsyncTask<Void, Void, List<Resto>> {
+    /**
+     * Checks if the network is up and usable.
+     *
+     * @return {@code True} if the network is up and can be used, {@code False} otherwise
+     */
+    public boolean isNetworkAccessible() {
+        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        @Override
-        protected List<Resto> doInBackground(Void... params) {
-            RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
-            return db.getAllRestaurants();
-        }
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
 
-        @Override
-        protected void onPostExecute(List<Resto> list) {
-            syncHeroku(list);
-        }
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
