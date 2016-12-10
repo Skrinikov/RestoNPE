@@ -121,7 +121,7 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Async class to do network registration in a background thread.
      */
-    public class RegisterAsync extends AsyncTask<String, Void, Boolean> {
+    public class RegisterAsync extends AsyncTask<String, Void, Integer> {
 
         /**
          * Tries to authenticate the given email password combination with the server. If the server
@@ -132,10 +132,10 @@ public class RegisterActivity extends AppCompatActivity {
          * @return True if server authenticates the user.
          */
         @Override
-        protected Boolean doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
             HttpURLConnection conn = null;
             OutputStream out;
-            boolean isFound = false;
+            int result = 0;
 
             try {
 
@@ -166,12 +166,15 @@ public class RegisterActivity extends AppCompatActivity {
 
                     // Get response
                     int response = conn.getResponseCode();
-                    if (response != HttpURLConnection.HTTP_CREATED) {
-                        Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
-                        isFound = false;
+                    if (response == HttpURLConnection.HTTP_CREATED) {
+                        // Created Url
+                        result = 2;
+                    } else if(response == HttpURLConnection.HTTP_OK){
+                        //Redirect Happened -> email or username taken
+                        result = 1;
                     } else {
-                        Log.i(TAG, "Success!");
-                        isFound = true;
+                        Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
+                        result = 0;
                     }
 
                     conn.disconnect();
@@ -186,7 +189,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (conn != null)
                     conn.disconnect();
             }
-            return isFound;
+            return result;
         }
 
         /**
@@ -196,12 +199,26 @@ public class RegisterActivity extends AppCompatActivity {
          * @param result result of the background thread.
          */
         @Override
-        public void onPostExecute(Boolean result){
-            if(result)
+        public void onPostExecute(Integer result){
+            if(result == 2)
                 saveToPreferencesAndLaunchMain();
+            else if(result == 1)
+                displayTakenUsernameOrEmail();
             else
                 displayFailedRegister();
         }
+    }
+
+    /**
+     * Displays an error to the user which says that the given email/name is already taken
+     */
+    private void displayTakenUsernameOrEmail() {
+        TextInputLayout temp = (TextInputLayout) findViewById(R.id.emailLbl);
+        temp.setErrorEnabled(true);
+        temp.setError(getString(R.string.register_email_taken));
+        TextInputLayout temp2 = (TextInputLayout) findViewById(R.id.nameLbl);
+        temp2.setErrorEnabled(true);
+        temp2.setError(getString(R.string.register_name_taken));
     }
 
     /**

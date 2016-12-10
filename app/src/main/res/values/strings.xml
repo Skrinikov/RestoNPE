@@ -128,6 +128,8 @@
     <string name="login_authen_postal_error">Invalid postal code.</string>
     <string name="login_wait">Please wait. Login in...</string>
     <string name="register_wait">Registration in progress...</string>
+    <string name="register_email_taken">Email is taken</string>
+    <string name="register_name_taken">Name is taken</string>
 
     <!--Search restos-->
     <string name="search_name">Name</string>
