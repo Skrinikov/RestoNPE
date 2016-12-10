@@ -197,9 +197,7 @@ public class HerokuRestos {
         if (civicNum != null) {
             addressString += Integer.parseInt(civicNum) + " ";
         }
-        if (suite != null) {
-            addressString += Integer.parseInt(suite) + " ";
-        }
+        addressString += suite + " ";
         addressString += street + ", " + city + ", " + province + " " + postal + "\n" + country;
 
         address.setAddress(addressString);
