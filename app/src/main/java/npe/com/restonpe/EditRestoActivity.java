@@ -113,6 +113,10 @@ public class EditRestoActivity extends BaseActivity {
         email.setText(resto.getEmail());
         link.setText(resto.getLink());
         adr.setText(resto.getAddress().getAddress());
+        city.setText(resto.getAddress().getCity());
+        province.setText(resto.getAddress().getProvince());
+        country.setText(resto.getAddress().getCountry());
+        postal.setText(resto.getAddress().getPostal());
 
         submitResto.setText(R.string.save);
         submitResto.setOnClickListener(null);
