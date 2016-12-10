@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import npe.com.restonpe.Beans.Review;
@@ -90,13 +91,17 @@ public class ShowReviewFragment extends Fragment {
         TextView tvSubmitter = (TextView)activity.findViewById(R.id.textViewReviewSubmitter);
         TextView tvSubmitterEmail = (TextView)activity.findViewById(R.id.textViewReviewSubmitterEmail);
         TextView tvLikes = (TextView)activity.findViewById(R.id.textViewReviewLikes);
-        TextView tvRating = (TextView)activity.findViewById(R.id.textViewReviewRating);
+        RatingBar tvRating = (RatingBar)activity.findViewById(R.id.ratingBarReviewRating);
 
         tvTitle.setText(title);
         tvContent.setText(content);
-        tvSubmitter.setText(String.format(activity.getString(R.string.review_submitter), submitter));
+        if (submitter.isEmpty()) {
+            tvSubmitter.setText("");
+        } else {
+            tvSubmitter.setText(String.format(activity.getString(R.string.review_submitter), submitter));
+        }
         tvSubmitterEmail.setText(submitterEmail);
         tvLikes.setText(String.format(activity.getString(R.string.review_likes), likes));
-        tvRating.setText(String.format(activity.getString(R.string.review_rating), rating));
+        tvRating.setRating((float)rating);
     }
 }

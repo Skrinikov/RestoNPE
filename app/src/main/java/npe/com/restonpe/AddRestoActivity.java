@@ -194,7 +194,7 @@ public class AddRestoActivity extends BaseActivity {
 
         // Checking if email is in correct format if it is not empty.
         TextInputEditText email = (TextInputEditText) findViewById(R.id.restoEmail);
-        if (!email.getText().toString().isEmpty() && Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+        if (email.getText().toString().isEmpty() || !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
             isValid = false;
             TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoEmailLbl);
             temp.setErrorEnabled(true);
