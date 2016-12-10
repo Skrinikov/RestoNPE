@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import java.io.BufferedWriter;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -44,16 +42,12 @@ public class AddReviewFragment extends Fragment {
     // The URL to hit to add a review to a restaurant in Heroku
     private static final String RESTO_URL_ADD_REVIEW_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews/create";
 
-    // Headers for HTTP request to Heroku
-    private static final String REVIEW_USER_HEADER = "email";
-    private static final String REVIEW_PASSWORD_HEADER = "password";
-    private static final String REVIEW_RESTO_ID_HEADER = "id";
-    private static final String REVIEW_TITLE_HEADER = "title";
-    private static final String REVIEW_CONTENT_HEADER = "content";
-    private static final String REVIEW_RATING_HEADER = "rating";
+    // Json for HTTP POST request to Heroku
+    private String jsonData = "{\"email\":\"%1$s\",\"password\":\"%2$s\",\"title\":\"%3$s\" , \"content\":\"%4$s\" , \"rating\":\"%5$s\" , \"id\":\"%6$s\"}";
 
-    private static final String RESTO_ACCEPT_CONTENT = "Content-Type";
-    private static final String RESTO_ACCEPT = "application/json; charset=UTF-8;";
+    private static final String CONTENT_TYPE = "Content-Type";
+    private static final String TYPE = "application/json; charset=UTF-8;";
+    private static final String CONTENT_LENGTH = "Content-Length";
 
     private AddReviewActivity activity;
     private SharedPreferences prefs;
@@ -126,37 +120,31 @@ public class AddReviewFragment extends Fragment {
                         if (isNetworkAccessible()) {
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                            // Put user email and password
+                            // Format Json string
+                            jsonData = String.format(jsonData, review.getSubmitterEmail(), password, review.getTitle(), review.getContent(), review.getRating(), review.getRestoId());
+                            byte[] bytes = jsonData.getBytes("UTF-8");
+                            int bytesLeng = bytes.length;
+
+                            // Set HTTP request
                             conn.setRequestMethod("POST");
-                            conn.setRequestProperty(RESTO_ACCEPT_CONTENT, RESTO_ACCEPT);
-                            conn.setDoInput(true);
+                            conn.setRequestProperty(CONTENT_TYPE, TYPE);
+                            conn.addRequestProperty(CONTENT_LENGTH, String.valueOf(bytesLeng));
                             conn.setDoOutput(true);
+                            conn.setDoInput(true);
 
-                            Uri.Builder builder = new Uri.Builder()
-                                .appendQueryParameter(REVIEW_USER_HEADER, review.getSubmitterEmail())
-                                .appendQueryParameter(REVIEW_PASSWORD_HEADER, password)
-                                .appendQueryParameter(REVIEW_TITLE_HEADER, review.getTitle())
-                                .appendQueryParameter(REVIEW_CONTENT_HEADER, review.getContent())
-                                .appendQueryParameter(REVIEW_RATING_HEADER, String.valueOf(review.getRating()))
-                                .appendQueryParameter(REVIEW_RESTO_ID_HEADER, String.valueOf(review.getRestoId()));
-                            String query = builder.build().getQuery();
+                            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
 
-                            Log.i(TAG, "Post query: " + query);
+                            out.write(bytes);
+                            out.flush();
+                            out.close();
 
-                            OutputStream os = conn.getOutputStream();
-                            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-                            writer.write(query);
-                            writer.flush();
-                            writer.close();
-                            os.close();
-
-                            conn.connect();
-
+                            // Get response
                             int response = conn.getResponseCode();
                             if (response != HttpURLConnection.HTTP_OK) {
-                                Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
+                                Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
                             } else {
-                                Toast.makeText(activity, getString(R.string.add_review_valid), Toast.LENGTH_LONG).show();
+                                Log.i(TAG, "Success!");
+                                activity.finish();
                             }
 
                             conn.disconnect();
@@ -164,7 +152,8 @@ public class AddReviewFragment extends Fragment {
                     } catch (MalformedURLException e) {
                         Log.e(TAG, "Malformed URL: " + RESTO_URL_ADD_REVIEW_HEROKU);
                     } catch (IOException e) {
-                        Log.e(TAG, "An IOException occurred while reading the JSON file: " + e.getMessage());
+                        Log.e(TAG, "An IOException occurred: " + e.getMessage());
+                        e.printStackTrace();
                     }
 
                     return null;
