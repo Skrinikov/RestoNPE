@@ -205,9 +205,7 @@ public class HerokuRestos {
         address.setCity(city);
         address.setProvince(province);
         address.setCountry(country);
-        if (suite != null) {
-            address.setSuite(Integer.parseInt(suite));
-        }
+        address.setSuite(suite);
         if (latitude != null) {
             address.setLatitude(Double.parseDouble(latitude));
         }

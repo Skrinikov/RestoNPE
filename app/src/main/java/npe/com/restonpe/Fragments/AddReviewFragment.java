@@ -53,7 +53,7 @@ public class AddReviewFragment extends Fragment {
     private static final String REVIEW_RATING_HEADER = "rating";
 
     private static final String RESTO_ACCEPT_CONTENT = "Content-Type";
-    private static final String RESTO_ACCEPT = "application/json";
+    private static final String RESTO_ACCEPT = "application/json; charset=UTF-8;";
 
     private AddReviewActivity activity;
     private SharedPreferences prefs;
@@ -139,7 +139,7 @@ public class AddReviewFragment extends Fragment {
                                 .appendQueryParameter(REVIEW_CONTENT_HEADER, review.getContent())
                                 .appendQueryParameter(REVIEW_RATING_HEADER, String.valueOf(review.getRating()))
                                 .appendQueryParameter(REVIEW_RESTO_ID_HEADER, String.valueOf(review.getRestoId()));
-                            String query = builder.build().getEncodedQuery();
+                            String query = builder.build().getQuery();
 
                             Log.i(TAG, "Post query: " + query);
 
