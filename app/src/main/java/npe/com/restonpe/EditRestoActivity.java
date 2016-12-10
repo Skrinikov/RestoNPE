@@ -6,6 +6,8 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.location.Address;
+import android.location.Location;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
@@ -20,6 +22,7 @@ import android.widget.SpinnerAdapter;
 
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Fragments.AddRestoFragment;
+import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.database.RestoDAO;
 
 /**
@@ -42,6 +45,7 @@ public class EditRestoActivity extends BaseActivity {
     private SharedPreferences pref;
     private Resto resto;
     private String[] restoGenre;
+    private npe.com.restonpe.Beans.Address restoAddress;
 
     /**
      * Loads the fragment and changes the action bar's title.
@@ -126,6 +130,8 @@ public class EditRestoActivity extends BaseActivity {
                 if (validateInputFields()) {
                     Resto resto = buildResto();
 
+                    Log.d(TAG,"resto is: "+ resto.toString());
+
                     RestoDAO db = RestoDAO.getDatabase(EditRestoActivity.this);
                     db.updateRestaurant(resto);
 
@@ -184,9 +190,7 @@ public class EditRestoActivity extends BaseActivity {
 
         resto.setLink(link.getText().toString());
 
-        npe.com.restonpe.Beans.Address address = new npe.com.restonpe.Beans.Address();
-        address.setAddress(adr.getText().toString());
-        resto.setAddress(address);
+        resto.setAddress(restoAddress);
 
         //Spinners;
         resto.setGenre(genre.getSelectedItem().toString());
@@ -264,6 +268,9 @@ public class EditRestoActivity extends BaseActivity {
             temp.setError(getString(R.string.email_error));
         }
 
+        if (isValid && !validateAddress())
+            isValid = false;
+
         return isValid;
     }
 
@@ -320,13 +327,13 @@ public class EditRestoActivity extends BaseActivity {
             return false;
         if (!adr.getText().toString().trim().equals(resto.getAddress().getAddress()))
             return false;
-        if (!city.getText().toString().isEmpty())
+        if (!city.getText().toString().trim().equals(resto.getAddress().getCity()))
             return false;
-        if (!province.getText().toString().isEmpty())
+        if (!province.getText().toString().trim().equals(resto.getAddress().getProvince()))
             return false;
-        if (!country.getText().toString().isEmpty())
+        if (!country.getText().toString().trim().equals(resto.getAddress().getCountry()))
             return false;
-        if (!postal.getText().toString().isEmpty())
+        if (!postal.getText().toString().trim().equals(resto.getAddress().getPostal()))
             return false;
         if(!(phone.getText().toString().isEmpty() && resto.getPhone() < 1)) {
             if (!phone.getText().toString().equals(String.valueOf(resto.getPhone())))
@@ -350,5 +357,55 @@ public class EditRestoActivity extends BaseActivity {
         }
 
         return nochangeGenre;
+    }
+
+    /**
+     * Validates only the address using the RestoLocationManager. If it is valid stores the Location
+     * in an instance variable.
+     *
+     * @return true if the address is valid and was found.
+     */
+    private boolean validateAddress() {
+        Log.d(TAG, "ValidateAddress");
+        String address = this.adr.getText().toString();
+        String city = this.city.getText().toString();
+        String province = this.province.getText().toString();
+        String country = this.country.getText().toString();
+        String postal = this.postal.getText().toString();
+
+
+        RestoLocationManager lm = new RestoLocationManager(this) {
+            @Override
+            public void onLocationChanged(Location location) {
+                // Is not used.
+            }
+        };
+
+        Address addr = lm.getLocationFromName(postal.toUpperCase());
+        String addressString = address;
+        if (addr == null) {
+            Log.d(TAG, "Did not find address with Postal code");
+            addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
+            if (addr == null) {
+                Log.d(TAG, "Did not find address with all variables");
+                return false;
+            }
+        }
+
+        // Should have named the address bean something else :/
+        restoAddress = new npe.com.restonpe.Beans.Address();
+        restoAddress.setLatitude(addr.getLatitude());
+        restoAddress.setLongitude(addr.getLongitude());
+        restoAddress.setCity(city);
+        restoAddress.setAddress(addressString);
+        restoAddress.setPostal(postal);
+        restoAddress.setCountry(country);
+        restoAddress.setProvince(province);
+        Log.d(TAG, "latitude: " + addr.getLatitude());
+        Log.d(TAG, "longitude: " + addr.getLongitude());
+
+
+        return true;
+
     }
 }
