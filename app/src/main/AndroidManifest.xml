@@ -63,8 +63,9 @@
         <activity android:name=".ShowRestoActivity" />
         <activity android:name=".ShowReviewActivity" />
         <activity android:name=".FindSomewhereRestoActivity" />
-        <activity android:name=".EditRestoActivity"></activity>
+        <activity android:name=".EditRestoActivity" />
         <activity android:name=".AddReviewActivity" />
+        <activity android:name=".RegisterActivity"></activity>
     </application>
 
 </manifest>

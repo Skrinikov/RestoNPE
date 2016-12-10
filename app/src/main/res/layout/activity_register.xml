@@ -11,7 +11,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="npe.com.restonpe.LoginActivity">
+    tools:context="npe.com.restonpe.RegisterActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -89,23 +89,51 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/passwordConfirmationLbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Login_only"
+            app:errorTextAppearance="@style/error_login">
+
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/passwordConfirmation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_password_confirmation"
+                android:inputType="textPassword"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/postalLbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Login_only"
+            app:errorTextAppearance="@style/error_login">
+
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/postal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/login_password_confirmation"
+                android:maxLines="1" />
+
+        </android.support.design.widget.TextInputLayout>
+
+
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:background="@color/colorPrimaryDark"
-            android:onClick="attemptLogin"
-            android:text="@string/login_button"
+            android:onClick="attemptRegister"
+            android:text="@string/register_button"
             android:textColor="#fff" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="Don't have an account yet?"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:textColor="@color/white_text"
-            android:onClick="launchRegister"/>
     </LinearLayout>
 
 </LinearLayout>
