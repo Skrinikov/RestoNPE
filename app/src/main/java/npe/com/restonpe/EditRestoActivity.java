@@ -28,7 +28,7 @@ import npe.com.restonpe.database.RestoDAO;
 /**
  * Creates an instance of the AddRestoActivity which will
  * allow the user to edit a resto that is in the database.
- *
+ * <p>
  * Used as reference
  * source: Danieil's AddRestoActivity
  *
@@ -94,8 +94,11 @@ public class EditRestoActivity extends BaseActivity {
      * for the submit button.
      */
     private void setupData() {
+        Log.d(TAG, "setupData called");
         RestoDAO dao = RestoDAO.getDatabase(this);
         resto = dao.getSingleRestaurant(getIntent().getExtras().getLong("id"));
+
+        Log.d(TAG, "setupData - resto is: " + resto);
 
         name = (EditText) findViewById(R.id.restoName);
         phone = (EditText) findViewById(R.id.restoPhone);
@@ -130,7 +133,7 @@ public class EditRestoActivity extends BaseActivity {
                 if (validateInputFields()) {
                     Resto resto = buildResto();
 
-                    Log.d(TAG,"resto is: "+ resto.toString());
+                    Log.d(TAG, "resto is: " + resto.toString());
 
                     RestoDAO db = RestoDAO.getDatabase(EditRestoActivity.this);
                     db.updateRestaurant(resto);
@@ -261,11 +264,13 @@ public class EditRestoActivity extends BaseActivity {
         }
 
         // Checking if email is in correct format if it is not empty.
-        if (!email.getText().toString().isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
-            isValid = false;
-            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoEmailLbl);
-            temp.setErrorEnabled(true);
-            temp.setError(getString(R.string.email_error));
+        if (!email.getText().toString().isEmpty()) {
+            if (!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString()).matches()) {
+                isValid = false;
+                TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoEmailLbl);
+                temp.setErrorEnabled(true);
+                temp.setError(getString(R.string.email_error));
+            }
         }
 
         if (isValid && !validateAddress())
@@ -282,7 +287,7 @@ public class EditRestoActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         Log.d(TAG, "onBackPressed called");
-        boolean isEmpty = checkIfInputsAreEmpty();
+        boolean isEmpty = checkIfInputsAreSame();
 
         // There is unsaved data.
         if (!isEmpty) {
@@ -320,7 +325,7 @@ public class EditRestoActivity extends BaseActivity {
      *
      * @return boolean representing if the inputs are empty.
      */
-    private boolean checkIfInputsAreEmpty() {
+    private boolean checkIfInputsAreSame() {
         Log.d(TAG, "checkIfInputsAreEmpty called");
 
         if (!name.getText().toString().equals(resto.getName()))
@@ -335,7 +340,7 @@ public class EditRestoActivity extends BaseActivity {
             return false;
         if (!postal.getText().toString().trim().equals(resto.getAddress().getPostal()))
             return false;
-        if(!(phone.getText().toString().isEmpty() && resto.getPhone() < 1)) {
+        if (!(phone.getText().toString().isEmpty() && resto.getPhone() < 1)) {
             if (!phone.getText().toString().equals(String.valueOf(resto.getPhone())))
                 return false;
         }
@@ -356,7 +361,7 @@ public class EditRestoActivity extends BaseActivity {
             }
         }
 
-        return nochangeGenre;
+        return true;
     }
 
     /**
@@ -382,7 +387,6 @@ public class EditRestoActivity extends BaseActivity {
         };
 
         Address addr = lm.getLocationFromName(postal.toUpperCase());
-        String addressString = address;
         if (addr == null) {
             Log.d(TAG, "Did not find address with Postal code");
             addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
@@ -397,7 +401,7 @@ public class EditRestoActivity extends BaseActivity {
         restoAddress.setLatitude(addr.getLatitude());
         restoAddress.setLongitude(addr.getLongitude());
         restoAddress.setCity(city);
-        restoAddress.setAddress(addressString);
+        restoAddress.setAddress(address);
         restoAddress.setPostal(postal);
         restoAddress.setCountry(country);
         restoAddress.setProvince(province);
