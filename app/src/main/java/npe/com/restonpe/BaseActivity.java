@@ -31,7 +31,9 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -40,6 +42,7 @@ import java.util.List;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import npe.com.restonpe.Beans.Address;
 import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Services.RestoLocationManager;
 import npe.com.restonpe.Services.RestoNetworkManager;
@@ -274,20 +277,49 @@ public class BaseActivity extends AppCompatActivity
             RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
             List<Resto> restos = db.getAllRestaurants();
             String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
+
             HttpsURLConnection conn = null;
+            OutputStream out = null;
             try {
                 for (Resto resto : restos) {
                     if (isNetworkAccessible()) {
                         URL url = new URL(herokuURL);
                         conn = (HttpsURLConnection) url.openConnection();
 
+                        Address address = resto.getAddress();
+                        String[] str = address.getAddress().split(" ");
+                        String jsonData = "{\"name\":\"%1$s\",\"phone\":\"%2$s\",\"resto_email\":\"%3$s\",\"link\":\"%4$s\",\"price\":\"%5$s\",\"genre\":\"%6$s\"," +
+                                "\"civic_num\":\"%7$s\",\"street\":\"%8$s\",\"suite\":\"%9$s\",\"city\":\"%10$s\",\"country\":\"%11$s\",\"postal_code\":\"%12$s\"," +
+                                "\"province\":\"%13$s\",\"submitterName\":\"%14$s\",\"submitterEmail\":\"%15$s\",\"password\":\"%16$s\",\"email\":\"%17$s\"}";
+
+                        jsonData = String.format(jsonData, resto.getName(), resto.getPhone(), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
+                                resto.getGenre(), str[0], str[1], address.getSuite(), address.getCity(), address.getCountry(), address.getPostal(), address.getProvince(),
+                                resto.getSubmitterName(), resto.getSubmitterEmail(),prefs.getString(SettingActivity.PASSWORD,null),prefs.getString(SettingActivity.EMAIL,null));
+
+                        Log.d(TAG, "data is: " + jsonData);
+
+                        byte[] bytes = jsonData.getBytes("UTF-8");
+                        int bytesLeng = bytes.length;
+
                         // Set headers
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
                         conn.setDoInput(true);
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+                        conn.setRequestProperty("Content-Length", String.valueOf(bytesLeng));
 
-                        conn.connect();
+                        out = new BufferedOutputStream(conn.getOutputStream());
+
+                        out.write(bytes);
+                        out.flush();
+                        out.close();
+                        /*// Set headers
+                        conn.setRequestMethod("POST");
+                        conn.setDoOutput(true);
+                        conn.setDoInput(true);
+                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+
+                        //conn.connect();
 
                         Log.d(TAG, "resto is: " + resto.toString());
 
@@ -311,7 +343,7 @@ public class BaseActivity extends AppCompatActivity
 
                         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
                         out.write(obj.toString());
-                        out.close();
+                        out.close();*/
 
                         int httpResult = conn.getResponseCode();
 
@@ -323,10 +355,12 @@ public class BaseActivity extends AppCompatActivity
                 }
             } catch (MalformedURLException mue) {
                 Log.e(TAG, "Malformed URL: " + herokuURL);
+                return 0;
             } catch (IOException ioe) {
                 Log.e(TAG, "An IOException occurred while reading the JSON file: " + ioe.getMessage());
-            } catch (JSONException e) {
-                Log.e(TAG, "JSONException: " + e.getMessage());
+                return 0;
+            /*} catch (JSONException e) {
+                Log.e(TAG, "JSONException: " + e.getMessage());*/
             } finally {
                 if (conn != null)
                     conn.disconnect();
@@ -337,9 +371,9 @@ public class BaseActivity extends AppCompatActivity
 
         @Override
         protected void onPostExecute(Integer syncOK) {
-            if(syncOK == 1) {
+            if (syncOK == 1) {
                 Toast.makeText(BaseActivity.this, R.string.sync, Toast.LENGTH_LONG).show();
-            }else{
+            } else {
                 Toast.makeText(BaseActivity.this, R.string.failed, Toast.LENGTH_LONG).show();
             }
         }
