@@ -330,44 +330,14 @@ public class BaseActivity extends AppCompatActivity
                         out.flush();
                         out.close();
 
-                        /*// Set headers
-                        conn.setRequestMethod("POST");
-                        conn.setDoOutput(true);
-                        conn.setDoInput(true);
-                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-
-                        //conn.connect();
-
-                        Log.d(TAG, "resto is: " + resto.toString());
-
-                        JSONObject obj = new JSONObject();
-                        obj.put("name", resto.getName());
-                        obj.put("phone", String.valueOf(resto.getPhone()));
-                        obj.put("resto_email", resto.getEmail());
-                        obj.put("link", resto.getLink());
-                        obj.put("price", resto.getPriceRange().length());
-                        obj.put("genre", resto.getGenre());
-                        String[] str = resto.getAddress().getAddress().split(" ");
-                        obj.put("civic_num", str[0]);
-                        obj.put("street", str[1]);
-                        obj.put("suite", resto.getAddress().getSuite());
-                        obj.put("city", resto.getAddress().getCity());
-                        obj.put("country", resto.getAddress().getCountry());
-                        obj.put("postal_code", resto.getAddress().getPostal());
-                        obj.put("province", resto.getAddress().getProvince());
-                        obj.put("submitterName", resto.getSubmitterName());
-                        obj.put("submitterEmail", resto.getSubmitterEmail());
-
-                        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                        out.write(obj.toString());
-                        out.close();*/
-
                         int httpResult = conn.getResponseCode();
                         Log.d(TAG, "response is: " + httpResult);
                         if (httpResult != HttpURLConnection.HTTP_OK) {
                             Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
+                        }else{
                             return 0;
                         }
+
                     }
                 }
             } catch (MalformedURLException mue) {
@@ -386,6 +356,10 @@ public class BaseActivity extends AppCompatActivity
             return 1;
         }
 
+        /**
+         * Show Toast to tell user if the sync worked or not.
+         * @param syncOK
+         */
         @Override
         protected void onPostExecute(Integer syncOK) {
             if (syncOK == 1) {
