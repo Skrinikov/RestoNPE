@@ -271,6 +271,11 @@ public class ZomatoRestos {
             resto.setPhone(Long.parseLong(phone));
         }
         resto.setName(name);
+
+        if(cuisines.indexOf(",") > 0){
+            cuisines = cuisines.split(",")[0];
+        }
+
         resto.setGenre(cuisines);
         resto.setLink(url);
         resto.setPriceRange(priceRange);
@@ -288,7 +293,7 @@ public class ZomatoRestos {
         }
         address.setAddress(addressString);
 
-        Log.d(TAG,"adr contains: " + address);
+        Log.d(TAG, "adr contains: " + address);
 
         resto.setAddress(address);
 
@@ -346,13 +351,13 @@ public class ZomatoRestos {
     private HashMap<String, String> getLocationMap(JsonReader reader) throws IOException {
         HashMap<String, String> values = new HashMap<>();
         reader.beginObject();
-
         for (int i = 0; i < 8; i++) {
             String name = reader.nextName();
 
             switch (name) {
                 case "address":
                     String address = reader.nextString();
+                    Log.d(TAG, "full adr is: " + address);
                     // ex.: 1 Place Ville Marie, Montreal, QC H3B3Y1
                     String[] addressPieces = address.split(", ");
 
@@ -363,13 +368,13 @@ public class ZomatoRestos {
                     Log.i(TAG, "Found address: " + address);
 
                     values.put(RESTO_LOCATION_ADDRESS, addressPieces[0]);
-                    values.put(RESTO_LOCATION_PROVINCE, province.isEmpty()?"QC":province);
+                    values.put(RESTO_LOCATION_PROVINCE, province.isEmpty() ? "QC" : province);
                     break;
                 case "city":
                     String city = reader.nextString();
                     Log.i(TAG, "Found city: " + city);
 
-                    values.put(RESTO_LOCATION_CITY, city.isEmpty()?"QC":city);
+                    values.put(RESTO_LOCATION_CITY, city.isEmpty() ? "QC" : city);
                     break;
                 case "latitude":
                     double latitude = reader.nextDouble();
@@ -387,17 +392,18 @@ public class ZomatoRestos {
                     String postal = reader.nextString();
                     Log.i(TAG, "Found postal code: " + postal);
 
-                    values.put(RESTO_LOCATION_POSTAL, postal);
+                    // sometimes Zomato chops half the postal code out which causes me to unable to sync to heroku.
+                    values.put(RESTO_LOCATION_POSTAL, postal.length() >= 6 ? postal : "H3Z1A4");
                     break;
                 default:
-                    Log.i(TAG, "The " + name + " was ignored.");
-                    reader.skipValue();
+                    Log.i(TAG, "The " + name + " contains: " + reader.nextString());
+                    //reader.skipValue();
             }
 
             values.put(RESTO_LOCATION_COUNTRY, "CA");
         }
 
-        Log.d(TAG,"values contains: " + values);
+        Log.d(TAG, "values contains: " + values);
         reader.endObject();
 
         return values;
