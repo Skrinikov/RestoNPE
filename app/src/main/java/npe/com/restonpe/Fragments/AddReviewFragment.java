@@ -41,14 +41,11 @@ public class AddReviewFragment extends Fragment {
 
     // The URL to hit to add a review to a restaurant in Heroku
     private static final String RESTO_URL_ADD_REVIEW_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews/create";
-
-    // Json for HTTP POST request to Heroku
-    private String jsonData = "{\"email\":\"%1$s\",\"password\":\"%2$s\",\"title\":\"%3$s\" , \"content\":\"%4$s\" , \"rating\":\"%5$s\" , \"id\":\"%6$s\"}";
-
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String TYPE = "application/json; charset=UTF-8;";
     private static final String CONTENT_LENGTH = "Content-Length";
-
+    // Json for HTTP POST request to Heroku
+    private String jsonData = "{\"email\":\"%1$s\",\"password\":\"%2$s\",\"title\":\"%3$s\" , \"content\":\"%4$s\" , \"rating\":\"%5$s\" , \"id\":\"%6$s\"}";
     private AddReviewActivity activity;
     private SharedPreferences prefs;
     private long id;
@@ -111,52 +108,57 @@ public class AddReviewFragment extends Fragment {
             AsyncTask<Review, Void, Void> task = new AsyncTask<Review, Void, Void>() {
                 @Override
                 protected Void doInBackground(Review... reviews) {
-                    Review review = reviews[0];
+                Review review = reviews[0];
+                HttpURLConnection conn = null;
 
-                    try {
-                        Log.i(TAG, "Hitting " + RESTO_URL_ADD_REVIEW_HEROKU);
-                        URL url = new URL(RESTO_URL_ADD_REVIEW_HEROKU);
+                try {
+                    Log.i(TAG, "Hitting " + RESTO_URL_ADD_REVIEW_HEROKU);
+                    URL url = new URL(RESTO_URL_ADD_REVIEW_HEROKU);
 
-                        if (isNetworkAccessible()) {
-                            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    if (isNetworkAccessible()) {
+                        conn = (HttpURLConnection) url.openConnection();
 
-                            // Format Json string
-                            jsonData = String.format(jsonData, review.getSubmitterEmail(), password, review.getTitle(), review.getContent(), review.getRating(), review.getRestoId());
-                            byte[] bytes = jsonData.getBytes("UTF-8");
-                            int bytesLeng = bytes.length;
+                        // Format Json string
+                        jsonData = String.format(jsonData, review.getSubmitterEmail(), password, review.getTitle(), review.getContent(), review.getRating(), review.getRestoId());
+                        byte[] bytes = jsonData.getBytes("UTF-8");
+                        int bytesLeng = bytes.length;
 
-                            // Set HTTP request
-                            conn.setRequestMethod("POST");
-                            conn.setRequestProperty(CONTENT_TYPE, TYPE);
-                            conn.addRequestProperty(CONTENT_LENGTH, String.valueOf(bytesLeng));
-                            conn.setDoOutput(true);
-                            conn.setDoInput(true);
+                        // Set HTTP request
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty(CONTENT_TYPE, TYPE);
+                        conn.addRequestProperty(CONTENT_LENGTH, String.valueOf(bytesLeng));
+                        conn.setDoOutput(true);
+                        conn.setDoInput(true);
 
-                            OutputStream out = new BufferedOutputStream(conn.getOutputStream());
+                        OutputStream out = new BufferedOutputStream(conn.getOutputStream());
 
-                            out.write(bytes);
-                            out.flush();
-                            out.close();
+                        out.write(bytes);
+                        out.flush();
+                        out.close();
 
-                            // Get response
-                            int response = conn.getResponseCode();
-                            if (response != HttpURLConnection.HTTP_OK) {
-                                Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
-                            } else {
-                                Log.i(TAG, "Success!");
-                                activity.finish();
-                            }
-
-                            conn.disconnect();
+                        // Get response
+                        int response = conn.getResponseCode();
+                        if (response != HttpURLConnection.HTTP_OK) {
+                            Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
+                        } else {
+                            Log.i(TAG, "Success!");
+                            activity.finish();
                         }
-                    } catch (MalformedURLException e) {
-                        Log.e(TAG, "Malformed URL: " + RESTO_URL_ADD_REVIEW_HEROKU);
-                    } catch (IOException e) {
-                        Log.e(TAG, "An IOException occurred: " + e.getMessage());
-                        e.printStackTrace();
-                    }
 
-                    return null;
+                        conn.disconnect();
+                    }
+                } catch (MalformedURLException e) {
+                    Log.e(TAG, "Malformed URL: " + RESTO_URL_ADD_REVIEW_HEROKU);
+                } catch (IOException e) {
+                    Log.e(TAG, "An IOException occurred: " + e.getMessage());
+                    e.printStackTrace();
+                } finally {
+                    if (conn != null) {
+                        conn.disconnect();
+                    }
+                }
+
+                return null;
                 }
             };
 
