@@ -276,15 +276,15 @@ public class BaseActivity extends AppCompatActivity
         protected Integer doInBackground(Void... params) {
             RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
             List<Resto> restos = db.getAllRestaurants();
-            String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
+            String herokuURL = "http://shrouded-thicket-29911.herokuapp.com/api/resto/create";
 
-            HttpsURLConnection conn = null;
+            HttpURLConnection conn = null;
             OutputStream out = null;
             try {
                 for (Resto resto : restos) {
                     if (isNetworkAccessible()) {
                         URL url = new URL(herokuURL);
-                        conn = (HttpsURLConnection) url.openConnection();
+                        conn = (HttpURLConnection) url.openConnection();
 
                         Address address = resto.getAddress();
                         String[] str = address.getAddress().split(" ");
@@ -294,7 +294,7 @@ public class BaseActivity extends AppCompatActivity
 
                         jsonData = String.format(jsonData, resto.getName(), resto.getPhone(), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
                                 resto.getGenre(), str[0], str[1], address.getSuite(), address.getCity(), address.getCountry(), address.getPostal(), address.getProvince(),
-                                resto.getSubmitterName(), resto.getSubmitterEmail(),prefs.getString(SettingActivity.PASSWORD,null),prefs.getString(SettingActivity.EMAIL,null));
+                                resto.getSubmitterName(), resto.getSubmitterEmail(), prefs.getString(SettingActivity.PASSWORD, null), prefs.getString(SettingActivity.EMAIL, null));
 
                         Log.d(TAG, "data is: " + jsonData);
 
@@ -313,6 +313,7 @@ public class BaseActivity extends AppCompatActivity
                         out.write(bytes);
                         out.flush();
                         out.close();
+
                         /*// Set headers
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
@@ -346,7 +347,7 @@ public class BaseActivity extends AppCompatActivity
                         out.close();*/
 
                         int httpResult = conn.getResponseCode();
-
+                        Log.d(TAG, "response is: " + httpResult);
                         if (httpResult != HttpURLConnection.HTTP_OK) {
                             Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
                             return 0;
