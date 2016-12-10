@@ -55,7 +55,7 @@ import npe.com.restonpe.database.RestoDAO;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.0
- * @since 01/12/2016
+ * @since 09/12/2016
  */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,15 +89,6 @@ public class BaseActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         locationSetting();
-/*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //((TextView)drawer.findViewById(R.id.hello_user)).setText(prefs.getString("username","user"));
@@ -128,28 +119,6 @@ public class BaseActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.base, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     /**
      * Event handler for all the different menu items for when they are clicked on.
@@ -266,10 +235,6 @@ public class BaseActivity extends AppCompatActivity
      * Retrieves all the resto in the local database and add them to
      * heroku's database.
      */
-    private void syncHeroku(List<Resto> list) {
-        // url is https://shrouded-thicket-29911.herokuapp.com/api/resto/create
-    }
-
     public class RetrieveData extends AsyncTask<Void, Void, Integer> {
 
         @Override
