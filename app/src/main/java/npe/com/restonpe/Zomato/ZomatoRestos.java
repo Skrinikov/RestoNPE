@@ -394,7 +394,7 @@ public class ZomatoRestos {
                     reader.skipValue();
             }
 
-            values.put(RESTO_LOCATION_COUNTRY, "Unavailable");
+            values.put(RESTO_LOCATION_COUNTRY, "CA");
         }
 
         Log.d(TAG,"values contains: " + values);

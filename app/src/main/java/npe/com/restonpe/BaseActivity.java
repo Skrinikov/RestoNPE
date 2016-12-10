@@ -299,7 +299,6 @@ public class BaseActivity extends AppCompatActivity
                         Log.d(TAG, "response is: " + httpResult);
                         if (httpResult != HttpURLConnection.HTTP_OK) {
                             Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
-                        }else{
                             return 0;
                         }
 
