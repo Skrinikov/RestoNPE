@@ -33,7 +33,7 @@ public class RestoDAO extends SQLiteOpenHelper {
 
     // Database related information.
     private static final String DATABASE_NAME = "resto.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Table names
     private static final String TABLE_GENRE = "genre";
@@ -447,7 +447,7 @@ public class RestoDAO extends SQLiteOpenHelper {
             address.setLongitude(c.getDouble(c.getColumnIndex(COLUMN_LONG)));
             address.setPostal(c.getString(c.getColumnIndex(COLUMN_POSTAL)));
             address.setProvince(c.getString(c.getColumnIndex(COLUMN_PROVINCE)));
-            address.setSuite(c.getInt(c.getColumnIndex(COLUMN_SUITE)));
+            address.setSuite(c.getString(c.getColumnIndex(COLUMN_SUITE)));
 
             resto.setAddress(address);
         }

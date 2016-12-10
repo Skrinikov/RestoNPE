@@ -64,7 +64,7 @@ public class RestoDAOTest {
         a.setLatitude(1);
         a.setLongitude(1);
         a.setPostal("h4h4h4");
-        a.setSuite(0);
+        a.setSuite("0");
 
         r.setAddress(a);
 
@@ -93,7 +93,7 @@ public class RestoDAOTest {
         a.setLongitude(1);
         a.setPostal("h4h4h4");
         a.setAddress("3040 Sherbrooke");
-        a.setSuite(0);
+        a.setSuite("0");
 
         r.setAddress(a);
 
@@ -175,7 +175,7 @@ public class RestoDAOTest {
         addr.setPostal("h0h0h0");
         addr.setCountry("France");
         addr.setAddress("3040 Sherbrooke");
-        addr.setSuite(2);
+        addr.setSuite("2");
         r.setAddress(addr);
 
 
