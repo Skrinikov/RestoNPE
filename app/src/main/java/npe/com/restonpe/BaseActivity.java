@@ -163,30 +163,9 @@ public class BaseActivity extends AppCompatActivity
                 break;
             case R.id.heroku:
                 Log.d(TAG, "onNavigationItemSelected - heroku");
-                // TO DO
+                syncHeroku();
                 break;
         }
-
-        /*
-        if (id == R.id.home) {
-            Log.d(TAG, "onNavigationItemSelected - home");
-            intent = new Intent(this, MainActivity.class);
-        } else if (id == R.id.about) {
-            Log.d(TAG, "onNavigationItemSelected - about");
-            intent = new Intent(this, AboutActivity.class);
-        } else if (id == R.id.dawson) {
-            Log.d(TAG, "onNavigationItemSelected - dawson");
-            intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.dawsoncollege.qc.ca/computer-science-technology/"));
-        } else if (id == R.id.setting) {
-            Log.d(TAG, "onNavigationItemSelected - setting");
-            intent = new Intent(this, SettingActivity.class);
-        } else if (id == R.id.tip) {
-            Log.d(TAG, "onNavigationItemSelected - tip");
-            intent = new Intent(this, TipActivity.class);
-        }else if(id == R.id.heroku){
-            Log.d(TAG, "onNavigationItemSelected - heroku");
-            // TO DO
-        }*/
 
         if (intent != null)
             startActivity(intent);
@@ -256,5 +235,13 @@ public class BaseActivity extends AppCompatActivity
         FragmentTransaction transaction = manager.beginTransaction();
         transaction.add(R.id.content, fragment);
         transaction.commit();
+    }
+
+    /**
+     * Retrieves all the resto in the local database and add them to
+     * heroku's database.
+     */
+    private void syncHeroku(){
+
     }
 }

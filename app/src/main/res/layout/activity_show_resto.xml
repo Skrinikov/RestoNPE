@@ -17,6 +17,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:textColor="#d98d8d"
             android:id="@+id/textViewShowName"
             style="@style/RestoNameTheme"
             android:layout_width="match_parent"
