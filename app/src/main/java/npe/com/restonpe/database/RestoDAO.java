@@ -724,4 +724,32 @@ public class RestoDAO extends SQLiteOpenHelper {
         c.close();
         //I did overloaded methods because I was too lazy to make a common interface.
     }
+
+
+    public List<Resto> getAllRestaurants() {
+        Cursor c = getReadableDatabase().query(TABLE_RESTO, null, null, null, null, null, null);
+        List<Resto> restos = new ArrayList<>();
+        Resto temp = new Resto();
+
+        while (c.moveToNext()) {
+            temp.setId(c.getLong(c.getColumnIndex(COLUMN_ID)));
+            temp.setZomatoId(c.getLong(c.getColumnIndex(COLUMN_ZOMATO_ID)));
+            temp.setHerokuId(c.getLong(c.getColumnIndex(COLUMN_HEROKU_ID)));
+            temp.setName(c.getString(c.getColumnIndex(COLUMN_RESTO_NAME)));
+            temp.setPriceRange(c.getString(c.getColumnIndex(COLUMN_PRICE_RANGE)));
+            temp.setEmail(c.getString(c.getColumnIndex(COLUMN_EMAIL)));
+            temp.setLink(c.getString(c.getColumnIndex(COLUMN_LINK)));
+            temp.setPhone(c.getLong(c.getColumnIndex(COLUMN_PHONE)));
+
+            getGenre(temp, c.getLong(c.getColumnIndex(COLUMN_GENRE_FK)));
+            getAddressList(temp);
+            getReviewList(temp);
+            getUser(temp, c.getLong(c.getColumnIndex(COLUMN_USER_FK)));
+
+            restos.add(temp);
+        }
+        c.close();
+        Log.i(TAG, "getAllRestaurant()");
+        return restos;
+    }
 }

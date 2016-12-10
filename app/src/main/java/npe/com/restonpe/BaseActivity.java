@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -17,12 +18,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.JsonReader;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.List;
+
+import npe.com.restonpe.Beans.Resto;
 import npe.com.restonpe.Services.RestoLocationManager;
+import npe.com.restonpe.Services.RestoNetworkManager;
+import npe.com.restonpe.database.RestoDAO;
 
 /**
  * Template activity for all other activity to extend. Contains the
@@ -163,7 +171,8 @@ public class BaseActivity extends AppCompatActivity
                 break;
             case R.id.heroku:
                 Log.d(TAG, "onNavigationItemSelected - heroku");
-                syncHeroku();
+                RetrieveData retrieveData = new RetrieveData();
+                retrieveData.execute();
                 break;
         }
 
@@ -241,7 +250,35 @@ public class BaseActivity extends AppCompatActivity
      * Retrieves all the resto in the local database and add them to
      * heroku's database.
      */
-    private void syncHeroku(){
+    private void syncHeroku(List<Resto> list) {
+        // url is https://shrouded-thicket-29911.herokuapp.com/api/resto/create
+        RestoNetworkManager<Resto> restoNetworkManager = new RestoNetworkManager<Resto>(this) {
+            @Override
+            public void onPostExecute(List<Resto> list) {
+            }
 
+            @Override
+            protected List<Resto> readJson(JsonReader reader) {
+                return null;
+            }
+        };
+
+        for(Resto resto : list){
+            restoNetworkManager.addResto(resto);
+        }
+    }
+
+    public class RetrieveData extends AsyncTask<Void, Void, List<Resto>> {
+
+        @Override
+        protected List<Resto> doInBackground(Void... params) {
+            RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
+            return db.getAllRestaurants();
+        }
+
+        @Override
+        protected void onPostExecute(List<Resto> list) {
+            syncHeroku(list);
+        }
     }
 }

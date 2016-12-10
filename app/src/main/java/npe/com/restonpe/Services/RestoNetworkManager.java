@@ -16,6 +16,7 @@ import java.net.URL;
 import java.util.List;
 
 import npe.com.restonpe.Beans.Cuisine;
+import npe.com.restonpe.Beans.Resto;
 
 /**
  * Manages network connections for the application. This class extends ASyncTask so that it may do
@@ -44,6 +45,8 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     private static final String RESTO_REVIEW_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/reviews?id=%1$s";
     // The URL to hit to find specific information on a single restaurant with a placeholder for the restaurant's id
     private static final String RESTO_URL_HEROKU = "http://shrouded-thicket-29911.herokuapp.com/api/resto/details?id=%1$s";
+    // The URL to hit to add a resto to the Heroku database
+    private static final String RESTO_ADD_URL_HEROKU = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
 
     // HTTP request constants
     private static final String RESTO_ACCEPT_HEADER = "Accept";
@@ -254,13 +257,12 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
     }
 
     /**
-     * A convenience method for finding reviews from Heroku of the restaurant with the given id
+     * A convenience method for adding restaurant to Heroku.
      *
-     * @param id The id of the restaurant whose information is to be found
+     * @param resto The restaurant object to add to Heroku.
      */
-    public void addResto(long id) {
-        // Add id to url
-        String updatedURL = String.format(RESTO_REVIEW_URL_HEROKU, id);
+    public void addResto(Resto resto) {
+        String updatedURL = String.format(RESTO_ADD_URL_HEROKU);
 
         try {
             URL url = new URL(updatedURL);
