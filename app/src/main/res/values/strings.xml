@@ -167,4 +167,5 @@
 
     <!-- heroku -->
     <string name="sync">Sync Completed</string>
+    <string name="failed">Sync Failed</string>
 </resources>

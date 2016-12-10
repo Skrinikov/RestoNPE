@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
             prefs.edit()
                     .putString(SettingActivity.USERNAME, name.getText().toString().trim())
                     .putString(SettingActivity.EMAIL, email.getText().toString().trim())
+                    .putString(SettingActivity.PASSWORD,pwd.getText().toString().trim())
                     .apply();
 
             Intent intent = new Intent(this, MainActivity.class);
