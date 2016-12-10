@@ -105,13 +105,17 @@ public class AddRestoActivity extends BaseActivity {
         Log.d(TAG, name);
         resto.setName(name);
         Log.d(TAG, "Returned: " + resto.getName());
+
         String phone = ((EditText) findViewById(R.id.restoPhone)).getText().toString();
         if (!phone.isEmpty())
             resto.setPhone(Long.parseLong(phone));
+
         String email = ((EditText) findViewById(R.id.restoEmail)).getText().toString();
         resto.setEmail(email);
+
         String link = ((EditText) findViewById(R.id.restoLink)).getText().toString();
         resto.setLink(link);
+
         resto.setAddress(restoAddress);
 
         //Spinners
@@ -230,7 +234,7 @@ public class AddRestoActivity extends BaseActivity {
         };
 
         Address addr = lm.getLocationFromName(postal.toUpperCase());
-        String addressString = address + ", " + city + ", " + province + ", " + country;
+
         if (addr == null) {
             Log.d(TAG, "Did not find address with Postal code");
             addr = lm.getLocationFromName(address + ", " + city + " " + province + ", " + country);
@@ -245,7 +249,7 @@ public class AddRestoActivity extends BaseActivity {
         restoAddress.setLatitude(addr.getLatitude());
         restoAddress.setLongitude(addr.getLongitude());
         restoAddress.setCity(city);
-        restoAddress.setAddress(addressString);
+        restoAddress.setAddress(address);
         restoAddress.setPostal(postal);
         restoAddress.setCountry(country);
         restoAddress.setProvince(province);
