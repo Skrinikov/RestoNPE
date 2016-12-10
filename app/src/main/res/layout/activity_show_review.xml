@@ -13,38 +13,49 @@
 
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewReviewTitle" />
+        android:id="@+id/textViewReviewTitle"
+        style="@style/RestoNameTheme"
+        android:gravity="end"
+        android:textStyle="bold" />
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/RestoDetailTheme"
+        android:gravity="end"
+        android:layout_marginTop="16dp"
         android:id="@+id/textViewReviewContent" />
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/RestoDetailTheme"
+        android:gravity="end"
         android:id="@+id/textViewReviewSubmitter" />
 
     <TextView
-        android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/RestoDetailTheme"
+        android:gravity="end"
         android:id="@+id/textViewReviewSubmitterEmail" />
 
-    <TextView
-        android:text=""
-        android:layout_width="match_parent"
+    <RatingBar
+        android:id="@+id/ratingBarReviewRating"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textViewReviewRating" />
+        android:layout_gravity="end"
+        android:numStars="5"
+        android:isIndicator="true" />
 
     <TextView
         android:text=""
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        style="@style/RestoDetailTheme"
+        android:layout_marginTop="16dp"
+        android:gravity="end"
         android:id="@+id/textViewReviewLikes" />
 </LinearLayout>
