@@ -55,7 +55,7 @@ import npe.com.restonpe.database.RestoDAO;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.0
- * @since 01/12/2016
+ * @since 09/12/2016
  */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
