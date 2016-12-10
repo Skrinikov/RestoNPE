@@ -267,10 +267,10 @@ public class BaseActivity extends AppCompatActivity
         // url is https://shrouded-thicket-29911.herokuapp.com/api/resto/create
     }
 
-    public class RetrieveData extends AsyncTask<Void, Void, String> {
+    public class RetrieveData extends AsyncTask<Void, Void, Integer> {
 
         @Override
-        protected String doInBackground(Void... params) {
+        protected Integer doInBackground(Void... params) {
             RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
             List<Resto> restos = db.getAllRestaurants();
             String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
@@ -293,7 +293,7 @@ public class BaseActivity extends AppCompatActivity
 
                         JSONObject obj = new JSONObject();
                         obj.put("name", resto.getName());
-                        obj.put("phone", resto.getPhone());
+                        obj.put("phone", String.valueOf(resto.getPhone()));
                         obj.put("resto_email", resto.getEmail());
                         obj.put("link", resto.getLink());
                         obj.put("price", resto.getPriceRange().length());
@@ -317,6 +317,7 @@ public class BaseActivity extends AppCompatActivity
 
                         if (httpResult != HttpURLConnection.HTTP_OK) {
                             Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
+                            return 0;
                         }
                     }
                 }
@@ -331,12 +332,16 @@ public class BaseActivity extends AppCompatActivity
                     conn.disconnect();
             }
 
-            return null;
+            return 1;
         }
 
         @Override
-        protected void onPostExecute(String str) {
-            Toast.makeText(BaseActivity.this, R.string.sync, Toast.LENGTH_LONG).show();
+        protected void onPostExecute(Integer syncOK) {
+            if(syncOK == 1) {
+                Toast.makeText(BaseActivity.this, R.string.sync, Toast.LENGTH_LONG).show();
+            }else{
+                Toast.makeText(BaseActivity.this, R.string.failed, Toast.LENGTH_LONG).show();
+            }
         }
     }
 
