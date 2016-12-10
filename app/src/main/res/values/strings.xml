@@ -119,7 +119,7 @@
     <string name="login_password">Password</string>
     <string name="login_password_confirmation">Confirm password</string>
     <string name="login_button">LOGIN</string>
-    <string name="register_button">LOGIN</string>
+    <string name="register_button">REGISTER</string>
     <string name="login_email_error">Must provide email</string>
     <string name="login_name_error">Must provide name</string>
     <string name="login_password_error">Must provide password</string>
