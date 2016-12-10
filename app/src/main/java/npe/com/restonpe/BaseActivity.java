@@ -273,7 +273,7 @@ public class BaseActivity extends AppCompatActivity
                                 "\"description\":\"%18$s\"," +
                                 "\"img\":\"%19$s\"}";
 
-                        jsonData = String.format(jsonData, resto.getName(), String.valueOf(resto.getPhone()), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
+                        jsonData = String.format(jsonData, resto.getName(), String.valueOf(resto.getPhone()), resto.getEmail(), resto.getLink(), resto.getPriceRange().length()>5?5:resto.getPriceRange(),
                                 resto.getGenre(), str[0], str[1], address.getSuite(), address.getCity(), address.getCountry(), address.getPostal(), address.getProvince(),
                                 resto.getSubmitterName(), resto.getSubmitterEmail(), prefs.getString(SettingActivity.PASSWORD, null), prefs.getString(SettingActivity.EMAIL, null),"","");
 
