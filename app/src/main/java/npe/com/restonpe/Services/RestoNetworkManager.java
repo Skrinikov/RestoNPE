@@ -93,10 +93,11 @@ public abstract class RestoNetworkManager<T> extends AsyncTask<URL, Void, List<T
                     // how the JSON is parsed depending on what find... method is called
                     list = readJson(reader);
 
-                    conn.disconnect();
                 } else {
                     Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
                 }
+
+                conn.disconnect();
             }
         } catch (IOException e) {
             Log.e(TAG, "An IOException occurred while reading the JSON file: " + e.getMessage());

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,7 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,6 +51,9 @@ public class AddReviewFragment extends Fragment {
     private static final String REVIEW_TITLE_HEADER = "title";
     private static final String REVIEW_CONTENT_HEADER = "content";
     private static final String REVIEW_RATING_HEADER = "rating";
+
+    private static final String RESTO_ACCEPT_CONTENT = "Content-Type";
+    private static final String RESTO_ACCEPT = "application/json";
 
     private AddReviewActivity activity;
     private SharedPreferences prefs;
@@ -119,23 +126,40 @@ public class AddReviewFragment extends Fragment {
                         if (isNetworkAccessible()) {
                             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-                            // Put review information and user email and password
-                            conn.setRequestProperty(REVIEW_USER_HEADER, review.getSubmitterEmail());
-                            conn.setRequestProperty(REVIEW_PASSWORD_HEADER, password);
-                            conn.setRequestProperty(REVIEW_RESTO_ID_HEADER, String.valueOf(review.getRestoId()));
-                            conn.setRequestProperty(REVIEW_TITLE_HEADER, review.getTitle());
-                            conn.setRequestProperty(REVIEW_CONTENT_HEADER, review.getContent());
-                            conn.setRequestProperty(REVIEW_RATING_HEADER, String.valueOf(review.getRating()));
+                            // Put user email and password
+                            conn.setRequestMethod("POST");
+                            conn.setRequestProperty(RESTO_ACCEPT_CONTENT, RESTO_ACCEPT);
+                            conn.setDoInput(true);
+                            conn.setDoOutput(true);
+
+                            Uri.Builder builder = new Uri.Builder()
+                                .appendQueryParameter(REVIEW_USER_HEADER, review.getSubmitterEmail())
+                                .appendQueryParameter(REVIEW_PASSWORD_HEADER, password)
+                                .appendQueryParameter(REVIEW_TITLE_HEADER, review.getTitle())
+                                .appendQueryParameter(REVIEW_CONTENT_HEADER, review.getContent())
+                                .appendQueryParameter(REVIEW_RATING_HEADER, String.valueOf(review.getRating()))
+                                .appendQueryParameter(REVIEW_RESTO_ID_HEADER, String.valueOf(review.getRestoId()));
+                            String query = builder.build().getEncodedQuery();
+
+                            Log.i(TAG, "Post query: " + query);
+
+                            OutputStream os = conn.getOutputStream();
+                            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+                            writer.write(query);
+                            writer.flush();
+                            writer.close();
+                            os.close();
 
                             conn.connect();
 
                             int response = conn.getResponseCode();
-                            if (response == HttpURLConnection.HTTP_OK) {
-
-                                conn.disconnect();
-                            } else {
+                            if (response != HttpURLConnection.HTTP_OK) {
                                 Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response);
+                            } else {
+                                Toast.makeText(activity, getString(R.string.add_review_valid), Toast.LENGTH_LONG).show();
                             }
+
+                            conn.disconnect();
                         }
                     } catch (MalformedURLException e) {
                         Log.e(TAG, "Malformed URL: " + RESTO_URL_ADD_REVIEW_HEROKU);

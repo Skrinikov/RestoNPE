@@ -147,6 +147,7 @@
     <!--Add review-->
     <string name="add_review_title">Title</string>
     <string name="add_review_content">Content</string>
+    <string name="add_review_valid">Review added!</string>
     <string name="add_review_invalid">Could not add review</string>
 
     <!--RestoAdapter id codes-->
