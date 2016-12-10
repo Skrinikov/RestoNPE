@@ -36,6 +36,7 @@ public class ZomatoRestos {
 
     private static final String RESTO_LOCATION_ADDRESS = "address";
     private static final String RESTO_LOCATION_CITY = "city";
+    private static final String RESTO_LOCATION_PROVINCE = "province";
     private static final String RESTO_LOCATION_LATITUDE = "latitude";
     private static final String RESTO_LOCATION_LONGITUDE = "longitude";
     private static final String RESTO_LOCATION_POSTAL = "postal";
@@ -257,6 +258,7 @@ public class ZomatoRestos {
         String cuisines = map.get(RESTO_CUISINES);
         String priceRange = map.get(RESTO_PRICE);
         String city = map.get(RESTO_LOCATION_CITY);
+        String province = map.get(RESTO_LOCATION_PROVINCE);
         String postal = map.get(RESTO_LOCATION_POSTAL);
         String addressString = map.get(RESTO_LOCATION_ADDRESS);
 
@@ -274,6 +276,7 @@ public class ZomatoRestos {
         Address address = new Address();
         address.setCity(city);
         address.setPostal(postal);
+        address.setProvince(province);
         if (latitude != null && longitude != null) {
             address.setLatitude(Double.parseDouble(latitude));
             address.setLongitude(Double.parseDouble(longitude));
@@ -343,9 +346,17 @@ public class ZomatoRestos {
             switch (name) {
                 case "address":
                     String address = reader.nextString();
+                    // ex.: 1 Place Ville Marie, Montreal, QC H3B3Y1
+                    String[] addressPieces = address.split(", ");
+
+                    // Get province
+                    String province = addressPieces[2].split(" ", 2)[0];
+
+                    Log.i(TAG, "Found province: " + province);
                     Log.i(TAG, "Found address: " + address);
 
                     values.put(RESTO_LOCATION_ADDRESS, address);
+                    values.put(RESTO_LOCATION_PROVINCE, province);
                     break;
                 case "city":
                     String city = reader.nextString();
@@ -430,6 +441,7 @@ public class ZomatoRestos {
                             HashMap<String, String> locations = getLocationMap(reader);
 
                             map.put(RESTO_LOCATION_CITY, locations.get(RESTO_LOCATION_CITY));
+                            map.put(RESTO_LOCATION_PROVINCE, locations.get(RESTO_LOCATION_PROVINCE));
                             map.put(RESTO_LOCATION_LATITUDE, locations.get(RESTO_LOCATION_LATITUDE));
                             map.put(RESTO_LOCATION_LONGITUDE, locations.get(RESTO_LOCATION_LONGITUDE));
                             map.put(RESTO_LOCATION_ADDRESS, locations.get(RESTO_LOCATION_ADDRESS));
