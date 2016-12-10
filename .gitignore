@@ -9,4 +9,5 @@
 .externalNativeBuild
 .idea/misc.xml
 .idea/gradle.xml
+.idea/encodings.xml
 

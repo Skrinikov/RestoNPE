@@ -22,24 +22,25 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Creates an instance of the login activity.
- * Authenticates that the user input of the login fields is valid. If it is valid saved the information
- * to shared preferences and calls async task to verify that the information is valid with the server.
+ * Displays the register activity. Lets a user register to a remote api. Before the user registers
+ * validates that all the provided data is in the right format and can be used as authentication.
  *
  * @author Danieil Skrinikov
- * @version 1.0
- * @since 04/12/2016
+ * @since 2016-12-10
+ * @version 1.0.0
  */
-public class LoginActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "RegisterActivity";
     EditText email;
     EditText name;
     EditText pwd;
+    EditText pwdConfirm;
+    EditText postal;
 
     // Authentication Variables.
-    private static final String LOGIN_URL = "http://shrouded-thicket-29911.herokuapp.com/api/userlogin";
-    private String jsonData = "{\"email\":\"%1$s\",\"password\":\"%2$s\"}";
+    private static final String LOGIN_URL = "http://shrouded-thicket-29911.herokuapp.com/api/user_register";
+    private String jsonData = "{\"email\":\"%1$s\",\"password\":\"%2$s\",\"name\":\"%3$s\",\"postal_code\":\"%4$s\"}";
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String TYPE = "application/json; charset=UTF-8;";
@@ -48,36 +49,34 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
 
         email = (EditText) findViewById(R.id.email);
         name = (EditText) findViewById(R.id.name);
         pwd = (EditText) findViewById(R.id.password);
-
-
-        Log.i(TAG, "onCreate()");
+        pwdConfirm = (EditText) findViewById(R.id.passwordConfirmation);
+        postal = (EditText) findViewById(R.id.postal);
     }
 
     /**
-     * Validates that all the fields are provided, IF everything has a valid format checks with the
-     * the api to see if this user exists.
+     * Validates that all the inputs are correct. Then tried to register the user with the server online.
+     * If the server does register the user. Saves the information to shared preferences and then launches main activity.
      *
-     * @param view The view upon which the event was called
+     * @param view not used.
      */
-    public void attemptLogin(View view) {
-        if (validateInputs()) {
-            new AuthAsync().execute(email.getText().toString().trim(), pwd.getText().toString().trim());
-            Toast.makeText(this, getString(R.string.login_wait), Toast.LENGTH_SHORT).show();
+    public void attemptRegister(View view){
+        if(validateEditTexts()){
+            new RegisterAsync().execute(email.getText().toString().trim(),pwd.getText().toString().trim(), name.getText().toString().trim(), postal.getText().toString().trim());
+            Toast.makeText(this, getString(R.string.register_wait), Toast.LENGTH_LONG).show();
         }
     }
 
-
     /**
-     * Validates the login screen input.
+     * Verifies that the data in all the edit texts is present and that it is correctly formatted.
      *
-     * @return {@code True} if all fields in the screen have valid input, {@code False} otherwise.
+     * @return true if all data is in correct form.
      */
-    private boolean validateInputs() {
+    private boolean validateEditTexts() {
         boolean isValid = true;
 
         if (email.getText().toString().trim().isEmpty()) {
@@ -101,10 +100,28 @@ public class LoginActivity extends AppCompatActivity {
             temp.setErrorEnabled(true);
         }
 
+        if(pwdConfirm.getText().toString().trim().length() < 6 || !pwdConfirm.getText().toString().trim().equals(pwd.getText().toString().trim())){
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.passwordConfirmationLbl);
+            temp.setError(getString(R.string.login_password_error_nonmatch));
+            temp.setErrorEnabled(true);
+        }
+
+        if (postal.getText().toString().trim().length() < 6){
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.postalLbl);
+            temp.setError(getString(R.string.postal_error));
+            temp.setErrorEnabled(true);
+        }
+
         return isValid;
     }
 
-    public class AuthAsync extends AsyncTask<String, Void, Boolean> {
+
+    /**
+     * Async class to do network registration in a background thread.
+     */
+    public class RegisterAsync extends AsyncTask<String, Void, Boolean> {
 
         /**
          * Tries to authenticate the given email password combination with the server. If the server
@@ -122,14 +139,14 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
 
-                Log.i(TAG, "Requesting: " + LOGIN_URL);
+                Log.i(TAG, "Requesting: "+LOGIN_URL);
                 URL url = new URL(LOGIN_URL);
 
-                if (isNetworkAccessible()) {
+                if(isNetworkAccessible()){
                     conn = (HttpURLConnection) url.openConnection();
 
                     // Format Json string
-                    jsonData = String.format(jsonData, params[0], params[1]);
+                    jsonData = String.format(jsonData, params[0], params[1], params[2], params[3]);
                     Log.i(TAG, jsonData);
                     byte[] bytes = jsonData.getBytes("UTF-8");
                     int bytesLeng = bytes.length;
@@ -149,7 +166,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     // Get response
                     int response = conn.getResponseCode();
-                    if (response != HttpURLConnection.HTTP_ACCEPTED) {
+                    if (response != HttpURLConnection.HTTP_CREATED) {
                         Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + response + " " + conn.getResponseMessage());
                         isFound = false;
                     } else {
@@ -179,43 +196,28 @@ public class LoginActivity extends AppCompatActivity {
          * @param result result of the background thread.
          */
         @Override
-        public void onPostExecute(Boolean result) {
-            if (result)
+        public void onPostExecute(Boolean result){
+            if(result)
                 saveToPreferencesAndLaunchMain();
             else
-                displayFailedLogin();
+                displayFailedRegister();
         }
     }
 
     /**
-     * Display failed login attempt on the UI.
+     * Displays an error to the user when the server cannot register the user.
      */
-    private void displayFailedLogin() {
-        Log.i(TAG, "displayFailedLogin");
-        TextInputLayout temp = (TextInputLayout) findViewById(R.id.emailLbl);
+    private void displayFailedRegister() {
+        TextInputLayout temp = (TextInputLayout) findViewById(R.id.postalLbl);
         temp.setErrorEnabled(true);
-        temp.setError(getString(R.string.login_authen_error));
-
-    }
-
-    /**
-     * Checks if the network is up and usable.
-     *
-     * @return {@code True} if the network is up and can be used, {@code False} otherwise
-     */
-    public boolean isNetworkAccessible() {
-        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-
-        return networkInfo != null && networkInfo.isConnected();
+        temp.setError(getString(R.string.login_authen_postal_error));
     }
 
     /**
      * Saves the current preferences into the database and then launches the main activity with a new
      * task flags.
      */
-    private void saveToPreferencesAndLaunchMain() {
+    private void saveToPreferencesAndLaunchMain(){
         Log.d(TAG, "input valid, attempting to login");
         SharedPreferences prefs = getSharedPreferences(BaseActivity.SHARED_PREFS, MODE_PRIVATE);
         prefs.edit()
@@ -231,12 +233,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     /**
-     * Launches register activity.
+     * Checks if the network is up and usable.
      *
-     * @param view
+     * @return {@code True} if the network is up and can be used, {@code False} otherwise
      */
-    public void launchRegister(View view) {
-        Intent intent = new Intent(this, RegisterActivity.class);
-        startActivity(intent);
+    public boolean isNetworkAccessible() {
+        ConnectivityManager connMgr = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        return networkInfo != null && networkInfo.isConnected();
     }
 }
