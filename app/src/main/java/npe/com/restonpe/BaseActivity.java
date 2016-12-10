@@ -55,7 +55,7 @@ import npe.com.restonpe.database.RestoDAO;
  *
  * @author Uen Yi Cindy Hung
  * @version 1.0
- * @since 01/12/2016
+ * @since 09/12/2016
  */
 public class BaseActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,15 +89,6 @@ public class BaseActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         locationSetting();
-/*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         //((TextView)drawer.findViewById(R.id.hello_user)).setText(prefs.getString("username","user"));
@@ -128,28 +119,6 @@ public class BaseActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-/*
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.base, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }*/
 
     /**
      * Event handler for all the different menu items for when they are clicked on.
@@ -266,10 +235,6 @@ public class BaseActivity extends AppCompatActivity
      * Retrieves all the resto in the local database and add them to
      * heroku's database.
      */
-    private void syncHeroku(List<Resto> list) {
-        // url is https://shrouded-thicket-29911.herokuapp.com/api/resto/create
-    }
-
     public class RetrieveData extends AsyncTask<Void, Void, Integer> {
 
         @Override
@@ -288,13 +253,29 @@ public class BaseActivity extends AppCompatActivity
 
                         Address address = resto.getAddress();
                         String[] str = address.getAddress().split(" ");
-                        String jsonData = "{\"name\":\"%1$s\",\"phone\":\"%2$s\",\"resto_email\":\"%3$s\",\"link\":\"%4$s\",\"price\":\"%5$s\",\"genre\":\"%6$s\"," +
-                                "\"civic_num\":\"%7$s\",\"street\":\"%8$s\",\"suite\":\"%9$s\",\"city\":\"%10$s\",\"country\":\"%11$s\",\"postal_code\":\"%12$s\"," +
-                                "\"province\":\"%13$s\",\"submitterName\":\"%14$s\",\"submitterEmail\":\"%15$s\",\"password\":\"%16$s\",\"email\":\"%17$s\"}";
+                        String jsonData = "{\"name\":\"%1$s\"," +
+                                "\"phone\":\"%2$s\"," +
+                                "\"resto_email\":\"%3$s\"," +
+                                "\"link\":\"%4$s\"," +
+                                "\"price\":\"%5$s\"," +
+                                "\"genre\":\"%6$s\"," +
+                                "\"civic_num\":\"%7$s\"," +
+                                "\"street\":\"%8$s\"," +
+                                "\"suite\":\"%9$s\"," +
+                                "\"city\":\"%10$s\"," +
+                                "\"country\":\"%11$s\"," +
+                                "\"postal_code\":\"%12$s\"," +
+                                "\"province\":\"%13$s\"," +
+                                "\"submitterName\":\"%14$s\"," +
+                                "\"submitterEmail\":\"%15$s\"," +
+                                "\"password\":\"%16$s\"," +
+                                "\"email\":\"%17$s\"," +
+                                "\"description\":\"%18$s\"," +
+                                "\"img\":\"%19$s\"}";
 
-                        jsonData = String.format(jsonData, resto.getName(), resto.getPhone(), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
+                        jsonData = String.format(jsonData, resto.getName(), String.valueOf(resto.getPhone()), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
                                 resto.getGenre(), str[0], str[1], address.getSuite(), address.getCity(), address.getCountry(), address.getPostal(), address.getProvince(),
-                                resto.getSubmitterName(), resto.getSubmitterEmail(),prefs.getString(SettingActivity.PASSWORD,null),prefs.getString(SettingActivity.EMAIL,null));
+                                resto.getSubmitterName(), resto.getSubmitterEmail(), prefs.getString(SettingActivity.PASSWORD, null), prefs.getString(SettingActivity.EMAIL, null),"","");
 
                         Log.d(TAG, "data is: " + jsonData);
 
@@ -304,7 +285,7 @@ public class BaseActivity extends AppCompatActivity
                         // Set headers
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
-                        conn.setDoInput(true);
+                        //conn.setDoInput(true);
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         conn.setRequestProperty("Content-Length", String.valueOf(bytesLeng));
 
@@ -313,44 +294,15 @@ public class BaseActivity extends AppCompatActivity
                         out.write(bytes);
                         out.flush();
                         out.close();
-                        /*// Set headers
-                        conn.setRequestMethod("POST");
-                        conn.setDoOutput(true);
-                        conn.setDoInput(true);
-                        conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-
-                        //conn.connect();
-
-                        Log.d(TAG, "resto is: " + resto.toString());
-
-                        JSONObject obj = new JSONObject();
-                        obj.put("name", resto.getName());
-                        obj.put("phone", String.valueOf(resto.getPhone()));
-                        obj.put("resto_email", resto.getEmail());
-                        obj.put("link", resto.getLink());
-                        obj.put("price", resto.getPriceRange().length());
-                        obj.put("genre", resto.getGenre());
-                        String[] str = resto.getAddress().getAddress().split(" ");
-                        obj.put("civic_num", str[0]);
-                        obj.put("street", str[1]);
-                        obj.put("suite", resto.getAddress().getSuite());
-                        obj.put("city", resto.getAddress().getCity());
-                        obj.put("country", resto.getAddress().getCountry());
-                        obj.put("postal_code", resto.getAddress().getPostal());
-                        obj.put("province", resto.getAddress().getProvince());
-                        obj.put("submitterName", resto.getSubmitterName());
-                        obj.put("submitterEmail", resto.getSubmitterEmail());
-
-                        OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-                        out.write(obj.toString());
-                        out.close();*/
 
                         int httpResult = conn.getResponseCode();
-
+                        Log.d(TAG, "response is: " + httpResult);
                         if (httpResult != HttpURLConnection.HTTP_OK) {
                             Log.e(TAG, "Something went wrong. The URL was " + url + " The HTTP response was " + httpResult);
+                        }else{
                             return 0;
                         }
+
                     }
                 }
             } catch (MalformedURLException mue) {
@@ -369,6 +321,10 @@ public class BaseActivity extends AppCompatActivity
             return 1;
         }
 
+        /**
+         * Show Toast to tell user if the sync worked or not.
+         * @param syncOK
+         */
         @Override
         protected void onPostExecute(Integer syncOK) {
             if (syncOK == 1) {

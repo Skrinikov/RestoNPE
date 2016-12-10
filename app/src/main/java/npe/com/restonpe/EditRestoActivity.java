@@ -6,6 +6,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -112,6 +113,10 @@ public class EditRestoActivity extends BaseActivity {
         email.setText(resto.getEmail());
         link.setText(resto.getLink());
         adr.setText(resto.getAddress().getAddress());
+        city.setText(resto.getAddress().getCity());
+        province.setText(resto.getAddress().getProvince());
+        country.setText(resto.getAddress().getCountry());
+        postal.setText(resto.getAddress().getPostal());
 
         submitResto.setText(R.string.save);
         submitResto.setOnClickListener(null);
@@ -220,23 +225,35 @@ public class EditRestoActivity extends BaseActivity {
         }
 
         // Province
-        if (!province.getText().toString().isEmpty()) {
-            adr.setText(adr.getText() + ", " + province.getText());
+        if (province.getText().toString().isEmpty()) {
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoProvinceLbl);
+            temp.setErrorEnabled(true);
+            temp.setError(getString(R.string.province_error));
         }
 
         //City
-        if (!city.getText().toString().isEmpty()) {
-            adr.setText(adr.getText() + ", " + city.getText());
-        }
-
-        // Country
-        if (!country.getText().toString().isEmpty()) {
-            adr.setText(adr.getText() + ", " + country.getText());
+        if (city.getText().toString().isEmpty()) {
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCityLbl);
+            temp.setErrorEnabled(true);
+            temp.setError(getString(R.string.city_error));
         }
 
         // Postal Code
-        if (!postal.getText().toString().isEmpty()) {
-            adr.setText(adr.getText() + ", " + postal.getText());
+        if (postal.getText().toString().isEmpty()) {
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoPostalLbl);
+            temp.setErrorEnabled(true);
+            temp.setError(getString(R.string.postal_error));
+        }
+
+        // Country
+        if (country.getText().toString().isEmpty()) {
+            isValid = false;
+            TextInputLayout temp = (TextInputLayout) findViewById(R.id.restoCountryLbl);
+            temp.setErrorEnabled(true);
+            temp.setError(getString(R.string.name_error));
         }
 
         // Checking if email is in correct format if it is not empty.
