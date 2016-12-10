@@ -362,7 +362,7 @@ public class ZomatoRestos {
                     Log.i(TAG, "Found province: " + province);
                     Log.i(TAG, "Found address: " + address);
 
-                    values.put(RESTO_LOCATION_ADDRESS, address);
+                    values.put(RESTO_LOCATION_ADDRESS, addressPieces[0]);
                     values.put(RESTO_LOCATION_PROVINCE, province.isEmpty()?"QC":province);
                     break;
                 case "city":
