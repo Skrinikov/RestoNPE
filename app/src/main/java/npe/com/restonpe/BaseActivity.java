@@ -274,12 +274,12 @@ public class BaseActivity extends AppCompatActivity
             RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
             List<Resto> restos = db.getAllRestaurants();
             String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
-
+            HttpsURLConnection conn = null;
             try {
-                for(Resto resto: restos) {
+                for (Resto resto : restos) {
                     if (isNetworkAccessible()) {
                         URL url = new URL(herokuURL);
-                        HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                        conn = (HttpsURLConnection) url.openConnection();
 
                         // Set headers
                         conn.setRequestMethod("POST");
@@ -289,21 +289,24 @@ public class BaseActivity extends AppCompatActivity
 
                         conn.connect();
 
+                        Log.d(TAG, "resto is: " + resto.toString());
+
                         JSONObject obj = new JSONObject();
                         obj.put("name", resto.getName());
                         obj.put("phone", resto.getPhone());
                         obj.put("resto_email", resto.getEmail());
-                        obj.put("link",resto.getLink());
-                        obj.put("price",resto.getPriceRange().length());
-                        obj.put("genre",resto.getGenre());
-                        obj.put("civic_num",resto.getAddress().getAddress());
-                        obj.put("street",resto.getAddress().getAddress());
-                        obj.put("suite",resto.getAddress().getSuite());
-                        obj.put("city",resto.getAddress().getCity());
-                        obj.put("country",resto.getAddress().getCountry());
-                        obj.put("postal_code",resto.getAddress().getPostal());
-                        obj.put("province",resto.getAddress().getProvince());
-                        obj.put("submitterName",resto.getSubmitterName());
+                        obj.put("link", resto.getLink());
+                        obj.put("price", resto.getPriceRange().length());
+                        obj.put("genre", resto.getGenre());
+                        String[] str = resto.getAddress().getAddress().split(" ");
+                        obj.put("civic_num", str[0]);
+                        obj.put("street", str[1]);
+                        obj.put("suite", resto.getAddress().getSuite());
+                        obj.put("city", resto.getAddress().getCity());
+                        obj.put("country", resto.getAddress().getCountry());
+                        obj.put("postal_code", resto.getAddress().getPostal());
+                        obj.put("province", resto.getAddress().getProvince());
+                        obj.put("submitterName", resto.getSubmitterName());
                         obj.put("submitterEmail", resto.getSubmitterEmail());
 
                         OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
@@ -323,7 +326,11 @@ public class BaseActivity extends AppCompatActivity
                 Log.e(TAG, "An IOException occurred while reading the JSON file: " + ioe.getMessage());
             } catch (JSONException e) {
                 Log.e(TAG, "JSONException: " + e.getMessage());
+            } finally {
+                if (conn != null)
+                    conn.disconnect();
             }
+
             return null;
         }
 
