@@ -276,25 +276,41 @@ public class BaseActivity extends AppCompatActivity
         protected Integer doInBackground(Void... params) {
             RestoDAO db = RestoDAO.getDatabase(BaseActivity.this);
             List<Resto> restos = db.getAllRestaurants();
-            String herokuURL = "http://shrouded-thicket-29911.herokuapp.com/api/resto/create";
+            String herokuURL = "https://shrouded-thicket-29911.herokuapp.com/api/resto/create";
 
-            HttpURLConnection conn = null;
+            HttpsURLConnection conn = null;
             OutputStream out = null;
             try {
                 for (Resto resto : restos) {
                     if (isNetworkAccessible()) {
                         URL url = new URL(herokuURL);
-                        conn = (HttpURLConnection) url.openConnection();
+                        conn = (HttpsURLConnection) url.openConnection();
 
                         Address address = resto.getAddress();
                         String[] str = address.getAddress().split(" ");
-                        String jsonData = "{\"name\":\"%1$s\",\"phone\":\"%2$s\",\"resto_email\":\"%3$s\",\"link\":\"%4$s\",\"price\":\"%5$s\",\"genre\":\"%6$s\"," +
-                                "\"civic_num\":\"%7$s\",\"street\":\"%8$s\",\"suite\":\"%9$s\",\"city\":\"%10$s\",\"country\":\"%11$s\",\"postal_code\":\"%12$s\"," +
-                                "\"province\":\"%13$s\",\"submitterName\":\"%14$s\",\"submitterEmail\":\"%15$s\",\"password\":\"%16$s\",\"email\":\"%17$s\"}";
+                        String jsonData = "{\"name\":\"%1$s\"," +
+                                "\"phone\":\"%2$s\"," +
+                                "\"resto_email\":\"%3$s\"," +
+                                "\"link\":\"%4$s\"," +
+                                "\"price\":\"%5$s\"," +
+                                "\"genre\":\"%6$s\"," +
+                                "\"civic_num\":\"%7$s\"," +
+                                "\"street\":\"%8$s\"," +
+                                "\"suite\":\"%9$s\"," +
+                                "\"city\":\"%10$s\"," +
+                                "\"country\":\"%11$s\"," +
+                                "\"postal_code\":\"%12$s\"," +
+                                "\"province\":\"%13$s\"," +
+                                "\"submitterName\":\"%14$s\"," +
+                                "\"submitterEmail\":\"%15$s\"," +
+                                "\"password\":\"%16$s\"," +
+                                "\"email\":\"%17$s\"," +
+                                "\"description\":\"%18$s\"," +
+                                "\"img\":\"%19$s\"}";
 
-                        jsonData = String.format(jsonData, resto.getName(), resto.getPhone(), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
+                        jsonData = String.format(jsonData, resto.getName(), String.valueOf(resto.getPhone()), resto.getEmail(), resto.getLink(), resto.getPriceRange().length(),
                                 resto.getGenre(), str[0], str[1], address.getSuite(), address.getCity(), address.getCountry(), address.getPostal(), address.getProvince(),
-                                resto.getSubmitterName(), resto.getSubmitterEmail(), prefs.getString(SettingActivity.PASSWORD, null), prefs.getString(SettingActivity.EMAIL, null));
+                                resto.getSubmitterName(), resto.getSubmitterEmail(), prefs.getString(SettingActivity.PASSWORD, null), prefs.getString(SettingActivity.EMAIL, null),"","");
 
                         Log.d(TAG, "data is: " + jsonData);
 
@@ -304,7 +320,7 @@ public class BaseActivity extends AppCompatActivity
                         // Set headers
                         conn.setRequestMethod("POST");
                         conn.setDoOutput(true);
-                        conn.setDoInput(true);
+                        //conn.setDoInput(true);
                         conn.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
                         conn.setRequestProperty("Content-Length", String.valueOf(bytesLeng));
 
