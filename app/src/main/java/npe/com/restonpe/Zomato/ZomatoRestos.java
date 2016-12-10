@@ -280,11 +280,15 @@ public class ZomatoRestos {
         address.setPostal(postal);
         address.setProvince(province);
         address.setCountry(country);
+
+
         if (latitude != null && longitude != null) {
             address.setLatitude(Double.parseDouble(latitude));
             address.setLongitude(Double.parseDouble(longitude));
         }
         address.setAddress(addressString);
+
+        Log.d(TAG,"adr contains: " + address);
 
         resto.setAddress(address);
 
@@ -392,6 +396,8 @@ public class ZomatoRestos {
 
             values.put(RESTO_LOCATION_COUNTRY, "Unavailable");
         }
+
+        Log.d(TAG,"values contains: " + values);
         reader.endObject();
 
         return values;
@@ -451,6 +457,7 @@ public class ZomatoRestos {
                             map.put(RESTO_LOCATION_LONGITUDE, locations.get(RESTO_LOCATION_LONGITUDE));
                             map.put(RESTO_LOCATION_ADDRESS, locations.get(RESTO_LOCATION_ADDRESS));
                             map.put(RESTO_LOCATION_POSTAL, locations.get(RESTO_LOCATION_POSTAL));
+                            map.put(RESTO_LOCATION_COUNTRY, locations.get(RESTO_LOCATION_COUNTRY));
                             break;
                         case "cuisines":
                             String cuisines = reader.nextString();
